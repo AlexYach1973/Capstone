@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="styleButton">
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/yellow</item>
+        <item name="android:layout_margin">@dimen/button_margin</item>
+        <!--<item name="android:layout_marginTop">@dimen/button_margin</item>
+        <item name="android:layout_marginBottom">@dimen/button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/button_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/button_margin_left</item>-->
+        <item name="android:padding">@dimen/button_padding</item>
+        <item name="background">@color/yellow</item>
+    </style>
+
+    <style name="styleText">
+        <item name="android:padding">@dimen/text_padding</item>
+    </style>
+</resources>

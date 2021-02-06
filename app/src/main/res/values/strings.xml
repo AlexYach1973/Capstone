@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Caostone Project</string>
+    <string name="app_name">Stalker notes</string>
+    <string name="danger">DANGER</string>
+    <string name="database">DATABASE</string>
+    <string name="map">MAP</string>
+    <string name="hello">!!!</string>
+    <string name="hello_danger">danger</string>
 </resources>

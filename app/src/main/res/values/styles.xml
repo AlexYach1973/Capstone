@@ -16,4 +16,12 @@
     <style name="styleText">
         <item name="android:padding">@dimen/text_padding</item>
     </style>
+
+    <style name="styleTextList">
+        android:padding="@dimen/text_padding"
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold|italic"
+        android:textColor="@color/purple_200"
+        android:background="@color/purple_700"
+    </style>
 </resources>

@@ -2,16 +2,17 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.lang.reflect.Field;
-
 public class MainActivity extends AppCompatActivity {
 
 //    Field
+
+    static ContentResolver mContentResolver;
 
     /**
      * Buttons
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialization();
+
+        mContentResolver = getContentResolver();
     }
 
     private void initialization() {
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.buttonDatabase:
+
+                    Intent intent1 = new Intent(MainActivity.this, DataBase.class);
+                    startActivity(intent1);
 
                     break;
                 case R.id.buttonMap:

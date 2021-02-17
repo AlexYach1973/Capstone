@@ -2,20 +2,24 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ImageView;
 
 public class Danger extends AppCompatActivity {
 
-     WebView webView;
-     Button imageRadiation, imageBio, imageChem, imageLaser, imageMagnetic, imageRadio;
+    /**
+     *website display window
+      */
+    WebView webView;
+
+    /**
+     *buttons for selecting information about the type of hazard
+     */
+    Button buttonRadiation, buttonBio, buttonChem, buttonLaser, buttonMagnetic, buttonRadio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +30,20 @@ public class Danger extends AppCompatActivity {
 
         // initialization
         // picture
-        imageRadiation = findViewById(R.id.imageRadiation);
-        imageBio = findViewById(R.id.imageBio);
-        imageChem = findViewById(R.id.imageChem);
-        imageLaser = findViewById(R.id.imageLaser);
-        imageMagnetic = findViewById(R.id.imageMagnetic);
-        imageRadio = findViewById(R.id.imageRadio);
+        buttonRadiation = findViewById(R.id.buttonRadiation);
+        buttonBio = findViewById(R.id.buttonBio);
+        buttonChem = findViewById(R.id.buttonChem);
+        buttonLaser = findViewById(R.id.buttonLaser);
+        buttonMagnetic = findViewById(R.id.buttonMagnetic);
+        buttonRadio = findViewById(R.id.buttonRadio);
 
         // assign a listener
-        imageRadiation.setOnClickListener(viewClickListener);
-        imageBio.setOnClickListener(viewClickListener);
-        imageChem.setOnClickListener(viewClickListener);
-        imageLaser.setOnClickListener(viewClickListener);
-        imageMagnetic.setOnClickListener(viewClickListener);
-        imageRadio.setOnClickListener(viewClickListener);
+        buttonRadiation.setOnClickListener(viewClickListener);
+        buttonBio.setOnClickListener(viewClickListener);
+        buttonChem.setOnClickListener(viewClickListener);
+        buttonLaser.setOnClickListener(viewClickListener);
+        buttonMagnetic.setOnClickListener(viewClickListener);
+        buttonRadio.setOnClickListener(viewClickListener);
 
         // включаем поддержку JavaScript
         webView.getSettings().setJavaScriptEnabled(true);
@@ -47,37 +51,40 @@ public class Danger extends AppCompatActivity {
 
     }
 
+    /**
+     * button click listener
+     */
     View.OnClickListener viewClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             switch (v.getId()) {
-                case R.id.imageRadiation:
+                case R.id.buttonRadiation:
                     // указываем страницу загрузки
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Radiation");
                     break;
-                case R.id.imageBio:
+                case R.id.buttonBio:
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Biodefense");
                     break;
 
-                case R.id.imageChem:
+                case R.id.buttonChem:
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Chemical_hazard");
                     break;
 
-                case R.id.imageLaser:
+                case R.id.buttonLaser:
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Laser_safety");
                     break;
 
-                case R.id.imageMagnetic:
+                case R.id.buttonMagnetic:
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Electromagnetic_radiation");
                     break;
 
-                case R.id.imageRadio:
+                case R.id.buttonRadio:
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Radio_wave");
                     break;
@@ -86,7 +93,10 @@ public class Danger extends AppCompatActivity {
         }
     };
 
-    // Loading a webpage
+    /**
+     * loading a web page into a window webView
+     */
+
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -95,7 +105,10 @@ public class Danger extends AppCompatActivity {
         }
     }
 
-    //back button processing
+    /**
+     *  back button processing
+     *  The method handles clicking the back button
+      */
     public void onBackPressed(){
         if (webView.canGoBack()) {
             webView.goBack();

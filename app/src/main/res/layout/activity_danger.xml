@@ -19,42 +19,42 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/imageRadiation"
+            android:id="@+id/buttonRadiation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
            android:background="@mipmap/ic_launcher_round" />
 
         <Button
-            android:id="@+id/imageBio"
+            android:id="@+id/buttonBio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@mipmap/ic_launcher_bio" />
 
         <Button
-            android:id="@+id/imageChem"
+            android:id="@+id/buttonChem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@mipmap/ic_launcher_chem" />
 
         <Button
-            android:id="@+id/imageLaser"
+            android:id="@+id/buttonLaser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@mipmap/ic_launcher_laser" />
 
         <Button
-            android:id="@+id/imageMagnetic"
+            android:id="@+id/buttonMagnetic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@mipmap/ic_launcher_magnetics" />
 
         <Button
-            android:id="@+id/imageRadio"
+            android:id="@+id/buttonRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

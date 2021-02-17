@@ -5,4 +5,5 @@
     <string name="map">MAP</string>
     <string name="hello">!!!</string>
     <string name="hello_danger">danger</string>
+    <string name="hello_DataBase">DataBase</string>
 </resources>

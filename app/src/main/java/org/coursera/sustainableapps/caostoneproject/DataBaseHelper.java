@@ -68,6 +68,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // Create the table.
         db.execSQL(SQL_CREATE_TABLE);
 
+        /*// loading danger of default
         // we fill the database "Chernobyl"
         ContentValues cvs = new ContentValues();
         cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
@@ -82,7 +83,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 37.760799);
         cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 140.474785);
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "Fukushima");
-        db.insert(DBContract.FeedEntry.TABLE_NAME, null, cvs);
+        db.insert(DBContract.FeedEntry.TABLE_NAME, null, cvs);*/
     }
 
     /**

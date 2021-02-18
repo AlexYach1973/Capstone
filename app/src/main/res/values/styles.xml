@@ -24,4 +24,14 @@
         android:textColor="@color/purple_200"
         android:background="@color/purple_700"
     </style>
+
+    <style name="styleButtonDataBase">
+        <item name="android:textSize">@dimen/text_size_data_base</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/yellow</item>
+        <item name="android:layout_margin">@dimen/button_margin_data_base</item>
+        <item name="android:padding">@dimen/button_padding_data_base</item>
+        <item name="background">@color/yellow</item>
+    </style>
+
 </resources>

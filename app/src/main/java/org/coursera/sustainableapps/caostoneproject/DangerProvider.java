@@ -52,7 +52,7 @@ public class DangerProvider extends ContentProvider {
         int returnCount;
 
         // Logs
-//        Log.d("myLogs", selection + selectionArgs + uri);
+        Log.d("myLogs", "Удаление ");
 
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
@@ -78,6 +78,7 @@ public class DangerProvider extends ContentProvider {
         if (selection == null
                 || returnCount > 0)
             // Notifies registered observers that row(s) were deleted.
+            // Уведомляет зарегистрированных наблюдателей об удалении строки (строк).
             mContext.getContentResolver().notifyChange(uri,null);
 
         return returnCount;
@@ -205,7 +206,7 @@ public class DangerProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
 
-                Log.d("myLogs", "Зпустили Provider метод Query");
+//                Log.d("myLogs", "Зпустили Provider метод Query");
 
                 cursor = mOpenHelper.getReadableDatabase().query
                         (DBContract.FeedEntry.TABLE_NAME,
@@ -216,7 +217,7 @@ public class DangerProvider extends ContentProvider {
                                 null,
                                 sortOrder);
                 // Logs
-                Log.d("myLogs", "!!! return cursor of DangerProvider.query !!!");
+//                Log.d("myLogs", "!!! return cursor of DangerProvider.query !!!");
 
                 break;
 

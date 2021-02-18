@@ -4,19 +4,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-//    Field
-
+//    Field ContentResolver
     static ContentResolver mContentResolver;
 
     /**
-     * Buttons
+     * fields for determining the current location.
+     * Used in DataBase.class
+     * поля для определение текущей локации.
+     * Используется в DataBase.class
      */
+    public LocationManager locationManager;
+    List<String> providers;
+
+    // Buttons
     Button mButtonDanger, mButtonDatabase, mButtonMap;
 
     @Override
@@ -40,29 +49,30 @@ public class MainActivity extends AppCompatActivity {
         mButtonDanger.setOnClickListener(viewClickListener);
         mButtonDatabase.setOnClickListener(viewClickListener);
         mButtonMap.setOnClickListener(viewClickListener);
+
+        // get LocationManager
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
     }
 
-    View.OnClickListener viewClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    View.OnClickListener viewClickListener = v -> {
 
-            switch (v.getId()) {
-                case R.id.buttonDanger:
-                    Intent intent = new Intent(MainActivity.this, Danger.class);
-                    startActivity(intent);
-                    break;
+        switch (v.getId()) {
+            case R.id.buttonDanger:
+                Intent intent = new Intent(MainActivity.this, Danger.class);
+                startActivity(intent);
+                break;
 
-                case R.id.buttonDatabase:
+            case R.id.buttonDatabase:
 
-                    Intent intent1 = new Intent(MainActivity.this, DataBase.class);
-                    startActivity(intent1);
+                Intent intent1 = new Intent(MainActivity.this, DataBase.class);
+                startActivity(intent1);
 
-                    break;
-                case R.id.buttonMap:
+                break;
+            case R.id.buttonMap:
 
-                    break;
-            }
-
+                break;
         }
+
     };
 }

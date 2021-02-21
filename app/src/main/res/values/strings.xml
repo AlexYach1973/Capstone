@@ -11,5 +11,7 @@
     <string name="delete">Delete All</string>
     <string name="buttonCurrentMap">MAP</string>
     <string name="buttonOk">Ok!</string>
+    <string name="spinnerDanger">Danger choosing</string>
+    <string name="descr_danger">Description</string>
 
 </resources>

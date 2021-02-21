@@ -3,14 +3,14 @@ package org.coursera.sustainableapps.caostoneproject;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +20,25 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import java.util.List;
-
 public class DataBase extends AppCompatActivity {
+
+    MainActivity mMainActivity;
+
+    /**
+     * fields for determining the current location.
+     * поля для определение текущей локации.
+     */
+    public static String LATITUDE;
+    public static String LONGITUDE;
+    public static String DESCRIPTION;
+    public static String POSITION_DANGER;
+
+    // Request code for Position
+    private static final int REQUEST_POSITION = 1;
 
     /**
      * ListView to display the database
@@ -36,12 +49,6 @@ public class DataBase extends AppCompatActivity {
     ListView lvData;
 
     DangerProvider mProvider = new DangerProvider();
-
-    /**
-     * fields required to determine the current position
-     * поля, необходимые для определения текущего положения
-     */
-//    private LocationManager locationManager;
 
     /**
      * Buttons "Refresh", "Add" and "delete"
@@ -86,7 +93,7 @@ public class DataBase extends AppCompatActivity {
         mButtonAdd.setOnClickListener(viewClickListener);
         mButtonDelete.setOnClickListener(viewClickListener);
 
-        loadingDefault();
+//        loadingDefault();
         displayCurrent();
 
     }
@@ -158,41 +165,43 @@ public class DataBase extends AppCompatActivity {
     };
 
     /**
-     * Добавить текущую позицию с указанием типа опасности, лолготы, ширины и описанием
-     * Add current position with danger type, length, width and description
+     * Добавить текущую позицию с указанием типа опасности, долготы, широты и описанием
+     * Add current position with danger type, longitude, latitude and description
      */
     private void addCurrentPosition() {
 
-        /*// get LocationManager
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);*/
-
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }*/
-        /*@SuppressLint("MissingPermission") Location location = MainActivity.locationManager.getLastKnownLocation(String.valueOf(providers));
-
-        // Current location Coordinates
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-
-        // logs
-        Log.d("myLogs", "Широта: " + lat + "Долгота: " + lon);*/
-
-
         // Call
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, Position.class);
+        startActivityForResult(intent, REQUEST_POSITION);
+    }
 
-        startActivityForResult(intent, 1);
+    /**
+     * getting data from activity Position with current geodata
+     * получение данных из активности Position с текущими геоданными
+     * @param requestCode REQUEST_POSITION
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    Intent data) {
+        // Check if the started Activity completed successfully and
+        // the request code is what we're expecting.
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK
+                && requestCode == 1) {
+
+            // We write the current position to the base SQLite
+            // Записываем текущее положение в базу SQLite
 
 
+
+            // DisplayCurrent
+            Log.d("myLogs", "" + data.getIntExtra(POSITION_DANGER, -1));
+
+        }
 
     }
 
@@ -237,21 +246,6 @@ public class DataBase extends AppCompatActivity {
         MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode,
-                                    Intent data) {
-        // Check if the started Activity completed successfully and
-        // the request code is what we're expecting.
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK
-                && requestCode == 1) {
-            // DisplayCurrent
-
-        }
-
-
-    }
 
 }

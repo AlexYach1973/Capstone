@@ -1,11 +1,20 @@
 package org.coursera.sustainableapps.caostoneproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,17 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-//    Field ContentResolver
+    //    Field ContentResolver
     static ContentResolver mContentResolver;
-
-    /**
-     * fields for determining the current location.
-     * Used in DataBase.class
-     * поля для определение текущей локации.
-     * Используется в DataBase.class
-     */
-    public LocationManager locationManager;
-    List<String> providers;
 
     // Buttons
     Button mButtonDanger, mButtonDatabase, mButtonMap;
@@ -50,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
         mButtonDatabase.setOnClickListener(viewClickListener);
         mButtonMap.setOnClickListener(viewClickListener);
 
-        // get LocationManager
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
     }
 
     View.OnClickListener viewClickListener = v -> {
@@ -75,4 +72,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
 }

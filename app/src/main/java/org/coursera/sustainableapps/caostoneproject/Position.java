@@ -210,6 +210,7 @@ public class Position extends AppCompatActivity {
 
               // Return to DataBase
               Intent intentResult = makeIntentResult();
+              setResult(RESULT_OK, intentResult);
               finish();
               break;
       }
@@ -221,7 +222,6 @@ public class Position extends AppCompatActivity {
         intent.putExtra(DataBase.LONGITUDE, geoLong); // double
         intent.putExtra(DataBase.DESCRIPTION, editTextDescr.getText().toString()); // String
         intent.putExtra(DataBase.POSITION_DANGER, positionDanger); // int
-        setResult(RESULT_OK, intent);
 
         return intent;
     }

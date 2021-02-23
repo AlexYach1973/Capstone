@@ -32,10 +32,10 @@ public class DataBase extends AppCompatActivity {
      * fields for determining the current location.
      * поля для определение текущей локации.
      */
-    public static String LATITUDE;
-    public static String LONGITUDE;
-    public static String DESCRIPTION;
-    public static String POSITION_DANGER;
+    public static String LATITUDE = "latitude";
+    public static String LONGITUDE = "longitude";
+    public static String DESCRIPTION = "description";
+    public static String POSITION_DANGER = "positionDanger";
 
     // Request code for Position
     private static final int REQUEST_POSITION = 1;
@@ -47,6 +47,14 @@ public class DataBase extends AppCompatActivity {
     ListView listDanger;
     ImageView imageView;
     ListView lvData;
+
+    // формируем столбцы сопоставления
+    // form matching columns
+    String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
+            DBContract.FeedEntry.COLUMN_DESCRIPTION};
+
+    int[] to = new int[]{R.id.imageViewList, R.id.textList};
+
 
     DangerProvider mProvider = new DangerProvider();
 
@@ -93,6 +101,8 @@ public class DataBase extends AppCompatActivity {
         mButtonAdd.setOnClickListener(viewClickListener);
         mButtonDelete.setOnClickListener(viewClickListener);
 
+
+
 //        loadingDefault();
         displayCurrent();
 
@@ -116,20 +126,10 @@ public class DataBase extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
 
             // Logs
-            Log.d("myLogs", "mCursor = null");
-
-            // Remove the display if there's nothing left to show.
-//            mHobbitActivity.displayCursor(mCursor = null);
+//            Log.d("myLogs", "mCursor = null");
 
         } else {
             // Display the results of the query.
-
-            // формируем столбцы сопоставления
-            // form matching columns
-            String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
-                    DBContract.FeedEntry.COLUMN_DESCRIPTION};
-
-            int[] to = new int[]{R.id.imageViewList, R.id.textList};
 
             // создааем адаптер и настраиваем список
             // create an adapter and set up a list
@@ -179,7 +179,7 @@ public class DataBase extends AppCompatActivity {
      * getting data from activity Position with current geodata
      * получение данных из активности Position с текущими геоданными
      * @param requestCode REQUEST_POSITION
-     * @param resultCode
+     * @param resultCode RESULT_OK
      * @param data
      */
     @Override
@@ -191,17 +191,71 @@ public class DataBase extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK
-                && requestCode == 1) {
+                && requestCode == REQUEST_POSITION) {
 
             // We write the current position to the base SQLite
             // Записываем текущее положение в базу SQLite
 
+            insertCurrentGeo(data);
 
-
-            // DisplayCurrent
-            Log.d("myLogs", "" + data.getIntExtra(POSITION_DANGER, -1));
-
+//            displayCurrent();
+        } else {
+            Log.d("myLogs", "RESULT NOT OK ???");
         }
+
+    }
+
+    private void insertCurrentGeo(Intent intent) {
+
+        ContentValues cvs = new ContentValues();
+
+        // get the data and insert it into ContentValues
+        // получаем данные и вставляем их в ContentValues
+
+        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE,
+                intent.getDoubleExtra(LATITUDE, 0));
+
+        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE,
+                intent.getDoubleExtra(LONGITUDE, 0));
+
+        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.
+                getStringExtra(DESCRIPTION));
+
+        // insert the icon. вставляем иконку
+        switch (intent.getIntExtra(POSITION_DANGER, 0)) {
+            case 0:
+                // "Radiation"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
+                break;
+
+            case 1:
+                // "Biodefense"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_bio_round);
+                break;
+
+            case 2:
+                // "Chemical danger"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_chem_round);
+                break;
+
+            case 3:
+                // "Laser danger"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_laser_round);
+                break;
+
+            case 4:
+                // "Electromagnetic"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_magnetics_round);
+                break;
+
+            case 5:
+                // "Radio wave"
+                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_radio_round);
+                break;
+        }
+
+        // Inserting
+        MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
     }
 

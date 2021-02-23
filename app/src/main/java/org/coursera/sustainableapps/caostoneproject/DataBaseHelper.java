@@ -36,8 +36,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             + DBContract.FeedEntry.TABLE_NAME + " ("
             + DBContract.FeedEntry._ID + " integer primary key autoincrement, "
             + DBContract.FeedEntry.COLUMN_DANGER + " INTEGER , "
-            + DBContract.FeedEntry.COLUMN_LATITUDE + " INTEGER , "
-            + DBContract.FeedEntry.COLUMN_LONGITUDE + " INTEGER , "
+            + DBContract.FeedEntry.COLUMN_LATITUDE + " DOUBLE , "
+            + DBContract.FeedEntry.COLUMN_LONGITUDE + " DOUBLE , "
             + DBContract.FeedEntry.COLUMN_DESCRIPTION + " TEXT "
             + " );";
 

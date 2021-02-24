@@ -52,7 +52,9 @@ public class DangerProvider extends ContentProvider {
         int returnCount;
 
         // Logs
-        Log.d("myLogs", "Удаление ");
+        Log.d("myLogs", "Удаление DangerProvider");
+        Log.d("myLogs", "Selection :" + selection);
+        Log.d("myLogs", "SelectionArgs :" + selectionArgs[0]);
 
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
@@ -71,6 +73,7 @@ public class DangerProvider extends ContentProvider {
                                 addKeyIdCheckToWhereStatement(selection,
                                         ContentUris.parseId(uri)),
                                 selectionArgs);
+                break;
 
             default: throw new UnsupportedOperationException("???");
         }
@@ -114,7 +117,7 @@ public class DangerProvider extends ContentProvider {
                     + " = ?");
 
             // Logs
-            Log.d("myLogs", selectionResult);
+            Log.d("myLogs", "DangerProvider selectionResuly" + selectionResult);
 
             return selectionResult;
         }

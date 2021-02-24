@@ -13,5 +13,6 @@
     <string name="buttonOk">Ok!</string>
     <string name="spinnerDanger">Danger choosing</string>
     <string name="descr_danger">Description</string>
+    <string name="delete_record">delete ?</string>
 
 </resources>

@@ -13,7 +13,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,6 +50,9 @@ public class DataBase extends AppCompatActivity {
     ListView listDanger;
     ImageView imageView;
     ListView lvData;
+
+    // Context menu
+    private static final int DELETE_ID = 1;
 
     // формируем столбцы сопоставления
     // form matching columns
@@ -101,12 +107,60 @@ public class DataBase extends AppCompatActivity {
         mButtonAdd.setOnClickListener(viewClickListener);
         mButtonDelete.setOnClickListener(viewClickListener);
 
+        // добавляем контекстное меню к списку
+        // add a context menu to the list
+        registerForContextMenu(lvData);
+
 
 
 //        loadingDefault();
         displayCurrent();
 
     }
+
+    /**
+     * context menu
+     */
+    // оздаем контекстное меню
+    // creating a context menu
+    public void onCreateContextMenu(ContextMenu menu, View view,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+        menu.add(0, DELETE_ID, 0, R.string.delete_record);
+    }
+
+    // обработка нажатия на контекстное меню
+    // handling clicking on the context menu
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == DELETE_ID) {
+
+            // получаем из пункта контекстного меню данные по пункту списка
+            // get data on the list item from the context menu item
+            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)
+                    item.getMenuInfo();
+
+            // извлекаем id записи и удаляем соответствующую запись в БД
+            // retrieve the id of the record and delete the corresponding record in the database
+            deleteForId(acmi.id);
+        }
+        return true;
+    }
+
+    private void deleteForId(long id) {
+        //Logs
+        Log.d("myLogs", "delete ID= " + id);
+
+        MainActivity.mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
+                DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
+
+        // Сообщаем пользователю, какой ИД был удален
+        // Telling the user which ID was deleted
+        Toast.makeText(this,
+                "Deleted _ID= "
+                        + id,
+                Toast.LENGTH_SHORT).show();
+    }
+
 
     /**
      * Display the designated columns in the cursor as a List in
@@ -197,8 +251,8 @@ public class DataBase extends AppCompatActivity {
             // Записываем текущее положение в базу SQLite
 
             insertCurrentGeo(data);
-
 //            displayCurrent();
+
         } else {
             Log.d("myLogs", "RESULT NOT OK ???");
         }

@@ -42,6 +42,7 @@ public class DataBase extends AppCompatActivity {
 
     // Request code for Position
     private static final int REQUEST_POSITION = 1;
+    private static final int REQUEST_UPDATE_POSITION = 2;
 
     /**
      * ListView to display the database
@@ -53,6 +54,8 @@ public class DataBase extends AppCompatActivity {
 
     // Context menu
     private static final int DELETE_ID = 1;
+    private static final int UPDATE_ID = 2;
+    private long currentId ;
 
     // формируем столбцы сопоставления
     // form matching columns
@@ -111,8 +114,6 @@ public class DataBase extends AppCompatActivity {
         // add a context menu to the list
         registerForContextMenu(lvData);
 
-
-
 //        loadingDefault();
         displayCurrent();
 
@@ -127,28 +128,57 @@ public class DataBase extends AppCompatActivity {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
         menu.add(0, DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, UPDATE_ID, 0,"change ?");
     }
 
     // обработка нажатия на контекстное меню
     // handling clicking on the context menu
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == DELETE_ID) {
 
-            // получаем из пункта контекстного меню данные по пункту списка
-            // get data on the list item from the context menu item
-            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)
-                    item.getMenuInfo();
+        switch (item.getItemId()) {
 
-            // извлекаем id записи и удаляем соответствующую запись в БД
-            // retrieve the id of the record and delete the corresponding record in the database
-            deleteForId(acmi.id);
+            case DELETE_ID:
+                // получаем из пункта контекстного меню данные по пункту списка
+                // get data on the list item from the context menu item
+                AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)
+                        item.getMenuInfo();
+
+                // извлекаем id записи и удаляем соответствующую запись в БД
+                // retrieve the id of the record and delete the corresponding record in the database
+                deleteForId(acmi.id);
+
+                break;
+
+            case UPDATE_ID:
+                // вызываем Activity Position для редактирования выбранного пункта из списка listView
+                // we call the activity Position to edit the selected item from the listView
+                Intent intent = new Intent(this, Position.class);
+
+                // получаем из пункта контекстного меню данные по пункту списка
+                // get data on the list item from the context menu item
+                AdapterView.AdapterContextMenuInfo acmiId = (AdapterView.AdapterContextMenuInfo)
+                        item.getMenuInfo();
+
+                // Сохраняем ID в переменной для использования в updateCurrentPosition
+                // Store the ID in a variable for use in updateCurrentPosition
+                currentId = acmiId.id;
+
+                // Start
+                startActivityForResult(intent, REQUEST_UPDATE_POSITION);
+
+                break;
+            default:
+                Toast.makeText(this,
+                        "Delete, update 0 position", Toast.LENGTH_SHORT).show();
+                break;
         }
+
         return true;
     }
 
     private void deleteForId(long id) {
         //Logs
-        Log.d("myLogs", "delete ID= " + id);
+//        Log.d("myLogs", "delete ID= " + id);
 
         MainActivity.mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
                 DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
@@ -244,6 +274,9 @@ public class DataBase extends AppCompatActivity {
         // the request code is what we're expecting.
         super.onActivityResult(requestCode, resultCode, data);
 
+        // получаем данные для текущей позиции
+        // get data for the current position
+
         if (resultCode == Activity.RESULT_OK
                 && requestCode == REQUEST_POSITION) {
 
@@ -253,12 +286,32 @@ public class DataBase extends AppCompatActivity {
             insertCurrentGeo(data);
 //            displayCurrent();
 
+            Toast.makeText(this,
+                    "Insert 1 position", Toast.LENGTH_SHORT).show();
+
+
+            // получаем данные для обновления позиции
+            // get data to update the position
+        }else if (resultCode == Activity.RESULT_OK
+                && requestCode == REQUEST_UPDATE_POSITION) {
+
+            // Обновляем текущую позицию
+            //Updating the current position
+            updateCurrentPosition(data);
+
         } else {
             Log.d("myLogs", "RESULT NOT OK ???");
+            Toast.makeText(this,
+                    "Insert, update 0 position", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    /**
+     * inserting the current position into the database
+     * вставка текущей позиции в базу данных
+     * @param intent
+     */
     private void insertCurrentGeo(Intent intent) {
 
         ContentValues cvs = new ContentValues();
@@ -276,43 +329,93 @@ public class DataBase extends AppCompatActivity {
                 getStringExtra(DESCRIPTION));
 
         // insert the icon. вставляем иконку
-        switch (intent.getIntExtra(POSITION_DANGER, 0)) {
-            case 0:
-                // "Radiation"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
-                break;
-
-            case 1:
-                // "Biodefense"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_bio_round);
-                break;
-
-            case 2:
-                // "Chemical danger"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_chem_round);
-                break;
-
-            case 3:
-                // "Laser danger"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_laser_round);
-                break;
-
-            case 4:
-                // "Electromagnetic"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_magnetics_round);
-                break;
-
-            case 5:
-                // "Radio wave"
-                cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_radio_round);
-                break;
-        }
+        cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
+                insertIcon(intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Inserting
         MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
     }
 
+    // Устанавливаем иконку выбранную в спиннере в Position.java
+    // Set the icon selected in the spinner to Position.java
+    private Integer insertIcon(int intSnipePosition) {
+
+        int insIcon = 1;
+
+        switch (intSnipePosition) {
+            case 0:
+                // "Radiation"
+                insIcon = R.mipmap.ic_launcher_round_round;
+                break;
+
+            case 1:
+                // "Biodefense"
+                insIcon = R.mipmap.ic_launcher_bio_round;
+                break;
+
+            case 2:
+                // "Chemical danger"
+                insIcon = R.mipmap.ic_launcher_chem_round;
+                break;
+
+            case 3:
+                // "Laser danger"
+                insIcon = R.mipmap.ic_launcher_laser_round;
+                break;
+
+            case 4:
+                // "Electromagnetic"
+                insIcon = R.mipmap.ic_launcher_magnetics_round;
+                break;
+
+            case 5:
+                // "Radio wave"
+                insIcon = R.mipmap.ic_launcher_radio_round;
+                break;
+        }
+
+        return insIcon;
+    }
+
+
+    /**
+     * обновляем текущую позицию
+     * update the current position
+     */
+    private void updateCurrentPosition(Intent intent) {
+
+        ContentValues cvs = new ContentValues();
+
+        // get the data and insert it into ContentValues
+        // получаем данные и вставляем их в ContentValues
+
+        // Icon
+        cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
+                insertIcon(intent.getIntExtra(POSITION_DANGER, 0)));
+
+        // Descriptions
+        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.
+                getStringExtra(DESCRIPTION));
+
+//        Log.d("myLogs","ID= " + currentId);
+
+        // обновляем выбранную строку
+        // update the selected row
+        MainActivity.mContentResolver.update(DBContract.FeedEntry.CONTENT_URI,
+                cvs,
+                DBContract.FeedEntry._ID,
+                new String[]{String.valueOf(currentId)});
+
+        // Сообщаем об обновлении
+        // We inform about the update
+        Toast.makeText(this,
+                "Update _ID= "
+                        + currentId,
+                Toast.LENGTH_SHORT).show();
+
+
+    }
     /**
      * This method is run when the user clicks the "Delete All" button
      */
@@ -339,9 +442,9 @@ public class DataBase extends AppCompatActivity {
         // we fill the database "Chernobyl"
         ContentValues cvs = new ContentValues();
         cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
-        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 51.4045032);
-        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 30.0542331);
-        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "Chernobyl");
+        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 50.4708);
+        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 30.305075);
+        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "My House");
         MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
 

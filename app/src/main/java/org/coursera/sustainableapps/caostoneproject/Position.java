@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -47,8 +48,12 @@ public class Position extends AppCompatActivity {
 
     // содержимое спинера
     // contents spinner
-    String[] spData = {"Radiation", "Biodefense", "Chemical danger", "Laser danger",
+//    String[] spData = getResources().getStringArray(R.array.spinner_danger); // не работает
+     String[] spData = {"Radiation", "Biodefense", "Chemical danger", "Laser danger",
                     "Electromagnetic", "Radio wave"};
+
+    // текущая позиция спинера
+    // current spinner position
     int positionDanger;
 
     @Override
@@ -85,8 +90,8 @@ public class Position extends AppCompatActivity {
         // attach the spinner to the adapter
         spDanger.setAdapter(spAdapter);
 
-        // Title
-//        spDanger.setPrompt("Danger choosing");
+        // Title (не работает)
+//        spDanger.setPrompt(R.string.spinnerDanger);
         // select the element
         spDanger.setSelection(0);
 
@@ -139,7 +144,7 @@ public class Position extends AppCompatActivity {
     }
 
 
-    private class MyWebViewClient extends WebViewClient {
+    private static class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             view.loadUrl(request.getUrl().toString());
@@ -163,14 +168,18 @@ public class Position extends AppCompatActivity {
                 geoLan = location.getLatitude();
                 geoLong = location.getLongitude();
                 // Строки для вывода
-                pos1 = "Широта= " + Math.round(geoLan *10000)/10000.0;
-                pos2 = "Долгота= " + geoLong;
+                pos1 = "Latitude= " + Math.round(geoLan *10000)/10000.0;
+                pos2 = "Longitude= " + Math.round(geoLong *10000)/10000.0;
                 // Вывод
                 textLan.setText(pos1);
                 textLong.setText(pos2);
                 // Строка для карты
                 goMap = "http://www.google.com/maps/@" + geoLan +
                         "," + geoLong + "," + 15 + "z";
+
+               /* // Координаты моего дома. Для проверки
+                goMap = "http://www.google.com/maps/@" + 50.470 +
+                                        "," + 30.5075 + "," + 15 + "z";*/
 
                 // Потом разберусь...
 //                webView.loadUrl(goMap);
@@ -182,15 +191,13 @@ public class Position extends AppCompatActivity {
 
         }
 
-        @Override
+       /* @Override
         public void onProviderEnabled(@NonNull String provider) {
-
         }
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
-
-        }
+        }*/
     }
 
     // обработка нажатий кнопок
@@ -200,10 +207,10 @@ public class Position extends AppCompatActivity {
 
           case R.id.buttonCurrentMap:
 
-              //  Запускаем отдельное окно с Гуугл картой
-              // Launch a separate window with a google map
-              Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(goMap));
-              startActivity(intent);
+              // Используем HaMeR для запуска карты текущего расположения
+              // Use HaMeR to launch a map of the current location
+              displayCurrentGoogleMap(goMap);
+
               break;
 
           case R.id.buttonOk:
@@ -216,14 +223,57 @@ public class Position extends AppCompatActivity {
       }
     };
 
+    /**
+     * метод, который загружает в фоновом потоке гугл карту текущего расположения
+     * используя фреймворк HaMeR
+     * a method that loads a Google map of the current location in the background thread
+     * using the HaMeR framework
+     */
+    private void displayCurrentGoogleMap(String address) {
+
+        final Runnable downLoadGoogleMap = () -> {
+            //  Запускаем отдельное окно с Гуугл картой
+            // Launch a separate window with a google map
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));
+            startActivity(intent);
+        };
+        new Thread(downLoadGoogleMap).start();
+    };
+
+    //
     private Intent makeIntentResult() {
         Intent intent = new Intent();
         intent.putExtra(DataBase.LATITUDE, geoLan); // double
         intent.putExtra(DataBase.LONGITUDE, geoLong); // double
-        intent.putExtra(DataBase.DESCRIPTION, editTextDescr.getText().toString()); // String
+        intent.putExtra(DataBase.DESCRIPTION, checkTextDescription()); // String
         intent.putExtra(DataBase.POSITION_DANGER, positionDanger); // int
 
         return intent;
+    }
+
+    // проверка введенного текста в окно Description, если null, выводим Lat, Long
+    // checking the entered text in the Description window? if null, output Lat, Long
+    private String checkTextDescription() {
+        String strText;
+        if (!editTextDescr.getText().toString().equals(""))
+            strText = editTextDescr.getText().toString();
+        else
+            strText = "Lat= " + Math.round(geoLan *100)/100.0 + ", " +
+                    "Long= " + Math.round(geoLong *100)/100.0;
+
+       /* // Роверка расчета расстояния по долготе и широте
+       // Мой дом, Оболонсий пр-т 16А, Киев
+        Location locA = new Location("");
+        locA.setLatitude(50.4708);
+        locA.setLongitude(30.5075);
+        // Крещатик, 14, Киев
+        Location locB = new Location("");
+        locB.setLatitude(50.4514);
+        locB.setLongitude(30.5252);
+        double dist = locA.distanceTo(locB);
+        return String.valueOf(dist);*/
+
+        return strText;
     }
 
 

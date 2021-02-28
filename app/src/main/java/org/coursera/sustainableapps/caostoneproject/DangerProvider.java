@@ -54,7 +54,7 @@ public class DangerProvider extends ContentProvider {
         // Logs
         Log.d("myLogs", "Удаление DangerProvider");
         Log.d("myLogs", "Selection :" + selection);
-        Log.d("myLogs", "SelectionArgs :" + selectionArgs[0]);
+//        Log.d("myLogs", "SelectionArgs :" + selectionArgs[0]);
 
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
@@ -243,14 +243,14 @@ public class DangerProvider extends ContentProvider {
         }
 
         // Register to watch a content URI for changes.
-        cursor.setNotificationUri(mContext.getContentResolver(),uri);
+        cursor.setNotificationUri(mContext.getContentResolver(), uri);
 
         return cursor;
     }
 
     /**
-     * Method called to handle update requests from client
-     * applications.
+     * Method called to handle update requests from client applications
+     * Метод, вызываемый для обработки запросов на обновление от клиентских приложений.
      */
     @Override
     public int update(Uri uri, ContentValues cvs, String selection,

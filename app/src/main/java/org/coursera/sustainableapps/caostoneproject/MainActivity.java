@@ -22,9 +22,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    Field ContentResolver
-    static ContentResolver mContentResolver;
-
     // Buttons
     Button mButtonDanger, mButtonDatabase, mButtonMap;
 
@@ -35,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         initialization();
 
-        mContentResolver = getContentResolver();
     }
 
     private void initialization() {

@@ -3,6 +3,7 @@ package org.coursera.sustainableapps.caostoneproject;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -72,22 +73,13 @@ public class DataBase extends AppCompatActivity {
      */
     Button mButtonRefresh, mButtonAdd, mButtonDelete;
 
-    //    private ContentResolver mContentResolver;
-
-    // атрибуты для Map
-    // attributes for MAP
-   /* public static final String ATTRIBUTE_DANGER_ROUND = "round";
-    public static final String ATTRIBUTE_DANGER_BIO = "bio";
-    public static final String ATTRIBUTE_DANGER_CHEM = "chem";
-    public static final String ATTRIBUTE_DANGER_RADIO = "radio";
-    public static final String ATTRIBUTE_DANGER_LASER = "laser";
-    public static final String ATTRIBUTE_DANGER_MAGNETICS = "magnetics";*/
+    //    Field ContentResolver
+    static ContentResolver mContentResolver;
 
     /**
      * Constructor initializes the fields.
      */
     public DataBase() {
-//        mContentResolver = getApplicationContext().getContentResolver();
     }
 
     @SuppressLint("CutPasteId")
@@ -95,6 +87,8 @@ public class DataBase extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_base);
+
+        mContentResolver = getContentResolver();
 
         // initialize ListView
         imageView = findViewById(R.id.imageViewList);
@@ -180,7 +174,7 @@ public class DataBase extends AppCompatActivity {
         //Logs
 //        Log.d("myLogs", "delete ID= " + id);
 
-        MainActivity.mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
+        mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
                 DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
 
         // Сообщаем пользователю, какой ИД был удален
@@ -199,7 +193,7 @@ public class DataBase extends AppCompatActivity {
     private void displayCurrent() {
 
         // Query for all characters
-        Cursor mCursor = MainActivity.mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
+        Cursor mCursor = mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
                 DBContract.FeedEntry.sColumnsToDisplay,
                 null, null, null);
 
@@ -333,7 +327,7 @@ public class DataBase extends AppCompatActivity {
                 insertIcon(intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Inserting
-        MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
+        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
     }
 
@@ -402,7 +396,7 @@ public class DataBase extends AppCompatActivity {
 
         // обновляем выбранную строку
         // update the selected row
-        MainActivity.mContentResolver.update(DBContract.FeedEntry.CONTENT_URI,
+        mContentResolver.update(DBContract.FeedEntry.CONTENT_URI,
                 cvs,
                 DBContract.FeedEntry._ID,
                 new String[]{String.valueOf(currentId)});
@@ -421,7 +415,7 @@ public class DataBase extends AppCompatActivity {
      */
     private void deleteAll() {
 
-        int numDeleted = MainActivity.mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
+        int numDeleted = mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
                 null, null);
 
         // Сообщаем пользователю, сколько символов было удалено.
@@ -445,7 +439,7 @@ public class DataBase extends AppCompatActivity {
         cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 50.4708);
         cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 30.305075);
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "My House");
-        MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
+        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
 
         // we fill the database "Fukushima"
@@ -454,7 +448,7 @@ public class DataBase extends AppCompatActivity {
         cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 37.760799);
         cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 140.474785);
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "Fukushima");
-        MainActivity.mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
+        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
     }
 
 

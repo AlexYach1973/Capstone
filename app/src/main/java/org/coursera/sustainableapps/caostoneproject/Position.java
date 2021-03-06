@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class Position extends AppCompatActivity {
     EditText editTextDescr;
     TextView textLan, textLong;
     Button btnCurrentMap, btnOk;
-    WebView webView;
+    ImageView imageMap;
 
     // позиции геолокации
     // geolocation positions
@@ -68,7 +69,7 @@ public class Position extends AppCompatActivity {
         textLong = findViewById(R.id.textLongitude);
         btnCurrentMap = findViewById(R.id.buttonCurrentMap);
         btnOk = findViewById(R.id.buttonOk);
-        webView = findViewById(R.id.webViewAdd);
+        imageMap = findViewById(R.id.imageMap);
 
         // assign a listener
         btnCurrentMap.setOnClickListener(viewClickListener);
@@ -91,9 +92,9 @@ public class Position extends AppCompatActivity {
         spDanger.setAdapter(spAdapter);
 
         // Title (не работает)
-//        spDanger.setPrompt(R.string.spinnerDanger);
+//        spDanger.setPromptId(R.string.spinnerDanger);
         // select the element
-        spDanger.setSelection(0);
+        spDanger.setSelection(0,true);
 
         // устанавливаем обработчик нажатия
         // set the click handler
@@ -110,14 +111,6 @@ public class Position extends AppCompatActivity {
 
             }
         });
-
-        /**
-         * WebView
-         */
-        // включаем поддержку JavaScript
-        // turn on support JavaScript
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new MyWebViewClient());
 
         /**
          * LocationManager, LocationListener
@@ -141,15 +134,6 @@ public class Position extends AppCompatActivity {
         locationManager.requestLocationUpdates
                 (LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
-    }
-
-
-    private static class MyWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            view.loadUrl(request.getUrl().toString());
-            return true;
-        }
     }
 
     /**
@@ -261,7 +245,7 @@ public class Position extends AppCompatActivity {
             strText = "Lat= " + Math.round(geoLan *100)/100.0 + ", " +
                     "Long= " + Math.round(geoLong *100)/100.0;
 
-       /* // Роверка расчета расстояния по долготе и широте
+       /* // Проверка расчета расстояния по долготе и широте
        // Мой дом, Оболонсий пр-т 16А, Киев
         Location locA = new Location("");
         locA.setLatitude(50.4708);

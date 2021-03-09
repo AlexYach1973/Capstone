@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Stalker notes</string>
-<!--    Screen main-->
+    <!--    Screen main-->
     <string name="danger">DANGER</string>
     <string name="database">DATABASE</string>
-    <string name="map">MAP</string>
+    <string name="map">OBSERVE</string>
     <string name="hello">!!!</string>
 
-<!--    Screen Danger-->
+    <!--    Screen Danger-->
     <string name="hello_danger">danger</string>
 
     <!--    Screen DataBase-->
@@ -21,5 +21,11 @@
     <string name="spinnerDanger">Danger choosing</string>
     <string name="descr_danger">Description</string>
     <string name="delete_record">delete ?</string>
+
+<!--    Screen Observe-->
+    <string name="hello_Observe">OBSERVE</string>
+    <string name="button1_Observe">Button 1</string>
+    <string name="button2_Observe">Button 2</string>
+
 
 </resources>

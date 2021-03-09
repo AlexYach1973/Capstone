@@ -1,17 +1,11 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -24,9 +18,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 public class DataBase extends AppCompatActivity {
 
@@ -49,8 +41,6 @@ public class DataBase extends AppCompatActivity {
      * ListView to display the database
      *для отображения базы данных
      */
-    ListView listDanger;
-    ImageView imageView;
     ListView lvData;
 
     // Context menu
@@ -60,13 +50,13 @@ public class DataBase extends AppCompatActivity {
 
     // формируем столбцы сопоставления
     // form matching columns
-    String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
+    private final String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
             DBContract.FeedEntry.COLUMN_DESCRIPTION};
 
-    int[] to = new int[]{R.id.imageViewList, R.id.textList};
+    private final int[] to = new int[]{R.id.imageViewList, R.id.textList};
 
 
-    DangerProvider mProvider = new DangerProvider();
+//    DangerProvider mProvider = new DangerProvider();
 
     /**
      * Buttons "Refresh", "Add" and "delete"
@@ -74,7 +64,7 @@ public class DataBase extends AppCompatActivity {
     Button mButtonRefresh, mButtonAdd, mButtonDelete;
 
     //    Field ContentResolver
-    static ContentResolver mContentResolver;
+    private static ContentResolver mContentResolver;
 
     /**
      * Constructor initializes the fields.
@@ -91,8 +81,6 @@ public class DataBase extends AppCompatActivity {
         mContentResolver = getContentResolver();
 
         // initialize ListView
-        imageView = findViewById(R.id.imageViewList);
-        listDanger = findViewById(R.id.listDanger);
         lvData = (ListView) findViewById(R.id.listDanger);
 
         // initialize Buttons
@@ -109,8 +97,18 @@ public class DataBase extends AppCompatActivity {
         registerForContextMenu(lvData);
 
 //        loadingDefault();
-        displayCurrent();
 
+    }
+
+    /**
+     * Hook method called after onStart(), just before the activity
+     * (re)gains focus
+     */
+    protected void onResume() {
+
+        super.onResume();
+
+        displayCurrent();
     }
 
     /**
@@ -140,6 +138,9 @@ public class DataBase extends AppCompatActivity {
                 // извлекаем id записи и удаляем соответствующую запись в БД
                 // retrieve the id of the record and delete the corresponding record in the database
                 deleteForId(acmi.id);
+
+                // Refresh
+                displayCurrent();
 
                 break;
 
@@ -212,7 +213,7 @@ public class DataBase extends AppCompatActivity {
             // создааем адаптер и настраиваем список
             // create an adapter and set up a list
             SimpleCursorAdapter scAdapter = new SimpleCursorAdapter
-                    (this, R.layout.item_list, mCursor, from, to);
+                    (this, R.layout.item_list_data_base, mCursor, from, to,0);
             lvData.setAdapter(scAdapter);
 
         }

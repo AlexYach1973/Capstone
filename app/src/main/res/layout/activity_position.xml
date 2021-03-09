@@ -23,6 +23,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:spinnerMode="dialog"
             android:prompt="@string/spinnerDanger" />
 <!--        android:entries="@array/spinner_danger"-->
 
@@ -33,7 +34,8 @@
             android:layout_weight="1"
             android:ems="18"
             android:inputType="textMultiLine"
-            android:hint="@string/descr_danger" />
+            android:hint="@string/descr_danger"
+            android:autofillHints="" />
     </LinearLayout>
 
 

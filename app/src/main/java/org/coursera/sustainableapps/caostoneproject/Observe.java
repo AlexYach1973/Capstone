@@ -19,6 +19,14 @@ import java.util.Map;
 
 public class Observe extends AppCompatActivity {
 
+    /**
+     * поле используется, когда запускаем BroadcastReceiver,
+     * чтобы показать откуда делается запрос
+     * the field is used when we run the BroadcastReceiver
+     * to show where the request is coming from
+     */
+    public static final String FROM_OBSERVE = "fromObserve";
+
     //    Field ContentResolver
     private static ContentResolver mContentResolver;
 
@@ -63,9 +71,6 @@ public class Observe extends AppCompatActivity {
         mBtnStart.setOnClickListener(viewClickListener);
         mBtn2.setOnClickListener(viewClickListener);
 
-        /**
-         * PositionReceiver
-         */
         // Initialize the PingReceiver.
         mPositionReceiver = new PositionReceiver(this);
 
@@ -107,7 +112,7 @@ public class Observe extends AppCompatActivity {
 
         super.onPause();
 
-        // Unregister the PingReceiver.
+        // Unregister the BroadcastReceiver.
         unregisterReceiver(mPositionReceiver);
     }
 
@@ -157,6 +162,18 @@ public class Observe extends AppCompatActivity {
     }
 
     /**
+     * Этот метод получает текущие координаты из  и подсчитывает расстояния до точек опасности,
+     * которые записаны в базе данных. И выводит их.
+     * This method gets the current coordinates from and calculates the distances
+     * to the danger points that are recorded in the database. And takes them out
+     */
+    public void calculateDistance(String str){
+
+        Log.d("myLogs", str + " !!!");
+
+    }
+
+    /**
      * Обработка нажатий на кнопки
      * mBtnStart - запускает BroadcastReceiver
      * Handling button clicks
@@ -179,6 +196,9 @@ public class Observe extends AppCompatActivity {
     };
 
     private void startPositionReceiver() {
+
+        mPositionReceiver.onReceive(this,
+                PositionReceiver.makeObserveIntent(this, FROM_OBSERVE));
 
     }
 
@@ -269,30 +289,8 @@ public class Observe extends AppCompatActivity {
                 mCursor.moveToNext();
             }
 
-        //Посылаем dataListLatLong в метод distanceCalculation() и получаем обновленный distanceList
-        //  с расстояниями от точек опасности до текущей позиции
-        // We send dataListLatLong to the method distanceCalculation() and get the updated
-        // distanceList with the distances from the danger points to the current position
-        ArrayList<Map<String, Object>> distanceList = distanceCalculation(dataListLatLong);
-
             return null; //dataListLatLong;
     }
 
-    /**
-     * в этом методе делаем расчет расстояния от текущего положения до точек опасности из базы данных,
-     *  используя широту и долготу (метод distanceTo)
-     *  in this method, we calculate the distance from the current position to danger points
-     *  from the database using latitude and longitude (distanceTo method)
-     * @param list- входные данные широты и долготы из базы данных
-     * @param list- input latitude and longitude data from the database
-     * @return return updated lis (eg listDistance) with distances
-     */
-    private ArrayList<Map<String, Object>>
-    distanceCalculation(ArrayList<Map<String, Object>> list) {
 
-
-
-
-        return null;
-    }
 }

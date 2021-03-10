@@ -14,11 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CaostoneProject">
+
+        <service
+            android:name=".PositionService"
+            android:exported="false" />
+        <!--
         <receiver
             android:name=".PositionReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
-
+            android:exported="false" />
+        -->
         <activity android:name=".Observe" />
         <activity android:name=".Position" />
 

@@ -174,14 +174,6 @@ public class Position extends AppCompatActivity {
             }
 
         }
-
-       /* @Override
-        public void onProviderEnabled(@NonNull String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(@NonNull String provider) {
-        }*/
     }
 
     // обработка нажатий кнопок

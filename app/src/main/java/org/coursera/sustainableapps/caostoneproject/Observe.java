@@ -101,8 +101,8 @@ public class Observe extends AppCompatActivity {
         public void onServiceConnected(
                 ComponentName className,
                 IBinder binder) {
-            Log.d(TAG, "ComponentName: " + className);
-            Log.d(TAG, "Получил ответочку!");
+//            Log.d(TAG, "ComponentName: " + className);
+//            Log.d(TAG, "Получил ответочку!");
 
             // Create a new Messenger that encapsulates the
             // returned IBinder object and store it for later use
@@ -157,7 +157,7 @@ public class Observe extends AppCompatActivity {
         // Call to super class.
         super.onStart();
 
-        Log.d(TAG, "calling bindService(): Привет Service!");
+//        Log.d(TAG, "calling bindService(): Привет Service!");
         if (mReqMessengerRef == null) {
 
             // Bind to the PositionBindService associated with this Intent.
@@ -371,7 +371,6 @@ public class Observe extends AppCompatActivity {
         Location locDataBase = new Location("");
         // go through the whole dataListLatLong
         for (Map<String, Object> data : dataListLatLong){
-//        for (int i = 0; i < dataListLatLong.size(); i++)
 
             // Initialize dataMapDist
             dataMapDist = new HashMap<>();
@@ -385,7 +384,7 @@ public class Observe extends AppCompatActivity {
             double distance = locDataBase.distanceTo(locCurrent);
 
             // Add to Map
-            dataMapDist.put(DISTANCE, distance);
+            dataMapDist.put(DISTANCE, (int) distance);
 
             // Add to ArrayList
             dataDistance.add(dataMapDist);
@@ -457,16 +456,22 @@ public class Observe extends AppCompatActivity {
          */
         public void handleMessage(Message reply) {
 
-            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
+//            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
 
             double currentLat = reply.getData().getDouble("LAT");
             double currentLong = reply.getData().getDouble("LONG");
 
             Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
 
-            // calculate Distance
-            observe.calculateDistance(currentLat, currentLong);
+            if (currentLat != 0) {
 
+                // calculate Distance
+                observe.calculateDistance(currentLat, currentLong);
+            } else {
+                Toast.makeText(observe.getApplicationContext(),
+                        "wait 5 sec and try again",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
     }

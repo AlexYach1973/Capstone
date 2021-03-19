@@ -7,5 +7,5 @@
     <dimen name="button_padding_data_base">10dp</dimen>
     <dimen name="button_margin">10dp</dimen>
     <dimen name="button_margin_data_base">5dp</dimen>
-    <dimen name="button_margin_left">15</dimen>
+    <dimen name="button_margin_left">15dp</dimen>
 </resources>

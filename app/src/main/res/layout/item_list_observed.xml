@@ -9,6 +9,7 @@
         android:id="@+id/imageListObserved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:layout_weight="1" />
 
     <TextView
@@ -18,8 +19,8 @@
         android:layout_margin="10dp"
         android:layout_weight="2"
         android:background="@color/purple_700"
-        android:gravity="center"
-        android:padding="10dp"
+        android:gravity="left"
+        android:padding="3dp"
         android:textColor="@color/purple_200"
         android:textSize="@dimen/text_size"
         android:textStyle="bold" />
@@ -31,8 +32,8 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@color/purple_700"
-        android:gravity="center"
-        android:padding="10dp"
+        android:gravity="end"
+        android:padding="3dp"
         android:textColor="@color/purple_200"
         android:textSize="@dimen/text_size"
         android:textStyle="bold" />

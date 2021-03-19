@@ -1,22 +1,14 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-/**
- * Этот класс взаимодействует с связанным сервисом и получает от него широту и долготу
- * текущего положения. Расчитывает расстояния между текущеи положением и точками опасности
- * из базы данных.
- * ***********************************************************************************
- * This class interacts with the bound service and gets the latitude and longitude
- * of the current position from it. Calculates the distance between the current location
- * and the danger points from the database.
- */
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,10 +19,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Этот класс взаимодействует с связанным сервисом и получает от него широту и долготу
+ * текущего положения. Расчитывает расстояния между текущеи положением и точками опасности
+ * из базы данных.
+ * ***********************************************************************************
+ * This class interacts with the bound service and gets the latitude and longitude
+ * of the current position from it. Calculates the distance between the current location
+ * and the danger points from the database.
+ */
+
 public class Observe extends AppCompatActivity {
+
+    //
+    private static final String DISTANCE = "distance";
 
     /**
      * Used for debugging.
@@ -48,6 +58,10 @@ public class Observe extends AppCompatActivity {
      *для отображения базы данных
      */
     ListView listObserve;
+
+    // List for Latitude and Longitude data
+    ArrayList<Map<String, Object>> dataListLatLong = new ArrayList<>();
+
 
     // формируем столбцы сопоставления
     // form matching columns "from" and "to"
@@ -178,6 +192,8 @@ public class Observe extends AppCompatActivity {
         // Unbind from the Service.
         unbindService(mSvcConn);
 
+        Log.d(TAG, "Service отвязали");
+
         // Call to super class.
         super.onStop();
     }
@@ -215,17 +231,68 @@ public class Observe extends AppCompatActivity {
             listObserve.setAdapter(scAdapter);
 
         }
+
+//        Retrieving data from the cursor for further use
+//        Извлекаем данные из курсора для дальнейшего использования
+        extractDataFromCursor(mCursor);
+
     }
 
     /**
-     * Этот метод получает текущие координаты из  и подсчитывает расстояния до точек опасности,
-     * которые записаны в базе данных. И выводит их.
-     * This method gets the current coordinates from and calculates the distances
-     * to the danger points that are recorded in the database. And takes them out
+     * In this method, we extract the latitude and longitude from the cursor and
+     * add them to Map<String, Object> to calculate the distance of the danger points from the current location
+     * we also add the name and description of the danger to the Map<String, Object>,
+     * for display using SimpleAdapter
+     * В этом методе извлекаем широту и долготу из курсора и добавляем их в Map<String, Object>
+     * для оасчета расстояния точек опасности от текущего местоположения
+     * также добавляем в Map<String, Object> наименование и описание опасности,
+     * для вывода на экран с помощью SimpleAdapter
      */
-    public void calculateDistance(String str){
+    private void extractDataFromCursor(Cursor mCursor) {
 
-        Log.d(TAG, str + " !!!");
+        // extract Latitude and Longitude
+        Map<String, Object> dataMapLatLong;
+
+        // First line
+        mCursor.moveToFirst();
+
+        // to the end of the table
+        while (!mCursor.isAfterLast()) {
+            dataMapLatLong = new HashMap<>();
+
+            // Id для проверки
+            dataMapLatLong.put(DBContract.FeedEntry._ID,
+                    mCursor.getInt(mCursor.getColumnIndex(
+                            DBContract.FeedEntry._ID)));
+
+            // Danger
+            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_DANGER,
+                    mCursor.getInt(mCursor.getColumnIndex(
+                            DBContract.FeedEntry.COLUMN_DANGER)));
+
+            // широта (Latitude)
+            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_LATITUDE,
+                    mCursor.getDouble(mCursor.getColumnIndex(
+                            DBContract.FeedEntry.COLUMN_LATITUDE)));
+            // долгота (Longitude)
+            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_LONGITUDE,
+                    mCursor.getDouble(mCursor.getColumnIndex(
+                            DBContract.FeedEntry.COLUMN_LONGITUDE)));
+
+            // Description
+            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_DESCRIPTION,
+                    mCursor.getString(mCursor.getColumnIndex(
+                            DBContract.FeedEntry.COLUMN_DESCRIPTION)));
+
+            // new column: distance
+//            dataMapLatLong.put(DISTANCE, "?");
+
+            //Add Map to List
+            dataListLatLong.add(dataMapLatLong);
+
+            //move to next line
+            mCursor.moveToNext();
+        }
 
     }
 
@@ -235,6 +302,7 @@ public class Observe extends AppCompatActivity {
      * Handling button clicks
      * mBtnStart - Launches BindService
      */
+    @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
         switch (v.getId()) {
 
@@ -280,6 +348,86 @@ public class Observe extends AppCompatActivity {
     }
 
     /**
+     * Этот метод получает текущие координаты из  и подсчитывает расстояния до точек опасности,
+     * которые записаны в базе данных. И выводит их.
+     * This method gets the current coordinates from and calculates the distances
+     * to the danger points that are recorded in the database. And takes them out
+     */
+    public void calculateDistance(double currentLat, double currentLong){
+
+        // Current Location
+        Location locCurrent = new Location("");
+        locCurrent.setLatitude(currentLat);
+        locCurrent.setLongitude(currentLong);
+
+        // new ArrayList
+        ArrayList<Map<String, Object>> dataDistance =
+                new ArrayList<>(dataListLatLong.size());
+
+        // New Map with distances
+        Map<String, Object> dataMapDist;
+
+        // Location of danger
+        Location locDataBase = new Location("");
+        // go through the whole dataListLatLong
+        for (Map<String, Object> data : dataListLatLong){
+//        for (int i = 0; i < dataListLatLong.size(); i++)
+
+            // Initialize dataMapDist
+            dataMapDist = new HashMap<>();
+
+            double lat = (double) data.get(DBContract.FeedEntry.COLUMN_LATITUDE);
+            double lon = (double) data.get(DBContract.FeedEntry.COLUMN_LONGITUDE);
+
+            // Location of danger
+            locDataBase.setLatitude(lat);
+            locDataBase.setLongitude(lon);
+            double distance = locDataBase.distanceTo(locCurrent);
+
+            // Add to Map
+            dataMapDist.put(DISTANCE, distance);
+
+            // Add to ArrayList
+            dataDistance.add(dataMapDist);
+
+//            Log.d(TAG, "" + lat + ", " + lon);
+
+        }
+
+        // объединяем два ArrayLists
+        // combine two ArrayLists: dataListLatLong + dataDistance
+        for (int i = 0; i < dataListLatLong.size(); i++) {
+
+            // extract Map from dataListLatLong
+            Map<String, Object> returnMapLatLong = dataListLatLong.get(i);
+            // extract Map from dataDistance
+            Map<String, Object> returnMapDistance = dataDistance.get(i);
+
+//            insert distance from returnMapDistance into returnMapLatLong
+            returnMapLatLong.put(DISTANCE, returnMapDistance.get(DISTANCE));
+            // Logs
+//            Log.d(TAG, " " + dataListLatLong.get(i));
+
+            // insert returnMapLatLong into ArrayLists
+            dataListLatLong.set(i, returnMapLatLong);
+
+        }
+
+        // Create Adapter
+        SimpleAdapter sAdapter = new SimpleAdapter(this,
+                dataListLatLong,
+                R.layout.item_list_observed, new String[]{DBContract.FeedEntry.COLUMN_DANGER,
+                DBContract.FeedEntry.COLUMN_DESCRIPTION, DISTANCE},
+                new int[] {R.id.imageListObserved, R.id.textViewDescrObserved,
+                        R.id.textViewDistanceObserved});
+
+        // assign adapter
+        listObserve.setAdapter(sAdapter);
+
+    }
+
+
+    /**
      * Receives the reply from the PositionBindService containing the
      * Latitude and Longitude  and displays it to the user.
      * Получает ответ от PositionBindService, содержащий широту и долготу,
@@ -295,7 +443,7 @@ public class Observe extends AppCompatActivity {
         /**
          * Reference back to the enclosing activity.
          */
-        private Observe observe;
+        private final Observe observe;
 
         /**
          * Constructor initializes the fields.
@@ -316,10 +464,11 @@ public class Observe extends AppCompatActivity {
 
             Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
 
+            // calculate Distance
+            observe.calculateDistance(currentLat, currentLong);
 
         }
 
     }
-
 
 }

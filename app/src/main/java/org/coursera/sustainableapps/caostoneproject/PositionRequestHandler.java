@@ -1,6 +1,11 @@
 package org.coursera.sustainableapps.caostoneproject;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +14,9 @@ import android.os.RemoteException;
 import android.util.Log;
 
 //import java.util.logging.Handler;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
 import java.util.logging.LogRecord;
 
 /**
@@ -19,15 +27,20 @@ import java.util.logging.LogRecord;
  */
 class PositionRequestHandler extends Handler {
 
+    Context mContext;
+
     /**
      * Used for debugging.
      */
     private final String TAG = "myLogs";
 
+    public double lat, lon;
+
     /**
      * Initialize PositionRequestHandler to generate IDs concurrently.
      */
     public PositionRequestHandler(Context context) {
+        mContext = context;
 
     }
 
@@ -44,16 +57,38 @@ public void handleMessage(Message request) {
 
     Log.d(TAG,"RequestHandler: работает handleMessage");
 
+    /**
+     * LocationManager, LocationListener
+     */
+    // подключение к сервису. connection to the service
+    // Сервис определения географического расположения
+    // Geolocation service
+    LocationManager locationManager = (LocationManager)
+            mContext.getSystemService(Context.LOCATION_SERVICE);
 
-    // где-то получаем широту и долготу
-    double currentLat = 0.1;
-    double currentLong = 1.2;
+    // create a LocationListener
+    LocationListener locationListener = new myLocationListener();
 
-     Message reply = Message.obtain();
+    // Проверка разрешений
+    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(mContext, Manifest.permission
+            .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        return;
+    }
+    // команда, которая срабатывает при корректировки данных (5 с или 10 м)
+    // command that is triggered when data is corrected (5 s or 10 m)
+    locationManager.requestLocationUpdates
+            (LocationManager.GPS_PROVIDER, 0, 10, locationListener);
 
+
+    // Creates a Message
+    Message reply = Message.obtain();
+
+     // Add data
      Bundle dataLatLong = new Bundle();
-     dataLatLong.putDouble("LAT", currentLat);
-     dataLatLong.putDouble("LONG", currentLong);
+     dataLatLong.putDouble("LAT", lat);
+     dataLatLong.putDouble("LONG", lon);
 
      reply.setData(dataLatLong);
 
@@ -64,6 +99,16 @@ public void handleMessage(Message request) {
         e.printStackTrace();
     }
 
+}
+private class myLocationListener implements LocationListener {
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+
+        lat = location.getLatitude();
+        lon = location.getLongitude();
+
+    }
 }
 
 }

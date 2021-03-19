@@ -165,9 +165,6 @@ public class Position extends AppCompatActivity {
                 goMap = "http://www.google.com/maps/@" + 50.470 +
                                         "," + 30.5075 + "," + 15 + "z";*/
 
-                // Потом разберусь...
-//                webView.loadUrl(goMap);
-
             } else {
                 textLan.setText("?");
                 textLong.setText("?");

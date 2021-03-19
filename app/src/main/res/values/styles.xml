@@ -34,4 +34,21 @@
         <item name="background">@color/yellow</item>
     </style>
 
+    <style name="styleButtonPosition">
+        <item name="android:textSize">@dimen/text_size_data_base</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/yellow</item>
+<!--        <item name="android:layout_margin">@dimen/button_margin_data_base</item>-->
+        <item name="android:padding">@dimen/button_padding_position</item>
+        <item name="background">@color/yellow</item>
+    </style>
+
+    <style name="styleTextPosition">
+        <item name="android:textSize">@dimen/text_size_position</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/purple_700</item>
+        <item name="android:padding">@dimen/button_padding_position</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

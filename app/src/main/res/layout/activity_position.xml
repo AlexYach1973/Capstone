@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/purple_200"
     tools:context=".Position">
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        style="@style/styleTextPosition"
+        android:text="@string/text_activity" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +37,8 @@
             android:ems="18"
             android:inputType="textMultiLine"
             android:hint="@string/descr_danger"
-            android:autofillHints="" />
+            style="@style/styleTextPosition" />
+<!--            android:autofillHints="" />-->
     </LinearLayout>
 
 
@@ -49,33 +52,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="" />
+            style="@style/styleTextPosition"
+            android:text="@string/waite" />
 
         <TextView
             android:id="@+id/textLongitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="" />
+            style="@style/styleTextPosition"
+            android:text="@string/waite" />
     </LinearLayout>
 
     <Button
         android:id="@+id/buttonCurrentMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/styleButtonPosition"
         android:text="@string/buttonCurrentMap" />
 
     <Button
         android:id="@+id/buttonOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/styleButtonPosition"
         android:text="@string/buttonOk" />
 
     <ImageView
         android:id="@+id/imageMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/crossbones" />
+        app:srcCompat= "@drawable/crossbones" />
+<!--        app:srcCompat="@drawable/crossbones" />-->
 
 
 </LinearLayout>

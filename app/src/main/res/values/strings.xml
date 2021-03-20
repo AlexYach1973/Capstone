@@ -14,7 +14,8 @@
     <string name="refresh">Refresh</string>
     <string name="add">Add</string>
     <string name="delete">Delete All</string>
-    <string name="delete_record">delete ?</string>
+    <string name="delete_record">delete</string>
+    <string name="change_record">change</string>
 
     <!--    Screen Position-->
     <string name="text_activity">danger is near…</string>

@@ -1,24 +1,17 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,7 +20,29 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 public class Position extends AppCompatActivity {
+
+    /**
+     *  В этом классе используем внутренний класс - LocalBroadcastReceiver,
+     *  в котором получаем текущие координаты
+     *  In this class, we use the inner class - LocalBroadcastReceiver,
+     *  in which we get the current coordinates
+     */
+/**
+ * Action used by the LocalBroadcastManger
+ */
+private static final String ACTION_POSITION_RECEIVER = "ActionPositionReceiver";
+
+/**
+ * An instance of a local broadcast receiver implementation that receives a broadcast intent
+ */
+private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
+
 
     /**
      * GUI fields
@@ -76,8 +91,27 @@ public class Position extends AppCompatActivity {
         btnOk.setOnClickListener(viewClickListener);
 
         /**
+         * initialize and register BroadcastReceiver
+         */
+        mPositionReceiver = new PositionReceiver(this);
+        registerPositionReceiver();
+        /**
+         * Start BroadcastReceiver with ACTION_
+         */
+        LocalBroadcastManager.getInstance(Position.this)
+                .sendBroadcast(new Intent(ACTION_POSITION_RECEIVER));
+
+        /**
+         * set Spinner configuration
+         */
+        spinnerConfiguration();
+
+    }
+
+        /**
          * Spinner
          */
+        private void spinnerConfiguration(){
         // адаптер для спиннера
         // spinner adapter
         ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this,
@@ -105,73 +139,29 @@ public class Position extends AppCompatActivity {
                 // Logs
 //                Log.d("myLogs", "" + positionDanger);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-
-        /**
-         * LocationManager, LocationListener
-         */
-        // подключение к сервису. connection to the service
-        // Сервис определения географического расположения
-        // Geolocation service
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // create a LocationListener
-        // Слушатель. Listener
-        LocationListener locationListener = new myLocationListener();
-
-        // Проверка разрешений
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        // команда, которая срабатывает при корректировки данных (5 с или 10 м)
-        // command that is triggered when data is corrected (5 s or 10 m)
-        locationManager.requestLocationUpdates
-                (LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-
     }
 
-    /**
-     * обязательные методы для LocationListener
-     * required methods for LocationListener
+   /**
+     * Display Latitude and Longitude
      */
-    private class myLocationListener implements LocationListener {
+   public void displayLatLong(double geoLan, double geoLong) {
 
-        String pos1, pos2;
+       // Строки для вывода
+       String pos1 = "Latitude= " + Math.round(geoLan * 1000)/1000.0;
+       String pos2 = "Longitude= " + Math.round(geoLong * 1000)/1000.0;
+       // Вывод
+       textLan.setText(pos1);
+       textLong.setText(pos2);
 
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-
-            if (location != null){
-                // координаты
-                geoLan = location.getLatitude();
-                geoLong = location.getLongitude();
-                // Строки для вывода
-                pos1 = "Latitude= " + Math.round(geoLan *10000)/10000.0;
-                pos2 = "Longitude= " + Math.round(geoLong *10000)/10000.0;
-                // Вывод
-                textLan.setText(pos1);
-                textLong.setText(pos2);
-                // Строка для карты
-                goMap = "http://www.google.com/maps/@" + geoLan +
-                        "," + geoLong + "," + 15 + "z";
-
-               /* // Координаты моего дома. Для проверки
-                goMap = "http://www.google.com/maps/@" + 50.470 +
-                                        "," + 30.5075 + "," + 15 + "z";*/
-
-            } else {
-                textLan.setText("?");
-                textLong.setText("?");
-            }
-
-        }
-    }
+       // Строка для карты
+       goMap = "http://www.google.com/maps/@" + geoLan +
+               "," + geoLong + "," + 15 + "z";
+   }
 
     // обработка нажатий кнопок
     // handling button clicks
@@ -211,7 +201,7 @@ public class Position extends AppCompatActivity {
             startActivity(intent);
         };
         new Thread(downLoadGoogleMap).start();
-    };
+    }
 
     //
     private Intent makeIntentResult() {
@@ -247,6 +237,92 @@ public class Position extends AppCompatActivity {
         return String.valueOf(dist);*/
 
         return strText;
+    }
+
+    /**
+     * Hook method called when activity is about to be destroyed.
+     * Release resources that may cause a memory leak
+     */
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Unregister the broadcast receiver.
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(mPositionReceiver);
+    }
+
+    /**
+     * Registers a broadcast receiver instance
+     */
+    private void registerPositionReceiver() {
+        //Create a new broadcast intent filter that will filter and
+        // receive ACTION_POSITION_RECEIVER intents
+        IntentFilter intentFilter =
+                new IntentFilter(Position.ACTION_POSITION_RECEIVER);
+
+        // Call the Activity class helper method to register this local receiver instance
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mPositionReceiver,
+                        intentFilter);
+    }
+
+    /**
+     *
+     */
+    private class PositionReceiver extends BroadcastReceiver {
+
+        private final Position mPositionActivity;
+
+        /**
+         * Constructor for PositionReceiver
+         */
+        public PositionReceiver(Position activity) {
+            mPositionActivity = activity;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            /**
+             * LocationManager, LocationListener
+             */
+        // подключение к сервису. connection to the service
+        // Сервис определения географического расположения
+        // Geolocation service
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // create a LocationListener
+        // Слушатель. Listener
+        LocationListener locationListener = new myLocationListener();
+
+        // Проверка разрешений
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        // команда, которая срабатывает при корректировки данных (5 с или 10 м)
+        // command that is triggered when data is corrected (5 s or 10 m)
+        locationManager.requestLocationUpdates
+                (LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        }
+        /**
+         * обязательные методы для LocationListener
+         * required methods for LocationListener
+         */
+        private class myLocationListener implements LocationListener {
+
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+
+                // координаты
+                geoLan = location.getLatitude();
+                geoLong = location.getLongitude();
+
+                // Calling method
+                mPositionActivity.displayLatLong(geoLan, geoLong);
+            }
+        }
+
     }
 
 

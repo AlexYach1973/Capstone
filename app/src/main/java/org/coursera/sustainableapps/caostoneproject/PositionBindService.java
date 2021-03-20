@@ -49,7 +49,7 @@ public class PositionBindService extends Service {
     public IBinder onBind(Intent intent) {
 
         // debug Log
-//        Log.d(TAG, "onBind: Привет Observe! Держи ответочку...");
+        Log.d(TAG, "onBind: Привет Observe! Держи ответочку...");
 
         return mReqMessenger.getBinder();
     }

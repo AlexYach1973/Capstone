@@ -13,11 +13,10 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
-//import java.util.logging.Handler;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import java.util.logging.LogRecord;
+//import java.util.logging.Handler;
 
 /**
  * This class gets the current latitude and longitude and sends back to PositionBindService
@@ -28,11 +27,6 @@ import java.util.logging.LogRecord;
 class PositionRequestHandler extends Handler {
 
     Context mContext;
-
-    /**
-     * Used for debugging.
-     */
-    private final String TAG = "myLogs";
 
     public double lat, lon;
 
@@ -55,14 +49,15 @@ public void handleMessage(Message request) {
     // Store the reply messenger
     Messenger replyMessenger = request.replyTo;
 
+
+//      Used for debugging.
+    String TAG = "myLogs";
     Log.d(TAG,"RequestHandler: работает handleMessage");
 
-    /**
-     * LocationManager, LocationListener
-     */
-    // подключение к сервису. connection to the service
-    // Сервис определения географического расположения
-    // Geolocation service
+/**     LocationManager, LocationListener
+     подключение к сервису. connection to the service
+     Сервис определения географического расположения.  Geolocation service
+ */
     LocationManager locationManager = (LocationManager)
             mContext.getSystemService(Context.LOCATION_SERVICE);
 

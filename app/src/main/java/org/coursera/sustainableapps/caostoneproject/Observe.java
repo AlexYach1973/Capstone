@@ -102,7 +102,7 @@ public class Observe extends AppCompatActivity {
                 ComponentName className,
                 IBinder binder) {
 //            Log.d(TAG, "ComponentName: " + className);
-//            Log.d(TAG, "Получил ответочку!");
+            Log.d(TAG, "Получил ответочку!");
 
             // Create a new Messenger that encapsulates the
             // returned IBinder object and store it for later use
@@ -157,7 +157,7 @@ public class Observe extends AppCompatActivity {
         // Call to super class.
         super.onStart();
 
-//        Log.d(TAG, "calling bindService(): Привет Service!");
+        Log.d(TAG, "calling bindService(): Привет Service!");
         if (mReqMessengerRef == null) {
 
             // Bind to the PositionBindService associated with this Intent.
@@ -172,7 +172,6 @@ public class Observe extends AppCompatActivity {
      */
     protected void onResume() {
         super.onResume();
-
     }
 
     /**
@@ -204,7 +203,7 @@ public class Observe extends AppCompatActivity {
         Log.d(TAG, "Observe DESTROYED !!!");
     }
     /**
-     *В этом этом методе выводятся точки опасностей из базы данных без расчета расстояний до них.
+     * В этом этом методе выводятся точки опасностей из базы данных без расчета расстояний до них.
      *  This method retrieves hazard points from the database without calculating distances to them.
      */
     private void displayDbWithoutDist() {
@@ -283,9 +282,6 @@ public class Observe extends AppCompatActivity {
             dataMapLatLong.put(DBContract.FeedEntry.COLUMN_DESCRIPTION,
                     mCursor.getString(mCursor.getColumnIndex(
                             DBContract.FeedEntry.COLUMN_DESCRIPTION)));
-
-            // new column: distance
-//            dataMapLatLong.put(DISTANCE, "?");
 
             //Add Map to List
             dataListLatLong.add(dataMapLatLong);
@@ -456,7 +452,7 @@ public class Observe extends AppCompatActivity {
          */
         public void handleMessage(Message reply) {
 
-//            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
+            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
 
             double currentLat = reply.getData().getDouble("LAT");
             double currentLong = reply.getData().getDouble("LONG");

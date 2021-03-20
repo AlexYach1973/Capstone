@@ -120,7 +120,7 @@ public class DataBase extends AppCompatActivity {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
         menu.add(0, DELETE_ID, 0, R.string.delete_record);
-        menu.add(0, UPDATE_ID, 0,"change ?");
+        menu.add(0, UPDATE_ID, 0,R.string.change_record);
     }
 
     // обработка нажатия на контекстное меню

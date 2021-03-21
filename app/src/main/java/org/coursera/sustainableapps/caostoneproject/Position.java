@@ -114,19 +114,23 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         private void spinnerConfiguration(){
         // адаптер для спиннера
         // spinner adapter
-        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this,
+      /*  ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spData);
 
         // указываем какой layout использовать для прорисовки пунктов выпадающего списка.
         // specify which layout to use for drawing the items of the drop-down list.
-        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
+
+            // NEW SpinnerItem
+            ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this,
+                    R.layout.spinner_item, R.id.spinnerTextDanger, spData);
 
         // привязываем спиннер к адаптеру
         // attach the spinner to the adapter
         spDanger.setAdapter(spAdapter);
 
-        // Title (не работает)
-//        spDanger.setPromptId(R.string.spinnerDanger);
+        // Title
+        spDanger.setPrompt("DANGER");
         // select the element
         spDanger.setSelection(0,true);
 
@@ -136,8 +140,38 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 positionDanger = position;
-                // Logs
-//                Log.d("myLogs", "" + positionDanger);
+                // Choice image
+                switch (positionDanger) {
+                    case 0:
+                        // "Radiation"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_round_foreground);
+                        break;
+
+                    case 1:
+                        // "Biodefense"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_bio_foreground);
+                        break;
+
+                    case 2:
+                        // "Chemical danger"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_chem_foreground);
+                        break;
+
+                    case 3:
+                        // "Laser danger"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_laser_foreground);
+                        break;
+
+                    case 4:
+                        // "Electromagnetic"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_magnetics_foreground);
+                        break;
+
+                    case 5:
+                        // "Radio wave"
+                        imageMap.setImageResource(R.mipmap.ic_launcher_radio_foreground);
+                        break;
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

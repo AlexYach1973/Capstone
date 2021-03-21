@@ -4,12 +4,15 @@
         <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textColor">@color/yellow</item>
-        <item name="android:layout_margin">@dimen/button_margin</item>
-        <!--<item name="android:layout_marginTop">@dimen/button_margin</item>
-        <item name="android:layout_marginBottom">@dimen/button_margin</item>
+<!--        <item name="android:layout_margin">@dimen/button_margin</item>-->
+        <item name="android:layout_marginTop">@dimen/button_margin_data_base</item>
+        <item name="android:layout_marginBottom">@dimen/button_margin_data_base</item>
         <item name="android:layout_marginLeft">@dimen/button_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/button_margin_left</item>-->
-        <item name="android:padding">@dimen/button_padding</item>
+        <item name="android:layout_marginRight">@dimen/button_margin_left</item>
+       <!-- <item name="android:paddingRight">@dimen/button_padding</item>
+        <item name="android:paddingEnd">@dimen/button_padding</item>
+        <item name="android:paddingBottom">@dimen/button_padding_position</item>
+        <item name="android:paddingTop">@dimen/button_padding_position</item>-->
         <item name="background">@color/yellow</item>
     </style>
 
@@ -38,13 +41,13 @@
         <item name="android:textSize">@dimen/text_size_data_base</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/yellow</item>
-<!--        <item name="android:layout_margin">@dimen/button_margin_data_base</item>-->
+        <item name="android:layout_margin">@dimen/button_margin_data_base</item>
         <item name="android:padding">@dimen/button_padding_position</item>
         <item name="background">@color/yellow</item>
     </style>
 
     <style name="styleTextPosition">
-        <item name="android:textSize">@dimen/text_size_position</item>
+        <item name="android:textSize">@dimen/text_size_data_base</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/purple_700</item>
         <item name="android:padding">@dimen/button_padding_position</item>

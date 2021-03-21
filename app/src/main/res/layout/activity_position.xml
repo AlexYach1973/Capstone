@@ -18,27 +18,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Spinner
             android:id="@+id/spinnerDanger"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:spinnerMode="dialog"
-            android:prompt="@string/spinnerDanger" />
-<!--        android:entries="@array/spinner_danger"-->
+            android:prompt="@string/spinnerDanger"/>
+<!--            android:spinnerMode="dialog" />-->
+        <!--        android:entries="@array/spinner_danger"-->
 
         <EditText
             android:id="@+id/editTextDescription"
-            android:layout_width="wrap_content"
+            style="@style/styleTextPosition"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="18"
-            android:inputType="textMultiLine"
+            android:ems="20"
             android:hint="@string/descr_danger"
-            style="@style/styleTextPosition" />
-<!--            android:autofillHints="" />-->
+            android:inputType="textMultiLine" />
+        <!--            android:autofillHints="" />-->
     </LinearLayout>
 
 
@@ -64,25 +62,33 @@
             android:text="@string/waite" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonCurrentMap"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/styleButtonPosition"
-        android:text="@string/buttonCurrentMap" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/buttonOk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/styleButtonPosition"
-        android:text="@string/buttonOk" />
+        <Button
+            android:id="@+id/buttonCurrentMap"
+            style="@style/styleButtonPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/buttonCurrentMap" />
+
+        <Button
+            android:id="@+id/buttonOk"
+            style="@style/styleButtonPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/buttonOk" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat= "@drawable/crossbones" />
+        app:srcCompat="@mipmap/ic_launcher_round_foreground" />
 <!--        app:srcCompat="@drawable/crossbones" />-->
 
 

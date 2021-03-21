@@ -9,17 +9,16 @@
         android:id="@+id/imageListObserved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_weight="1" />
+        android:layout_weight="0"
+        android:gravity="center_vertical|start" />
 
     <TextView
         android:id="@+id/textViewDescrObserved"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:background="@color/purple_700"
-        android:gravity="left"
+        android:gravity="center_vertical"
         android:padding="3dp"
         android:textColor="@color/purple_200"
         android:textSize="@dimen/text_size"
@@ -28,11 +27,10 @@
     <TextView
         android:id="@+id/textViewDistanceObserved"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
         android:background="@color/purple_700"
-        android:gravity="end"
+        android:gravity="center_vertical|end"
         android:padding="3dp"
         android:textColor="@color/purple_200"
         android:textSize="@dimen/text_size"

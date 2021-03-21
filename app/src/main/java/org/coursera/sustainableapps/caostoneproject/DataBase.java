@@ -22,8 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DataBase extends AppCompatActivity {
 
-    MainActivity mMainActivity;
-
     /**
      * fields for determining the current location.
      * поля для определение текущей локации.
@@ -81,7 +79,7 @@ public class DataBase extends AppCompatActivity {
         mContentResolver = getContentResolver();
 
         // initialize ListView
-        lvData = (ListView) findViewById(R.id.listDanger);
+        lvData = findViewById(R.id.listDanger);
 
         // initialize Buttons
         mButtonRefresh = findViewById(R.id.butRefresh);
@@ -154,6 +152,8 @@ public class DataBase extends AppCompatActivity {
                 AdapterView.AdapterContextMenuInfo acmiId = (AdapterView.AdapterContextMenuInfo)
                         item.getMenuInfo();
 
+                //
+
                 // Сохраняем ID в переменной для использования в updateCurrentPosition
                 // Store the ID in a variable for use in updateCurrentPosition
                 currentId = acmiId.id;
@@ -171,9 +171,11 @@ public class DataBase extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Удаляем запись по ID
+     * Delete the entry by ID
+     */
     private void deleteForId(long id) {
-        //Logs
-//        Log.d("myLogs", "delete ID= " + id);
 
         mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
                 DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
@@ -207,7 +209,7 @@ public class DataBase extends AppCompatActivity {
             // Logs
 //            Log.d("myLogs", "mCursor = null");
 
-        } else {
+        }
             // Display the results of the query.
 
             // создааем адаптер и настраиваем список
@@ -216,7 +218,6 @@ public class DataBase extends AppCompatActivity {
                     (this, R.layout.item_list_data_base, mCursor, from, to,0);
             lvData.setAdapter(scAdapter);
 
-        }
 
     }
 
@@ -251,6 +252,8 @@ public class DataBase extends AppCompatActivity {
 
         // Call
         Intent intent = new Intent(this, Position.class);
+        intent.putExtra(DataBase.DESCRIPTION, "");
+        intent.putExtra(DataBase.POSITION_DANGER, 0);
         startActivityForResult(intent, REQUEST_POSITION);
     }
 
@@ -259,7 +262,6 @@ public class DataBase extends AppCompatActivity {
      * получение данных из активности Position с текущими геоданными
      * @param requestCode REQUEST_POSITION
      * @param resultCode RESULT_OK
-     * @param data
      */
     @Override
     protected void onActivityResult(int requestCode,
@@ -305,7 +307,6 @@ public class DataBase extends AppCompatActivity {
     /**
      * inserting the current position into the database
      * вставка текущей позиции в базу данных
-     * @param intent
      */
     private void insertCurrentGeo(Intent intent) {
 
@@ -341,32 +342,32 @@ public class DataBase extends AppCompatActivity {
         switch (intSnipePosition) {
             case 0:
                 // "Radiation"
-                insIcon = R.mipmap.ic_launcher_round_round;
+                insIcon = R.mipmap.ic_launcher_round_foreground;
                 break;
 
             case 1:
                 // "Biodefense"
-                insIcon = R.mipmap.ic_launcher_bio_round;
+                insIcon = R.mipmap.ic_launcher_bio_foreground;
                 break;
 
             case 2:
                 // "Chemical danger"
-                insIcon = R.mipmap.ic_launcher_chem_round;
+                insIcon = R.mipmap.ic_launcher_chem_foreground;
                 break;
 
             case 3:
                 // "Laser danger"
-                insIcon = R.mipmap.ic_launcher_laser_round;
+                insIcon = R.mipmap.ic_launcher_laser_foreground;
                 break;
 
             case 4:
                 // "Electromagnetic"
-                insIcon = R.mipmap.ic_launcher_magnetics_round;
+                insIcon = R.mipmap.ic_launcher_magnetics_foreground;
                 break;
 
             case 5:
                 // "Radio wave"
-                insIcon = R.mipmap.ic_launcher_radio_round;
+                insIcon = R.mipmap.ic_launcher_radio_foreground;
                 break;
         }
 
@@ -375,8 +376,8 @@ public class DataBase extends AppCompatActivity {
 
 
     /**
-     * обновляем текущую позицию
-     * update the current position
+     * обновляем текущую позицию (только иконку и описание)
+     * update the current position (only icon and description)
      */
     private void updateCurrentPosition(Intent intent) {
 
@@ -426,6 +427,8 @@ public class DataBase extends AppCompatActivity {
                         + numDeleted
                         + " position",
                 Toast.LENGTH_SHORT).show();
+
+        displayCurrent();
     }
 
     /**
@@ -436,7 +439,7 @@ public class DataBase extends AppCompatActivity {
         // loading danger of default
         // we fill the database "Chernobyl"
         ContentValues cvs = new ContentValues();
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
+        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round);
         cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 50.4708);
         cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 30.305075);
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "My House");
@@ -445,7 +448,7 @@ public class DataBase extends AppCompatActivity {
 
         // we fill the database "Fukushima"
 //        ContentValues cvs1 = new ContentValues();
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round_round);
+        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round);
         cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 37.760799);
         cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 140.474785);
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "Fukushima");

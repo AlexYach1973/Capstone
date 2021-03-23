@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -53,9 +52,6 @@ public class DataBase extends AppCompatActivity {
 
     private final int[] to = new int[]{R.id.imageViewList, R.id.textList};
 
-
-//    DangerProvider mProvider = new DangerProvider();
-
     /**
      * Buttons "Refresh", "Add" and "delete"
      */
@@ -93,8 +89,6 @@ public class DataBase extends AppCompatActivity {
         // добавляем контекстное меню к списку
         // add a context menu to the list
         registerForContextMenu(lvData);
-
-//        loadingDefault();
 
     }
 
@@ -224,6 +218,7 @@ public class DataBase extends AppCompatActivity {
     /**
      * handling button clicks "Refresh", "Add" and "delete"
      */
+    @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
         switch (v.getId()) {
             case R.id.butRefresh:
@@ -430,31 +425,5 @@ public class DataBase extends AppCompatActivity {
 
         displayCurrent();
     }
-
-    /**
-     * loading danger of default
-     */
-    public void loadingDefault() {
-
-        // loading danger of default
-        // we fill the database "Chernobyl"
-        ContentValues cvs = new ContentValues();
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round);
-        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 50.4708);
-        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 30.305075);
-        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "My House");
-        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
-
-
-        // we fill the database "Fukushima"
-//        ContentValues cvs1 = new ContentValues();
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER, R.mipmap.ic_launcher_round);
-        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE, 37.760799);
-        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE, 140.474785);
-        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, "Fukushima");
-        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
-    }
-
-
 
 }

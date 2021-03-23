@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(MainActivity.this, Observe.class);
                 startActivity(intent2);
                 break;
-            default:
-                break;
         }
 
     };

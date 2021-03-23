@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MainActivity
+class Danger {
+ webView: WebView
+}
+class MyWebViewClient {
+ +shouldOverrideUrlLoading()
+}
+class DataBase
+class Observe
+class ReplyHandler
+class PositionBindService
+class PositionRequestHandler
+class myLocationListener2
+class Position
+class PositionReceiver
+class myLocationListener1
+class DataBaseHelper
+class DangerProvider
+class DBContract
+abstract class FeedEntry
+
+MainActivity --> Danger
+MainActivity --> Observe
+MainActivity --> DataBase
+DataBase <--> Position
+DBContract +-- FeedEntry
+Position +-- PositionReceiver
+Observe +-- ReplyHandler
+Observe --> PositionBindService
+PositionBindService --> PositionRequestHandler
+PositionRequestHandler <--> ReplyHandler
+DangerProvider --> DataBaseHelper
+Danger +-- MyWebViewClient
+PositionReceiver +-- myLocationListener1
+PositionRequestHandler +-- myLocationListener2
+
+
+
+
+@enduml

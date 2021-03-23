@@ -12,8 +12,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class DangerProvider extends ContentProvider {
-   /* public DangerProvider() {
-    }*/
 
     /**
      * Use DatabaseHelper to manage database creation and version

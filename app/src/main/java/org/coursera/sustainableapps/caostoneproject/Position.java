@@ -1,6 +1,7 @@
 package org.coursera.sustainableapps.caostoneproject;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -199,6 +200,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
 
     // обработка нажатий кнопок
     // handling button clicks
+    @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
       switch (v.getId()) {
 
@@ -334,10 +336,10 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        // команда, которая срабатывает при корректировки данных (5 с или 10 м)
-        // command that is triggered when data is corrected (5 s or 10 m)
+        // команда, которая срабатывает при корректировки данных (0 с или 0 м)
+        // command that is triggered when data is corrected (0 s or 0 m)
         locationManager.requestLocationUpdates
-                (LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+                (LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
         /**
          * обязательные методы для LocationListener

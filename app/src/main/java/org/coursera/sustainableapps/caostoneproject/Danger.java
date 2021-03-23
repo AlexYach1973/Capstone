@@ -2,6 +2,7 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
@@ -21,6 +22,7 @@ public class Danger extends AppCompatActivity {
      */
     Button buttonRadiation, buttonBio, buttonChem, buttonLaser, buttonMagnetic, buttonRadio;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,7 @@ public class Danger extends AppCompatActivity {
      * button click listener
      */
     View.OnClickListener viewClickListener = new View.OnClickListener() {
+        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View v) {
 
@@ -97,7 +100,7 @@ public class Danger extends AppCompatActivity {
      * loading a web page into a window webView
      */
 
-    private class MyWebViewClient extends WebViewClient {
+    private static class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             view.loadUrl(request.getUrl().toString());

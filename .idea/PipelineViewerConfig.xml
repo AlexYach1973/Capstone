@@ -3,7 +3,7 @@
   <component name="PipelineViewerConfig">
     <option name="gitlabAuthToken" value="" />
     <option name="gitlabProjectId" value="0" />
-    <option name="gitlabUrl" value="https://gitlab.com/alexyach1973/capstone-project.git" />
+    <option name="gitlabUrl" value="https://gitlab.com/1973AlexYach/capstone-project.git" />
     <option name="showLightsForBranch" value="" />
   </component>
 </project>

@@ -1,24 +1,14 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+
+import static org.coursera.sustainableapps.caostoneproject.R.id.buttonDanger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private void initialization() {
 
         // Buttons
-        mButtonDanger = findViewById(R.id.buttonDanger);
+        mButtonDanger = findViewById(buttonDanger);
         mButtonDatabase = findViewById(R.id.buttonDatabase);
         mButtonMap = findViewById(R.id.buttonMap);
 
@@ -48,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
 
         switch (v.getId()) {
@@ -65,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonMap:
                 Intent intent2 = new Intent(MainActivity.this, Observe.class);
                 startActivity(intent2);
+                break;
+            default:
                 break;
         }
 

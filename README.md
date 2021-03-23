@@ -2,8 +2,7 @@
 >*this app is a must have for every survivor in the near future (both human and zombie)*
 ## **Description**
 The application allows:
-1. see the characteristics of the dangers that will be encountered using the world wide web
-(in the future it will be called differently) namely:
+1. see the characteristics of the dangers that will be encountered using the world wide web namely:
    * Radioactive radiation: https://en.wikipedia.org/wiki/Radiation
    * Biodefense: https://en.wikipedia.org/wiki/Biodefense
    * Chemical hazard: https://en.wikipedia.org/wiki/Chemical_hazard

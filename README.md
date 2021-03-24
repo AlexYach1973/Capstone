@@ -20,4 +20,4 @@ At the danger point, the user writes the hazard type and description into the da
    + The *BroadcastReceiver* + *LocationManager* is used to determine the current location
    + *ContentProvider* is used to store danger points in the database
 3. **OBSERVE**. In observation mode, the distance from the current position to all danger points is calculated.
-   + this mode uses *BoundSevice*
+   + this mode uses *BoundService*

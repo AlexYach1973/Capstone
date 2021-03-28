@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,7 +35,18 @@ public class Position extends AppCompatActivity {
      *  In this class, we use the inner class - LocalBroadcastReceiver,
      *  in which we get the current coordinates
      */
-/**
+
+    /**
+     * logical field.
+     * true - calling this class to insert a new position.
+     * False -  calling this class to update positions
+     */
+    Boolean insertUpdate;
+
+    // data Intent from DataBase
+    Bundle dataIntent;
+
+    /**
  * Action used by the LocalBroadcastManger
  */
 private static final String ACTION_POSITION_RECEIVER = "ActionPositionReceiver";
@@ -65,7 +77,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
 
     // содержимое спинера
     // contents spinner
-//    String[] spData = getResources().getStringArray(R.array.spinner_danger); // не работает
+//    String[] spData = getResources().getStringArray(R.array.spinner_danger); // не работает. does not work
      String[] spData = {"Radiation", "Biodefense", "Chemical danger", "Laser danger",
                     "Electromagnetic", "Radio wave"};
 
@@ -103,26 +115,66 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
                 .sendBroadcast(new Intent(ACTION_POSITION_RECEIVER));
 
         /**
+         * extracting data from DataBase.class to define insert / update
+         */
+        dataIntent = getIntent().getExtras();
+        // set boolean field insertUpdate
+        insertUpdate = dataIntent.getString(DataBase.DESCRIPTION).equals("");
+
+        Log.d("myLogs", "" + insertUpdate);
+
+//        Log.d("myLogs", "Latitude update: " +
+//                dataIntent.getDouble(DataBase.LATITUDE));
+
+        /**
          * set Spinner configuration
          */
         spinnerConfiguration();
+    }
 
+    protected void onResume() {
+
+        super.onResume();
+
+        // information output when updating
+        if (!insertUpdate) {
+
+            // Output the Descriptions
+            editTextDescr.setText(dataIntent.getString(DataBase.DESCRIPTION));
+
+            // Output the Image
+            imageMap.setImageResource(dataIntent.getInt(DataBase.POSITION_DANGER));
+
+            // Строки для вывода
+            // Output lines
+            String pos1 = "Latitude= " + Math.round(
+                   dataIntent.getDouble(DataBase.LATITUDE) * 1000)/1000.0;
+           String pos2 = "Longitude= " + Math.round(
+                   dataIntent.getDouble(DataBase.LONGITUDE) * 1000)/1000.0;
+           // Output text
+           textLan.setText(pos1);
+           textLong.setText(pos2);
+
+            // Строка для карты
+            // String for the MapView
+            goMap = "http://www.google.com/maps/@" +
+                    dataIntent.getDouble(DataBase.LATITUDE) + "," +
+                    dataIntent.getDouble(DataBase.LONGITUDE) + "," + 15 + "z";
+
+            // output spinner
+            spDanger.setSelection(Utils.imageDamageForItemSpinnerUpdate(
+                    dataIntent.getInt(DataBase.POSITION_DANGER)));
+
+        }
     }
 
         /**
          * Spinner
          */
         private void spinnerConfiguration(){
-        // адаптер для спиннера
-        // spinner adapter
-      /*  ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, spData);
-
-        // указываем какой layout использовать для прорисовки пунктов выпадающего списка.
-        // specify which layout to use for drawing the items of the drop-down list.
-        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
-
-            // NEW SpinnerItem
+        // адаптер для спиннера. spinner adapter
+            // устанавливаем свое отображения списка
+            // set our display of the list (R.layout.spinner_item)
             ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this,
                     R.layout.spinner_item, R.id.spinnerTextDanger, spData);
 
@@ -131,8 +183,9 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         spDanger.setAdapter(spAdapter);
 
         // Title
-        spDanger.setPrompt("DANGER");
+        spDanger.setPrompt("DANGER"); // не работает. does not work.
         // select the element
+            if (insertUpdate)
         spDanger.setSelection(0,true);
 
         // устанавливаем обработчик нажатия
@@ -141,38 +194,9 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 positionDanger = position;
-                // Choice image
-                switch (positionDanger) {
-                    case 0:
-                        // "Radiation"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_round_foreground);
-                        break;
-
-                    case 1:
-                        // "Biodefense"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_bio_foreground);
-                        break;
-
-                    case 2:
-                        // "Chemical danger"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_chem_foreground);
-                        break;
-
-                    case 3:
-                        // "Laser danger"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_laser_foreground);
-                        break;
-
-                    case 4:
-                        // "Electromagnetic"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_magnetics_foreground);
-                        break;
-
-                    case 5:
-                        // "Radio wave"
-                        imageMap.setImageResource(R.mipmap.ic_launcher_radio_foreground);
-                        break;
-                }
+                // Choice an image using the Utils class method helper method
+                // Выбор изображения с помощью вспомогательного метода метода класса Utils
+                imageMap.setImageResource(Utils.imageDamageForItemSpinner(positionDanger));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -187,15 +211,20 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
    public void displayLatLong(double geoLan, double geoLong) {
 
        // Строки для вывода
-       String pos1 = "Latitude= " + Math.round(geoLan * 1000)/1000.0;
-       String pos2 = "Longitude= " + Math.round(geoLong * 1000)/1000.0;
-       // Вывод
-       textLan.setText(pos1);
-       textLong.setText(pos2);
+       // Output lines
+       if (insertUpdate) {
+           String pos1 = "Latitude= " + Math.round(geoLan * 1000)/1000.0;
+           String pos2 = "Longitude= " + Math.round(geoLong * 1000)/1000.0;
+           // Вывод
+           textLan.setText(pos1);
+           textLong.setText(pos2);
 
-       // Строка для карты
-       goMap = "http://www.google.com/maps/@" + geoLan +
-               "," + geoLong + "," + 15 + "z";
+           // Строка для карты
+           // String for the MapView
+           goMap = "http://www.google.com/maps/@" + geoLan +
+                   "," + geoLong + "," + 15 + "z";
+
+       }
    }
 
     // обработка нажатий кнопок

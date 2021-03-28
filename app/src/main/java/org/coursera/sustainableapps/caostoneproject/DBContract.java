@@ -103,7 +103,7 @@ public final class DBContract {
 
         /**
          * Return a Uri that points to the row containing a given id.
-         *
+         * возвращает Uri, который указывает на строку, содержащую данный идентификатор
          * @param id row id
          * @return Uri URI for the specified row id
          */

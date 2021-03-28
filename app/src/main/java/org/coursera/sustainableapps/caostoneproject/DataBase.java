@@ -31,7 +31,7 @@ public class DataBase extends AppCompatActivity {
     public static String POSITION_DANGER = "positionDanger";
 
     // Request code for Position
-    private static final int REQUEST_POSITION = 1;
+    private static final int REQUEST_INSERT_POSITION = 1;
     private static final int REQUEST_UPDATE_POSITION = 2;
 
     /**
@@ -111,8 +111,8 @@ public class DataBase extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View view,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
-        menu.add(0, DELETE_ID, 0, R.string.delete_record);
         menu.add(0, UPDATE_ID, 0,R.string.change_record);
+        menu.add(0, DELETE_ID, 0, R.string.delete_record);
     }
 
     // обработка нажатия на контекстное меню
@@ -146,14 +146,39 @@ public class DataBase extends AppCompatActivity {
                 AdapterView.AdapterContextMenuInfo acmiId = (AdapterView.AdapterContextMenuInfo)
                         item.getMenuInfo();
 
-                //
-
                 // Сохраняем ID в переменной для использования в updateCurrentPosition
                 // Store the ID in a variable for use in updateCurrentPosition
-                currentId = acmiId.id;
+                currentId =  acmiId.id;
+                Log.d("myLogs", "acmiId.id = " + currentId);
 
-                // Start
+                // read information about the current position
+                // читаем информацию про текущую позицию
+               Cursor mCursorUpdate = mContentResolver.
+                       query(DBContract.FeedEntry.buildUri(currentId),
+                        null,null,null,null);
+
+               // без этой херни почему-то неработает, хотя курсор содержит одну строку
+               mCursorUpdate.moveToFirst();
+
+                // adding information about the current position
+                // добавление информации про текущую позицию
+                intent.putExtra(DataBase.POSITION_DANGER, mCursorUpdate.getInt(mCursorUpdate.
+                        getColumnIndex(DBContract.FeedEntry.COLUMN_DANGER)));
+
+                intent.putExtra(DataBase.LATITUDE, mCursorUpdate.getDouble(mCursorUpdate.
+                        getColumnIndex(DBContract.FeedEntry.COLUMN_LATITUDE)));
+
+                intent.putExtra(DataBase.LONGITUDE, mCursorUpdate.getDouble(mCursorUpdate.
+                        getColumnIndex(DBContract.FeedEntry.COLUMN_LONGITUDE)));
+
+                intent.putExtra(DataBase.DESCRIPTION, mCursorUpdate.getString(mCursorUpdate.
+                        getColumnIndex(DBContract.FeedEntry.COLUMN_DESCRIPTION)));
+
+                // Start Activity Position
                 startActivityForResult(intent, REQUEST_UPDATE_POSITION);
+
+                // close Cursor
+                mCursorUpdate.close();
 
                 break;
             default:
@@ -200,9 +225,6 @@ public class DataBase extends AppCompatActivity {
                     "No items to display",
                     Toast.LENGTH_SHORT).show();
 
-            // Logs
-//            Log.d("myLogs", "mCursor = null");
-
         }
             // Display the results of the query.
 
@@ -212,6 +234,8 @@ public class DataBase extends AppCompatActivity {
                     (this, R.layout.item_list_data_base, mCursor, from, to,0);
             lvData.setAdapter(scAdapter);
 
+        // close Cursor
+//        mCursor.close();
 
     }
 
@@ -248,8 +272,11 @@ public class DataBase extends AppCompatActivity {
         // Call
         Intent intent = new Intent(this, Position.class);
         intent.putExtra(DataBase.DESCRIPTION, "");
+        intent.putExtra(DataBase.LATITUDE, 0);
+        intent.putExtra(DataBase.LONGITUDE, 0);
         intent.putExtra(DataBase.POSITION_DANGER, 0);
-        startActivityForResult(intent, REQUEST_POSITION);
+        // Start Activity Position
+        startActivityForResult(intent, REQUEST_INSERT_POSITION);
     }
 
     /**
@@ -270,7 +297,7 @@ public class DataBase extends AppCompatActivity {
         // get data for the current position
 
         if (resultCode == Activity.RESULT_OK
-                && requestCode == REQUEST_POSITION) {
+                && requestCode == REQUEST_INSERT_POSITION) {
 
             // We write the current position to the base SQLite
             // Записываем текущее положение в базу SQLite
@@ -319,56 +346,15 @@ public class DataBase extends AppCompatActivity {
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.
                 getStringExtra(DESCRIPTION));
 
-        // insert the icon. вставляем иконку
+        // insert the icon using the Utils class method helper method. вставляем иконку
         cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
-                insertIcon(intent.getIntExtra(POSITION_DANGER, 0)));
+                Utils.imageDamageForItemSpinner
+                        (intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Inserting
         mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
 
     }
-
-    // Устанавливаем иконку выбранную в спиннере в Position.java
-    // Set the icon selected in the spinner to Position.java
-    private Integer insertIcon(int intSnipePosition) {
-
-        int insIcon = 1;
-
-        switch (intSnipePosition) {
-            case 0:
-                // "Radiation"
-                insIcon = R.mipmap.ic_launcher_round_foreground;
-                break;
-
-            case 1:
-                // "Biodefense"
-                insIcon = R.mipmap.ic_launcher_bio_foreground;
-                break;
-
-            case 2:
-                // "Chemical danger"
-                insIcon = R.mipmap.ic_launcher_chem_foreground;
-                break;
-
-            case 3:
-                // "Laser danger"
-                insIcon = R.mipmap.ic_launcher_laser_foreground;
-                break;
-
-            case 4:
-                // "Electromagnetic"
-                insIcon = R.mipmap.ic_launcher_magnetics_foreground;
-                break;
-
-            case 5:
-                // "Radio wave"
-                insIcon = R.mipmap.ic_launcher_radio_foreground;
-                break;
-        }
-
-        return insIcon;
-    }
-
 
     /**
      * обновляем текущую позицию (только иконку и описание)
@@ -381,9 +367,10 @@ public class DataBase extends AppCompatActivity {
         // get the data and insert it into ContentValues
         // получаем данные и вставляем их в ContentValues
 
-        // Icon
+        // insert the icon using the Utils class method helper method. вставляем иконку
         cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
-                insertIcon(intent.getIntExtra(POSITION_DANGER, 0)));
+                Utils.imageDamageForItemSpinner
+                        (intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Descriptions
         cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.

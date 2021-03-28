@@ -115,7 +115,7 @@ public class DangerProvider extends ContentProvider {
                     + " = ?");
 
             // Logs
-            Log.d("myLogs", "DangerProvider selectionResuly" + selectionResult);
+            Log.d("myLogs", "DangerProvider selectionResult: " + selectionResult);
 
             return selectionResult;
         }

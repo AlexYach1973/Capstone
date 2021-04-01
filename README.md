@@ -21,3 +21,12 @@ At the danger point, the user writes the hazard type and description into the da
    + *ContentProvider* is used to store danger points in the database
 3. **OBSERVE**. In observation mode, the distance from the current position to all danger points is calculated.
    + this mode uses *BoundService*
+   
+## **Activity**
+The application has 6 activities
+   + *MainActivity*
+   + *Danger*
+   + *DataBase*
+       - *Position*
+           - *GoogleMap*
+   +  *Observe*

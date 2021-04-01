@@ -30,3 +30,13 @@ The application has 6 activities
        - *Position*
            - *GoogleMap*
    +  *Observe*
+
+The scheme of transition between activities is shown in the UML diagram.
+
+For the transition from MainActivity to Activity Danger, DataBAse, Observe, used an explicit intent passed to startActivity().
+
+For the transition from Activity DataBAse to Activity Position used an explicit intent passed to startActivityForResult(intent, REQUEST), with different Requests:
+  - REQUEST_INSERT_POSITION - to insert a new position
+  - REQUEST_UPDATE_POSITION - to update the current position
+
+To launch google maps used implicit `intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));`

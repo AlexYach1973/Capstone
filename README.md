@@ -68,4 +68,4 @@ For these purposes, a Bound Service is used and additional classes are used:
 The interactions between classes are specified in the UML diagram.
 
 ## **Specification**
-
+I will fill in the next milestones...

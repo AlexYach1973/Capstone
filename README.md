@@ -24,7 +24,8 @@ At the danger point, the user writes the hazard type and description into the da
    
 ## **Activity**
 The application has 6 activities
-   + *MainActivity*
+
+   *MainActivity*
    + *Danger*
    + *DataBase*
        - *Position*
@@ -49,7 +50,7 @@ To save the danger points that are defined in Position Activity, use Content Pro
 
 To ensure the work of the Content Provider, the following classes were used:
   + *DBContract* - Contract containing labels that are used to access the table and its entries of the location storage database
-  + *DataBaseHelper* extends SQLiteOpenHelper - The database helper used by the DangerProvider to create and manage its underlying SQLite database.
+  + *DataBaseHelper extends SQLiteOpenHelper* - The database helper used by the DangerProvider to create and manage its underlying SQLite database.
   +  *DangerProvider* extends ContentProvider - provides the necessary operations with the database:
      - insert();
      - query();
@@ -61,8 +62,8 @@ In Activity Observe there is real-time observation from the current location to 
 
 For these purposes, a Bound Service is used and additional classes are used:
   + inner class *ReplyHandler extends Handler* that is built in class *Observe*
-  + class *PositionBindService* extends Service
-  + class *PositionRequestHandler* extends Handler
+  + class *PositionBindService extends Service*
+  + class *PositionRequestHandler extends Handler*
 
 The interactions between classes are specified in the UML diagram.
 

@@ -26,6 +26,7 @@ MainActivity --> Danger
 MainActivity --> Observe
 MainActivity --> DataBase
 DataBase <--> Position
+DataBase --> DangerProvider
 DBContract +-- FeedEntry
 Position +-- PositionReceiver
 Observe +-- ReplyHandler

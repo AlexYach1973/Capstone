@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 public class Utils {
 
-    // Этот метод принимает позицию спинера и возвращает ИД картики паности
+    // Этот метод принимает позицию спинера и возвращает ИД картики oпаности
     // This method takes the position of the spinner and returns the ID of the picture panel.
     public static int imageDamageForItemSpinner(int position) {
 

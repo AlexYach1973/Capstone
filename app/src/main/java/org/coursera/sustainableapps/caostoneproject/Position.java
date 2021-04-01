@@ -263,6 +263,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
             //  Запускаем отдельное окно с Гуугл картой
             // Launch a separate window with a google map
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));
+
             startActivity(intent);
         };
         new Thread(downLoadGoogleMap).start();
@@ -288,18 +289,6 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         else
             strText = "Lat= " + Math.round(geoLan *100)/100.0 + ", " +
                     "Long= " + Math.round(geoLong *100)/100.0;
-
-       /* // Проверка расчета расстояния по долготе и широте
-       // Мой дом, Оболонсий пр-т 16А, Киев
-        Location locA = new Location("");
-        locA.setLatitude(50.4708);
-        locA.setLongitude(30.5075);
-        // Крещатик, 14, Киев
-        Location locB = new Location("");
-        locB.setLatitude(50.4514);
-        locB.setLongitude(30.5252);
-        double dist = locA.distanceTo(locB);
-        return String.valueOf(dist);*/
 
         return strText;
     }
@@ -379,7 +368,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
             @Override
             public void onLocationChanged(@NonNull Location location) {
 
-                // координаты
+                // coordinates
                 geoLan = location.getLatitude();
                 geoLong = location.getLongitude();
 

@@ -5,22 +5,100 @@ class MainActivity
 class Danger {
  webView: WebView
 }
+
 class MyWebViewClient {
  +shouldOverrideUrlLoading()
 }
-class DataBase
-class Observe
-class ReplyHandler
-class PositionBindService
-class PositionRequestHandler
-class myLocationListener2
-class Position
-class PositionReceiver
-class myLocationListener1
-class DataBaseHelper
-class DangerProvider
-class DBContract
-abstract class FeedEntry
+
+class DataBase {
+- addCurrentPosition():void
+- updateCurrentPosition(Intent):void
+# onActivityResult(int requestCode,int resultCode, Intent):void
++ onCreateContextMenu(ContextMenu, View, ContextMenu.ContextMenuInfo):void
++ onContextItemSelected(MenuItem):boolean
+- deleteAll():void
+- deleteForId(long id):void
+- displayCurrent():void
+}
+
+class Observe {
+- {static} ContentResolver mContentResolver
+- Messenger mReqMessengerRef
+-  Messenger mReplyMessenger
+- ServiceConnection mSvcConn
++ onServiceConnected(ComponentName,IBinder):void
++ onServiceDisconnected(ComponentName):void
+- startPositionBindService():void
++ calculateDistance(double, double):void
+}
+
+class ReplyHandler {
+- Observe observe
++ handleMessage(Message):void
+}
+
+class PositionBindService {
+- PositionRequestHandler mPositionRequestHandler
+- Messenger mReqMessenger
++ onBind(Intent):IBinder
++ onCreate():void
+}
+
+class PositionRequestHandler {
+~ Message reply
++ double lat, lon
++ handleMessage(Message):void
+}
+
+class myLocationListener2 {
++ onLocationChanged(Location):void
+}
+
+class Position {
+- {static} String ACTION_POSITION_RECEIVER
+~ double geoLan, geoLong
+~ String goMap
+- registerPositionReceiver():void
+- displayCurrentGoogleMap(String):void
++ displayLatLong(double , double):void
+}
+
+class PositionReceiver {
++  onReceive(Context, Intent):void
+}
+
+class myLocationListener1 {
++ onLocationChanged(Location):void
+}
+
+class DataBaseHelper {
+~ String SQL_CREATE_TABLE
++ onCreate(SQLiteDatabase):void
++ onUpgrade(SQLiteDatabase, int, int):void
+}
+
+class DangerProvider {
+- mDataBaseHelper
++ insert(Uri, ContentValues):Uri
++ delete(Uri, String, String[]):int
++ query(Ui, String[], String, String[], String):Cursor
++ update(Uri, ContentValues, String, String[]):int
+}
+
+class DBContract {
++ {static} String CONTENT_AUTHORITY
++ {static} Uri BASE_CONTENT_URI
++ {static} String PATH_CHARACTER
+}
+
+abstract class FeedEntry {
++ {static} Uri CONTENT_URI
++ {static} String TABLE_NAME
++ {static} String COLUMN_DANGER
++ {static} String COLUMN_LATITUDE
++ {static} String COLUMN_LONGITUDE
++ {static} String COLUMN_LONGITUDE
+}
 
 MainActivity --> Danger
 MainActivity --> Observe
@@ -32,7 +110,7 @@ Position +-- PositionReceiver
 Observe +-- ReplyHandler
 Observe --> PositionBindService
 PositionBindService --> PositionRequestHandler
-PositionRequestHandler <--> ReplyHandler
+PositionRequestHandler "mReqMessengerRef" <--> "Message reply" ReplyHandler
 DangerProvider --> DataBaseHelper
 Danger +-- MyWebViewClient
 PositionReceiver +-- myLocationListener1

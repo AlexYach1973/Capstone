@@ -17,7 +17,7 @@ public class DangerProvider extends ContentProvider {
      * Use DatabaseHelper to manage database creation and version
      * management.
      */
-    private DataBaseHelper mOpenHelper;
+    private DataBaseHelper mDataBaseHelper;
 
     /**
      * Context for the Content Provider.
@@ -56,7 +56,7 @@ public class DangerProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
-                returnCount = mOpenHelper.getWritableDatabase().delete
+                returnCount = mDataBaseHelper.getWritableDatabase().delete
                         (DBContract.FeedEntry.TABLE_NAME,
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs);
@@ -66,7 +66,7 @@ public class DangerProvider extends ContentProvider {
                 // Expand the selection if necessary.
                 selection = addSelectionArgs(selection, selectionArgs);
 
-                returnCount =  mOpenHelper.getWritableDatabase().delete
+                returnCount =  mDataBaseHelper.getWritableDatabase().delete
                         (DBContract.FeedEntry.TABLE_NAME,
                                 addKeyIdCheckToWhereStatement(selection,
                                         ContentUris.parseId(uri)),
@@ -169,7 +169,7 @@ public class DangerProvider extends ContentProvider {
         // there is no matched node.  If there's a match insert a new
         // row.
         if (sUriMatcher.match(uri) == CHARACTERS) {
-            final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+            final SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
             long id = db.insert(DBContract.FeedEntry.TABLE_NAME,
                     null, cvs);
             returnUri = ContentUris
@@ -188,7 +188,7 @@ public class DangerProvider extends ContentProvider {
     public boolean onCreate() {
         mContext = getContext();
         // Create the DatabaseHelper.
-        mOpenHelper = new DataBaseHelper(mContext);
+        mDataBaseHelper = new DataBaseHelper(mContext);
         return true;
     }
 
@@ -209,7 +209,7 @@ public class DangerProvider extends ContentProvider {
 
 //                Log.d("myLogs", "Зпустили Provider метод Query");
 
-                cursor = mOpenHelper.getReadableDatabase().query
+                cursor = mDataBaseHelper.getReadableDatabase().query
                         (DBContract.FeedEntry.TABLE_NAME,
                                 null,
                                 addSelectionArgs(selection, selectionArgs),
@@ -223,7 +223,7 @@ public class DangerProvider extends ContentProvider {
                 break;
 
             case CHARACTER:
-                cursor = mOpenHelper.getReadableDatabase().query
+                cursor = mDataBaseHelper.getReadableDatabase().query
                         (DBContract.FeedEntry.TABLE_NAME,
                                 projection,
                                 addKeyIdCheckToWhereStatement(selection,
@@ -263,7 +263,7 @@ public class DangerProvider extends ContentProvider {
         // there is no matched node.  If there's a match update rows.
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
-                returnCount = mOpenHelper.getWritableDatabase().update
+                returnCount = mDataBaseHelper.getWritableDatabase().update
                         (DBContract.FeedEntry.TABLE_NAME,
                                 cvs,
                                 addSelectionArgs(selection, selectionArgs),
@@ -272,7 +272,7 @@ public class DangerProvider extends ContentProvider {
 
             case CHARACTER:
                 selection = addSelectionArgs(selection, selectionArgs);
-                returnCount = mOpenHelper.getWritableDatabase().update
+                returnCount = mDataBaseHelper.getWritableDatabase().update
                         (DBContract.FeedEntry.TABLE_NAME,
                                 cvs,
                                 addKeyIdCheckToWhereStatement(selection,

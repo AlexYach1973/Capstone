@@ -17,11 +17,13 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +53,8 @@ public class Observe extends AppCompatActivity {
     private static ContentResolver mContentResolver;
 
     // Button
-    Button mBtnStart, mBtn2;
+    FloatingActionButton buttonUpdate;
+    ImageButton imageButtonEye;
 
     /**
      * ListView to display the database
@@ -134,11 +137,11 @@ public class Observe extends AppCompatActivity {
         listObserve = findViewById(R.id.listObserve);
 
         // initialize Buttons
-        mBtnStart = findViewById(R.id.btnObserveStart);
-        mBtn2 = findViewById(R.id.button2Observe);
+        buttonUpdate = findViewById(R.id.btnObserveStart);
+        imageButtonEye = findViewById(R.id.buttonImageEye);
         // assign a listener
-        mBtnStart.setOnClickListener(viewClickListener);
-        mBtn2.setOnClickListener(viewClickListener);
+        buttonUpdate.setOnClickListener(viewClickListener);
+        imageButtonEye.setOnClickListener(viewClickListener);
 
         // Initialize the reply messenger.
         mReplyMessenger = new Messenger(new ReplyHandler(this));
@@ -304,6 +307,10 @@ public class Observe extends AppCompatActivity {
 
             case R.id.btnObserveStart:
 
+                // Show ImageButtonEye
+                Utils.showImage(imageButtonEye);
+
+
                 // Start PositionBindService
                 try {
                     startPositionBindService();
@@ -313,7 +320,7 @@ public class Observe extends AppCompatActivity {
 
                 break;
 
-            case R.id.button2Observe:
+            case R.id.buttonImageEye:
 
                 break;
         }

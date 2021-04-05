@@ -1,6 +1,7 @@
 package org.coursera.sustainableapps.caostoneproject;
 
 import android.annotation.SuppressLint;
+import android.widget.ImageButton;
 
 public class Utils {
 
@@ -85,5 +86,13 @@ public class Utils {
                 break;
         }
         return positionSpinner;
+    }
+
+    // ImageButtonEye animator when you click on the FloatingButton
+    public static void showImage(ImageButton imageId) {
+        imageId.animate().rotation(imageId.getRotation() + 3600).setDuration(3000);
+//        imageId.animate().scaleX(0).scaleY(0).setDuration(2000);
+//        imageId.animate().scaleX(1).scaleY(1).setDuration(2000);
+
     }
 }

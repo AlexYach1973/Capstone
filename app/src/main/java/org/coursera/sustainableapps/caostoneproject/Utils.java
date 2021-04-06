@@ -88,11 +88,12 @@ public class Utils {
         return positionSpinner;
     }
 
-    // ImageButtonEye animator when you click on the FloatingButton
+    // ImageButtonEye animation when you click on the FloatingButton
     public static void showImage(ImageButton imageId) {
-        imageId.animate().rotation(imageId.getRotation() + 3600).setDuration(3000);
+        imageId.animate().rotation(imageId.getRotation() + 1800).setDuration(2000);
 //        imageId.animate().scaleX(0).scaleY(0).setDuration(2000);
 //        imageId.animate().scaleX(1).scaleY(1).setDuration(2000);
 
     }
+
 }

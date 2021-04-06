@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,28 +7,36 @@
     android:background="@color/purple_200"
     tools:context=".Observe">
 
-    <TextView
-        android:id="@+id/textViewObserve"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/styleTextPosition"
-        android:text="@string/hello_Observe" />
+
 
     <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/purple_200"
         android:orientation="horizontal">
 
-        <!-- <Button
-            android:id="@+id/btnObserveStart"
+        <TextView
+            android:id="@+id/textViewObserve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/styleButtonDataBase"
-            android:drawableLeft="@drawable/eye_100"
-            android:text="@string/button1_Observe" />-->
+            android:layout_centerVertical="true"
+            style="@style/styleTextObserve"
+            android:text="@string/hello_Observe" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <ImageButton
+            android:id="@+id/buttonImageEye"
+            style="@style/styleButtonDataBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_alignParentEnd="true"
+            android:background="@color/purple_200"
+            android:src="@drawable/eye_100"
+            android:text="@string/button2_Observe"
+            tools:ignore="ContentDescription,RelativeOverlap" />
+
+       <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnObserveStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,21 +48,9 @@
             app:backgroundTint="@color/purple_700"
             app:fabCustomSize="50dp"
             app:tint="@color/purple_200"
-            />
-<!--            app:srcCompat="@color/purple_700"-->
-<!--            android:tint="@color/purple_200"/>-->
+            />-->
 
-        <ImageButton
-            android:id="@+id/buttonImageEye"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/eye_42_new"
-            android:background="@color/purple_200"
-            android:text="@string/button2_Observe" />
-    </RelativeLayout>
+        </RelativeLayout>
 
     <ListView
         android:id="@+id/listObserve"

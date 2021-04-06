@@ -54,4 +54,12 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="styleTextObserve">
+        <item name="android:textSize">@dimen/text_size_observe</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/purple_700</item>
+        <item name="android:padding">@dimen/button_margin</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

@@ -6,9 +6,11 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,6 +19,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -137,10 +141,10 @@ public class Observe extends AppCompatActivity {
         listObserve = findViewById(R.id.listObserve);
 
         // initialize Buttons
-        buttonUpdate = findViewById(R.id.btnObserveStart);
+//        buttonUpdate = findViewById(R.id.btnObserveStart);
         imageButtonEye = findViewById(R.id.buttonImageEye);
         // assign a listener
-        buttonUpdate.setOnClickListener(viewClickListener);
+//        buttonUpdate.setOnClickListener(viewClickListener);
         imageButtonEye.setOnClickListener(viewClickListener);
 
         // Initialize the reply messenger.
@@ -150,16 +154,19 @@ public class Observe extends AppCompatActivity {
         // display database without distances
         displayDbWithoutDist();
 
-    }
+        // processing of clicking a list item
+        listObserve.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // call the google map display method
+                displaySelectedItem(position);
 
-    /**
-     * Hook method called by Android when this activity becomes visible.
-     */
-    @Override
-    protected void onStart() {
-        // Call to super class.
-        super.onStart();
+                Log.d(TAG, "id_selected: " + id + "; " + "position: " + position);
 
+            }
+        });
+
+        // Run BindService method
         Log.d(TAG, "calling bindService(): Привет Service!");
         if (mReqMessengerRef == null) {
 
@@ -168,6 +175,15 @@ public class Observe extends AppCompatActivity {
                     mSvcConn,
                     Context.BIND_AUTO_CREATE);
         }
+
+    }
+
+    /**
+     * Hook method called by Android when this activity becomes visible.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     /**
@@ -183,7 +199,6 @@ public class Observe extends AppCompatActivity {
      */
     protected void onPause() {
         super.onPause();
-
     }
 
     /**
@@ -191,17 +206,15 @@ public class Observe extends AppCompatActivity {
      */
     @Override
     protected void onStop() {
-        // Unbind from the Service.
-        unbindService(mSvcConn);
-
-        Log.d(TAG, "Service отвязали");
-
-        // Call to super class.
         super.onStop();
     }
 
     protected void onDestroy() {
         super.onDestroy();
+        // Unbind from the Service.
+        unbindService(mSvcConn);
+
+        Log.d(TAG, "Service отвязали");
 
         Log.d(TAG, "Observe DESTROYED !!!");
     }
@@ -303,27 +316,15 @@ public class Observe extends AppCompatActivity {
      */
     @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
-        switch (v.getId()) {
-
-            case R.id.btnObserveStart:
 
                 // Show ImageButtonEye
                 Utils.showImage(imageButtonEye);
 
-
-                // Start PositionBindService
                 try {
                     startPositionBindService();
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-
-                break;
-
-            case R.id.buttonImageEye:
-
-                break;
-        }
     };
 
     /**
@@ -426,6 +427,31 @@ public class Observe extends AppCompatActivity {
         // assign adapter
         listObserve.setAdapter(sAdapter);
 
+
+
+    }
+
+    private void displaySelectedItem(int position) {
+
+        // extract selected Latitude and Longitude
+        Map<String, Object> selectedMapLatLong = dataListLatLong.get(position);
+        double selectedLat = (double) selectedMapLatLong.get(DBContract.FeedEntry.COLUMN_LATITUDE);
+        double selectedLon = (double) selectedMapLatLong.get(DBContract.FeedEntry.COLUMN_LONGITUDE);
+
+//        Log.d(TAG, "LatitudeSelected: " + selectedLat);
+
+        // Строка для карты
+        // String for the MapView
+        String addressSelected = "http://www.google.com/maps/@" + selectedLat +
+                "," + selectedLon + "," + 15 + "z";
+
+
+        //  Запускаем отдельное окно с Гуугл картой
+        // Launch a separate window with a google map
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(addressSelected));
+
+        startActivity(intent);
+
     }
 
 
@@ -459,12 +485,12 @@ public class Observe extends AppCompatActivity {
          */
         public void handleMessage(Message reply) {
 
-            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
+//            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
 
             double currentLat = reply.getData().getDouble("LAT");
             double currentLong = reply.getData().getDouble("LONG");
 
-            Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
+//            Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
 
             if (currentLat != 0) {
 

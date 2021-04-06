@@ -2,6 +2,7 @@
 <resources>
     <dimen name="text_size">28sp</dimen>
     <dimen name="text_size_data_base">20sp</dimen>
+    <dimen name="text_size_observe">25sp</dimen>
     <dimen name="text_size_position">18sp</dimen>
     <dimen name="text_padding">6dp</dimen>
     <dimen name="button_padding">15dp</dimen>

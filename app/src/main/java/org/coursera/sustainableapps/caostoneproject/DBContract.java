@@ -3,7 +3,6 @@ package org.coursera.sustainableapps.caostoneproject;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 /**
  * Contract containing labels that are used to access the table and

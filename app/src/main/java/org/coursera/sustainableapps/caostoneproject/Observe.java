@@ -1,7 +1,5 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -19,15 +17,13 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +39,7 @@ import java.util.Map;
  * and the danger points from the database.
  */
 
+@SuppressWarnings("ALL")
 public class Observe extends AppCompatActivity {
 
     //
@@ -57,7 +54,7 @@ public class Observe extends AppCompatActivity {
     private static ContentResolver mContentResolver;
 
     // Button
-    FloatingActionButton buttonUpdate;
+//    FloatingActionButton buttonUpdate;
     ImageButton imageButtonEye;
 
     /**
@@ -155,15 +152,12 @@ public class Observe extends AppCompatActivity {
         displayDbWithoutDist();
 
         // processing of clicking a list item
-        listObserve.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // call the google map display method
-                displaySelectedItem(position);
+        listObserve.setOnItemClickListener((parent, view, position, id) -> {
+            // call the google map display method
+            displaySelectedItem(position);
 
-                Log.d(TAG, "id_selected: " + id + "; " + "position: " + position);
+            Log.d(TAG, "id_selected: " + id + "; " + "position: " + position);
 
-            }
         });
 
         // Run BindService method
@@ -485,7 +479,7 @@ public class Observe extends AppCompatActivity {
          */
         public void handleMessage(Message reply) {
 
-//            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
+            Log.d(TAG, "Observe handleMessage: получили reply от RequestHandler");
 
             double currentLat = reply.getData().getDouble("LAT");
             double currentLong = reply.getData().getDouble("LONG");

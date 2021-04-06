@@ -97,27 +97,23 @@ public class DangerProvider extends ContentProvider {
                 || selectionArgs == null)
             return null;
         else {
-            String selectionResult = "";
+            StringBuilder selectionResult = new StringBuilder();
 
             // Properly add the selection args to the selectionResult.
             // Правильно добавьте аргументы выбора в selectionResult
             for (int i = 0;
                  i < selectionArgs.length - 1;
                  ++i)
-                selectionResult += (selection
-                        + " = ? "
-                        + " OR"
-                        + " ");
+                selectionResult.append(selection).append(" = ? ").append(" OR").append(" ");
 
             // Handle the final selection case.
             // Обработка случая окончательного выбора
-            selectionResult += (selection
-                    + " = ?");
+            selectionResult.append(selection).append(" = ?");
 
             // Logs
             Log.d("myLogs", "DangerProvider selectionResult: " + selectionResult);
 
-            return selectionResult;
+            return selectionResult.toString();
         }
     }
 

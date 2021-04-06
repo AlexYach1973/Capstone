@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat;
  * Этот класс получает текущую широту и долготу и отправляет обратно в PositionBindService
  * через ответный мессенджер, содержащийся в сообщении запроса.
  */
+@SuppressWarnings("deprecation")
 class PositionRequestHandler extends Handler {
 
     Context mContext;

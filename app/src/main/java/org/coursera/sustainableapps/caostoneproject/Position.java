@@ -1,15 +1,10 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,9 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class Position extends AppCompatActivity {
@@ -47,14 +40,14 @@ public class Position extends AppCompatActivity {
     Bundle dataIntent;
 
     /**
- * Action used by the LocalBroadcastManger
- */
-private static final String ACTION_POSITION_RECEIVER = "ActionPositionReceiver";
+     * Action used by the LocalBroadcastManger
+     */
+    private static final String ACTION_POSITION_RECEIVER = "ActionPositionReceiver";
 
-/**
- * An instance of a local broadcast receiver implementation that receives a broadcast intent
- */
-private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
+    /**
+     * An instance of a local broadcast receiver implementation that receives a broadcast intent
+     */
+    private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
 
 
     /**
@@ -108,13 +101,6 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         btnOk.setEnabled(false);
 
         /**
-         * initialize and register BroadcastReceiver
-         */
-        mPositionReceiver = new PositionReceiver(this);
-        registerPositionReceiver();
-
-
-        /**
          * extracting data from DataBase.class to define insert/update
          */
         dataIntent = getIntent().getExtras();
@@ -127,12 +113,20 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
 //                dataIntent.getDouble(DataBase.LATITUDE));
 
 /**
- * Start BroadcastReceiver with ACTION_
+ * initialize and register BroadcastReceiver
+ * Start CurrentLocation
  */
         // when inserting a new item starts
         if (insertUpdate) {
-            LocalBroadcastManager.getInstance(Position.this)
-                    .sendBroadcast(new Intent(ACTION_POSITION_RECEIVER));
+
+             // Initialize and register BroadcastReceiver
+            mPositionReceiver = new PositionReceiver(this);
+            registerPositionReceiver();
+
+            // Start CurrentLocation Activity
+            CurrentLocation mCurrentLocation = new CurrentLocation(this);
+            mCurrentLocation.currentPosition();
+
         }
 
 
@@ -323,6 +317,8 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         // Unregister the broadcast receiver.
         LocalBroadcastManager.getInstance(this)
                 .unregisterReceiver(mPositionReceiver);
+
+//        Log.d("myLogs", "Position.class is destroy");
     }
 
     /**
@@ -341,7 +337,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
     }
 
     /**
-     *
+     * BroadcastReceiver
      */
     private class PositionReceiver extends BroadcastReceiver {
 
@@ -357,47 +353,16 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            /**
-             * LocationManager, LocationListener
-             */
-        // подключение к сервису. connection to the service
-        // Сервис определения географического расположения
-        // Geolocation service
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            // Extract the Latitude and Longitude
+            geoLan = intent.getDoubleExtra("geoLan", 0.0);
+            geoLong = intent.getDoubleExtra("geoLong", 0.0);
 
-        // create a LocationListener
-        // Слушатель. Listener
-        LocationListener locationListener = new myLocationListener();
-
-        // Проверка разрешений
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        // команда, которая срабатывает при корректировки данных (0 с или 0 м)
-        // command that is triggered when data is corrected (600 s or 10 m)
-        locationManager.requestLocationUpdates
-                (LocationManager.GPS_PROVIDER, 600, 10, locationListener);
-        }
-        /**
-         * обязательные методы для LocationListener
-         * required methods for LocationListener
-         */
-        private class myLocationListener implements LocationListener {
-
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-
-                // coordinates
-                geoLan = location.getLatitude();
-                geoLong = location.getLongitude();
-
+            if (geoLan !=0) {
                 // Calling method
                 mPositionActivity.displayLatLong(geoLan, geoLong);
             }
+
         }
-
     }
-
 
 }

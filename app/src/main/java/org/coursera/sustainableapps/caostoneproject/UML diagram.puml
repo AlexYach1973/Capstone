@@ -50,10 +50,6 @@ class PositionRequestHandler {
 + handleMessage(Message):void
 }
 
-class myLocationListener2 {
-+ onLocationChanged(Location):void
-}
-
 class Position {
 - {static} String ACTION_POSITION_RECEIVER
 ~ double geoLan, geoLong
@@ -67,8 +63,8 @@ class PositionReceiver {
 +  onReceive(Context, Intent):void
 }
 
-class myLocationListener1 {
-+ onLocationChanged(Location):void
+class CurrentLocation {
++ currentPosition():void
 }
 
 class DataBaseHelper {
@@ -113,10 +109,7 @@ PositionBindService --> PositionRequestHandler
 PositionRequestHandler "mReqMessengerRef" <--> "Message reply" ReplyHandler
 DangerProvider --> DataBaseHelper
 Danger +-- MyWebViewClient
-PositionReceiver +-- myLocationListener1
-PositionRequestHandler +-- myLocationListener2
-
-
-
+Position --> CurrentLocation
+CurrentLocation --> PositionReceiver
 
 @enduml

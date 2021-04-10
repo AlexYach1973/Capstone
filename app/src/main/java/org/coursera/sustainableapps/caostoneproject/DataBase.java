@@ -236,9 +236,6 @@ public class DataBase extends AppCompatActivity {
                     (this, R.layout.item_list_data_base, mCursor, from, to,0);
             lvData.setAdapter(scAdapter);
 
-        // close Cursor
-//        mCursor.close();
-
     }
 
     /**

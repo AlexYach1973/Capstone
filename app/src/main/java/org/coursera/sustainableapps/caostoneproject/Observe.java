@@ -346,10 +346,10 @@ public class Observe extends AppCompatActivity {
     }
 
     /**
-     * Этот метод получает текущие координаты из  и подсчитывает расстояния до точек опасности,
+     * Этот метод получает текущие координаты из и подсчитывает расстояния до точек опасности,
      * которые записаны в базе данных. И выводит их.
      * This method gets the current coordinates from and calculates the distances
-     * to the danger points that are recorded in the database. And takes them out
+     * to the danger points that are recorded in the database. And displays them
      */
     public void calculateDistance(double currentLat, double currentLong){
 
@@ -484,7 +484,7 @@ public class Observe extends AppCompatActivity {
             double currentLat = reply.getData().getDouble("LAT");
             double currentLong = reply.getData().getDouble("LONG");
 
-//            Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
+            Log.d(TAG, "широта: " + currentLat + ", " + "долгота: " + currentLong);
 
             if (currentLat != 0) {
 

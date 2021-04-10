@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:ems="20"
             android:hint="@string/descr_danger"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:importantForAutofill="no" />
         <!--            android:autofillHints="" />-->
     </LinearLayout>
 
@@ -85,10 +86,11 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageMap"
+        android:id="@+id/imageIcon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@mipmap/ic_launcher_round_foreground" />
+        app:srcCompat="@mipmap/ic_launcher_round_foreground"
+        tools:ignore="ContentDescription" />
 <!--        app:srcCompat="@drawable/crossbones" />-->
 
 

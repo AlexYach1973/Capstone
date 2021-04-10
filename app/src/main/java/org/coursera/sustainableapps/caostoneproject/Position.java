@@ -65,7 +65,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
     EditText editTextDescr;
     TextView textLan, textLong;
     Button btnCurrentMap, btnOk;
-    ImageView imageMap;
+    ImageView imageIcon;
 
     // позиции геолокации
     // geolocation positions
@@ -97,34 +97,44 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         textLong = findViewById(R.id.textLongitude);
         btnCurrentMap = findViewById(R.id.buttonCurrentMap);
         btnOk = findViewById(R.id.buttonOk);
-        imageMap = findViewById(R.id.imageMap);
+        imageIcon = findViewById(R.id.imageIcon);
 
         // assign a listener
         btnCurrentMap.setOnClickListener(viewClickListener);
         btnOk.setOnClickListener(viewClickListener);
+
+        // setting button Map and Ok is not Enabled
+        btnCurrentMap.setEnabled(false);
+        btnOk.setEnabled(false);
 
         /**
          * initialize and register BroadcastReceiver
          */
         mPositionReceiver = new PositionReceiver(this);
         registerPositionReceiver();
-        /**
-         * Start BroadcastReceiver with ACTION_
-         */
-        LocalBroadcastManager.getInstance(Position.this)
-                .sendBroadcast(new Intent(ACTION_POSITION_RECEIVER));
+
 
         /**
-         * extracting data from DataBase.class to define insert / update
+         * extracting data from DataBase.class to define insert/update
          */
         dataIntent = getIntent().getExtras();
         // set boolean field insertUpdate
         insertUpdate = dataIntent.getString(DataBase.DESCRIPTION).equals("");
 
-        Log.d("myLogs", "" + insertUpdate);
+        Log.d("myLogs", "Boolean update: " + insertUpdate);
 
 //        Log.d("myLogs", "Latitude update: " +
 //                dataIntent.getDouble(DataBase.LATITUDE));
+
+/**
+ * Start BroadcastReceiver with ACTION_
+ */
+        // when inserting a new item starts
+        if (insertUpdate) {
+            LocalBroadcastManager.getInstance(Position.this)
+                    .sendBroadcast(new Intent(ACTION_POSITION_RECEIVER));
+        }
+
 
         /**
          * set Spinner configuration
@@ -139,11 +149,15 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
         // information output when updating
         if (!insertUpdate) {
 
+            // setting button Map and Ok is Enabled
+            btnCurrentMap.setEnabled(true);
+            btnOk.setEnabled(true);
+
             // Output the Descriptions
             editTextDescr.setText(dataIntent.getString(DataBase.DESCRIPTION));
 
             // Output the Image
-            imageMap.setImageResource(dataIntent.getInt(DataBase.POSITION_DANGER));
+            imageIcon.setImageResource(dataIntent.getInt(DataBase.POSITION_DANGER));
 
             // Строки для вывода
             // Output lines
@@ -196,7 +210,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
                 positionDanger = position;
                 // Choice an image using the Utils class method helper method
                 // Выбор изображения с помощью вспомогательного метода метода класса Utils
-                imageMap.setImageResource(Utils.imageDamageForItemSpinner(positionDanger));
+                imageIcon.setImageResource(Utils.imageDamageForItemSpinner(positionDanger));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -209,6 +223,12 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
      * Display Latitude and Longitude
      */
    public void displayLatLong(double geoLan, double geoLong) {
+
+       // setting button Map and Ok is Enabled
+       btnCurrentMap.setEnabled(true);
+       btnOk.setEnabled(true);
+
+       Log.d("myLogs", "LAT and LONG from BroadcastReceiver: " + geoLan +", "+geoLong);
 
        // Строки для вывода
        // Output lines
@@ -237,7 +257,7 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
 
               // Используем HaMeR для запуска карты текущего расположения
               // Use HaMeR to launch a map of the current location
-              displayCurrentGoogleMap(goMap);
+                  displayCurrentGoogleMap(goMap);
 
               break;
 
@@ -355,9 +375,9 @@ private BroadcastReceiver mPositionReceiver; // = new PositionReceiver();
             return;
         }
         // команда, которая срабатывает при корректировки данных (0 с или 0 м)
-        // command that is triggered when data is corrected (0 s or 0 m)
+        // command that is triggered when data is corrected (600 s or 10 m)
         locationManager.requestLocationUpdates
-                (LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                (LocationManager.GPS_PROVIDER, 600, 10, locationListener);
         }
         /**
          * обязательные методы для LocationListener

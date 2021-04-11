@@ -37,7 +37,7 @@ public class Position extends AppCompatActivity {
     Boolean insertUpdate;
 
     // data Intent from DataBase
-    Bundle dataIntent;
+    private Bundle dataIntent;
 
     /**
      * Action used by the LocalBroadcastManger
@@ -54,11 +54,11 @@ public class Position extends AppCompatActivity {
      * GUI fields
      * поля графического интерфейса
      */
-    Spinner spDanger;
-    EditText editTextDescr;
-    TextView textLan, textLong;
-    Button btnCurrentMap, btnOk;
-    ImageView imageIcon;
+    private Spinner spDanger;
+    private EditText editTextDescr;
+    private TextView textLan, textLong;
+    private Button btnCurrentMap, btnOk;
+    private ImageView imageIcon;
 
     // позиции геолокации
     // geolocation positions
@@ -66,17 +66,17 @@ public class Position extends AppCompatActivity {
 
     // строка адресс местоположния
     // string location address
-    String goMap;
+    private String goMap;
 
     // содержимое спинера
     // contents spinner
 //    String[] spData = getResources().getStringArray(R.array.spinner_danger); // не работает. does not work
-     String[] spData = {"Radiation", "Biodefense", "Chemical danger", "Laser danger",
+    private final String[] spData = {"Radiation", "Biodefense", "Chemical danger", "Laser danger",
                     "Electromagnetic", "Radio wave"};
 
     // текущая позиция спинера
     // current spinner position
-    int positionDanger;
+    private int positionDanger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +216,7 @@ public class Position extends AppCompatActivity {
    /**
      * Display Latitude and Longitude
      */
-   public void displayLatLong(double geoLan, double geoLong) {
+   private void displayLatLong(double geoLan, double geoLong) {
 
        // setting button Map and Ok is Enabled
        btnCurrentMap.setEnabled(true);
@@ -354,8 +354,8 @@ public class Position extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             // Extract the Latitude and Longitude
-            geoLan = intent.getDoubleExtra("geoLan", 0.0);
-            geoLong = intent.getDoubleExtra("geoLong", 0.0);
+            geoLan = intent.getDoubleExtra(CurrentLocation.GEO_LAN, 0.0);
+            geoLong = intent.getDoubleExtra(CurrentLocation.GEO_LONG, 0.0);
 
             if (geoLan !=0) {
                 // Calling method

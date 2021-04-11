@@ -1,9 +1,15 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class MainActivity
+class MainActivity {
+-Button mButtonDanger
+-Button mButtonDatabase
+-Button mButtonMap
+
+}
+
 class Danger {
- webView: WebView
+ -webView: WebView
 }
 
 class MyWebViewClient {
@@ -46,17 +52,17 @@ class PositionBindService {
 
 class PositionRequestHandler {
 ~ Message reply
-+ double lat, lon
+- double lat, lon
 + handleMessage(Message):void
 }
 
 class Position {
 - {static} String ACTION_POSITION_RECEIVER
-~ double geoLan, geoLong
-~ String goMap
+- double geoLan, geoLong
+- String goMap
 - registerPositionReceiver():void
 - displayCurrentGoogleMap(String):void
-+ displayLatLong(double , double):void
+- displayLatLong(double, double):void
 }
 
 class PositionReceiver {
@@ -64,11 +70,12 @@ class PositionReceiver {
 }
 
 class CurrentLocation {
+- {static} String ACTION_POSITION_RECEIVER
 + currentPosition():void
 }
 
 class DataBaseHelper {
-~ String SQL_CREATE_TABLE
+- String SQL_CREATE_TABLE
 + onCreate(SQLiteDatabase):void
 + onUpgrade(SQLiteDatabase, int, int):void
 }
@@ -93,7 +100,7 @@ abstract class FeedEntry {
 + {static} String COLUMN_DANGER
 + {static} String COLUMN_LATITUDE
 + {static} String COLUMN_LONGITUDE
-+ {static} String COLUMN_LONGITUDE
++ {static} String COLUMN_DESCRIPTION
 }
 
 MainActivity --> Danger

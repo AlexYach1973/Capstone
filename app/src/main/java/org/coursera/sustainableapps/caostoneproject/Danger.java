@@ -15,12 +15,7 @@ public class Danger extends AppCompatActivity {
     /**
      *website display window
       */
-    WebView webView;
-
-    /**
-     *buttons for selecting information about the type of hazard
-     */
-    Button buttonRadiation, buttonBio, buttonChem, buttonLaser, buttonMagnetic, buttonRadio;
+    private WebView webView;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -32,12 +27,15 @@ public class Danger extends AppCompatActivity {
 
         // initialization
         // picture
-        buttonRadiation = findViewById(R.id.buttonRadiation);
-        buttonBio = findViewById(R.id.buttonBio);
-        buttonChem = findViewById(R.id.buttonChem);
-        buttonLaser = findViewById(R.id.buttonLaser);
-        buttonMagnetic = findViewById(R.id.buttonMagnetic);
-        buttonRadio = findViewById(R.id.buttonRadio);
+        /**
+         *buttons for selecting information about the type of hazard
+         */
+        Button buttonRadiation = findViewById(R.id.buttonRadiation);
+        Button buttonBio = findViewById(R.id.buttonBio);
+        Button buttonChem = findViewById(R.id.buttonChem);
+        Button buttonLaser = findViewById(R.id.buttonLaser);
+        Button buttonMagnetic = findViewById(R.id.buttonMagnetic);
+        Button buttonRadio = findViewById(R.id.buttonRadio);
 
         // assign a listener
         buttonRadiation.setOnClickListener(viewClickListener);

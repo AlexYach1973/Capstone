@@ -110,9 +110,6 @@ public class DangerProvider extends ContentProvider {
             // Обработка случая окончательного выбора
             selectionResult.append(selection).append(" = ?");
 
-            // Logs
-            Log.d("myLogs", "DangerProvider selectionResult: " + selectionResult);
-
             return selectionResult.toString();
         }
     }

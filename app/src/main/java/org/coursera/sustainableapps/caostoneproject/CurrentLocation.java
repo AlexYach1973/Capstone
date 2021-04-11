@@ -19,9 +19,10 @@ public class CurrentLocation {
      */
     private static final String ACTION_POSITION_RECEIVER = "ActionPositionReceiver";
 
-    // позиции геолокации
-    // geolocation positions
-    double geoLan, geoLong;
+    // Keys for Latitude and Longitude
+    public static final String GEO_LAN = "geoLan";
+    public static final String GEO_LONG = "geoLong";
+
     Context mContext;
 
     // Constructor
@@ -46,6 +47,7 @@ public class CurrentLocation {
         LocationListener locationListener = new myLocationListener();
 
         // Проверка разрешений
+        // Checking permissions
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission
@@ -69,17 +71,19 @@ public class CurrentLocation {
         public void onLocationChanged(@NonNull Location location) {
 
             // coordinates
-            geoLan = location.getLatitude();
-            geoLong = location.getLongitude();
+            // позиции геолокации
+            // geolocation positions
+            double geoLan = location.getLatitude();
+            double geoLong = location.getLongitude();
 
             Intent intent = new Intent(ACTION_POSITION_RECEIVER);
-            intent.putExtra("geoLan", geoLan);
-            intent.putExtra("geoLong", geoLong);
+            intent.putExtra(GEO_LAN, geoLan);
+            intent.putExtra(GEO_LONG, geoLong);
 
+            // Call BroadcastReceiver
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
-            // Calling method
-//            mPositionActivity.displayLatLong(geoLan, geoLong);
         }
     }
+
 }

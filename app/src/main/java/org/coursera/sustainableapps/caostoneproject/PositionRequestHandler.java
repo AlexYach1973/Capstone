@@ -27,9 +27,9 @@ import androidx.core.app.ActivityCompat;
 @SuppressWarnings("deprecation")
 class PositionRequestHandler extends Handler {
 
-    Context mContext;
+    private final Context mContext;
 
-    public double lat, lon;
+    private double lat, lon;
 
     /**
      * Initialize PositionRequestHandler to generate IDs concurrently.

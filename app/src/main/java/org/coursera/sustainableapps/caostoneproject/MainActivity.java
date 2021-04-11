@@ -12,9 +12,6 @@ import static org.coursera.sustainableapps.caostoneproject.R.id.buttonDanger;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Buttons
-    Button mButtonDanger, mButtonDatabase, mButtonMap;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private void initialization() {
 
         // Buttons
-        mButtonDanger = findViewById(buttonDanger);
-        mButtonDatabase = findViewById(R.id.buttonDatabase);
-        mButtonMap = findViewById(R.id.buttonMap);
+        Button mButtonDanger = findViewById(buttonDanger);
+        Button mButtonDatabase = findViewById(R.id.buttonDatabase);
+        Button mButtonMap = findViewById(R.id.buttonMap);
 
         // assign a listener
         mButtonDanger.setOnClickListener(viewClickListener);

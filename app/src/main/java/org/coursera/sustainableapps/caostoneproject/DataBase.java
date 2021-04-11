@@ -2,8 +2,11 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -38,7 +41,7 @@ public class DataBase extends AppCompatActivity {
      * ListView to display the database
      *для отображения базы данных
      */
-    ListView lvData;
+    private ListView lvData;
 
     // Context menu
     private static final int DELETE_ID = 1;
@@ -255,11 +258,55 @@ public class DataBase extends AppCompatActivity {
                 break;
 
             case R.id.butDelete:
+                // Call Dialog
+                showDialog(1);
 
-                deleteAll();
+//                deleteAll();
                 break;
         }
 
+    };
+
+    // Dialog deprecated
+    protected Dialog onCreateDialog(int id) {
+
+        if (id == 1) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+
+            // Title
+            adb.setTitle(R.string.title_dialog);
+            // Message
+            adb.setMessage(R.string.message_dialog);
+            // icon
+            adb.setIcon(R.drawable.crossbones400_384);
+
+            // Positive
+            adb.setPositiveButton(R.string.positive_dialog,
+                    (DialogInterface.OnClickListener) myClickListenerDialog);
+
+            // Negative
+            adb.setNegativeButton(R.string.negative_dialog,
+                    (DialogInterface.OnClickListener) myClickListenerDialog);
+
+            // Create Dialog
+            return adb.create();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    // dialogue listener
+    DialogInterface.OnClickListener myClickListenerDialog = (dialog, which) -> {
+
+        switch (which) {
+
+            case Dialog.BUTTON_POSITIVE:
+                deleteAll();
+                break;
+
+            case Dialog.BUTTON_NEGATIVE:
+//                    finish();
+                break;
+        }
     };
 
     /**

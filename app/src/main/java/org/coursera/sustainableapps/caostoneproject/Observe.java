@@ -54,8 +54,7 @@ public class Observe extends AppCompatActivity {
     private static ContentResolver mContentResolver;
 
     // Button
-//    FloatingActionButton buttonUpdate;
-    ImageButton imageButtonEye;
+    private ImageButton imageButtonEye;
 
     /**
      * ListView to display the database
@@ -69,9 +68,9 @@ public class Observe extends AppCompatActivity {
 
     // формируем столбцы сопоставления
     // form matching columns "from" and "to"
-    String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
+    private String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
             DBContract.FeedEntry.COLUMN_DESCRIPTION};
-    int[] to = new int[]{R.id.imageListObserved, R.id.textViewDescrObserved};
+    private int[] to = new int[]{R.id.imageListObserved, R.id.textViewDescrObserved};
 
     /**
      * Reference to the request messenger that's implemented in the PositionBindService

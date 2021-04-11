@@ -30,7 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * SQL statement used to create the database table.
      */
 
-    final String SQL_CREATE_TABLE =
+     final String SQL_CREATE_TABLE =
             "create table "
             + DBContract.FeedEntry.TABLE_NAME + " ("
             + DBContract.FeedEntry._ID + " integer primary key autoincrement, "

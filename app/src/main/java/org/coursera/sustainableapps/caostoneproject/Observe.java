@@ -54,7 +54,7 @@ public class Observe extends AppCompatActivity {
     private static ContentResolver mContentResolver;
 
     // Button
-    private ImageButton imageButtonEye;
+    private ImageButton imageButtonEye, imageButtonEyeEye;
 
     /**
      * ListView to display the database
@@ -139,6 +139,8 @@ public class Observe extends AppCompatActivity {
         // initialize Buttons
 //        buttonUpdate = findViewById(R.id.btnObserveStart);
         imageButtonEye = findViewById(R.id.buttonImageEye);
+        imageButtonEyeEye = findViewById(R.id.buttonImageEyeEye);
+
         // assign a listener
 //        buttonUpdate.setOnClickListener(viewClickListener);
         imageButtonEye.setOnClickListener(viewClickListener);
@@ -311,7 +313,7 @@ public class Observe extends AppCompatActivity {
     View.OnClickListener viewClickListener = v -> {
 
                 // Show ImageButtonEye
-                Utils.showImage(imageButtonEye);
+                Utils.showImage(imageButtonEyeEye);
 
                 try {
                     startPositionBindService();

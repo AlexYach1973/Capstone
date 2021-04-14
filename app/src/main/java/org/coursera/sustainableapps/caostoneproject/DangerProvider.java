@@ -13,6 +13,9 @@ import android.util.Log;
 
 public class DangerProvider extends ContentProvider {
 
+    // For testing.
+//    public final static String AUTHORITY = "edu.vanderbilt.mooc.atom_reader.provider";
+
     /**
      * Use DatabaseHelper to manage database creation and version
      * management.

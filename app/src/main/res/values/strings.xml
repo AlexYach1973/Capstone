@@ -19,7 +19,7 @@
 <!--    Show Dialig-->
     <string name="title_dialog">Serious question</string>
     <string name="message_dialog">Are you sure?</string>
-    <string name="positive_dialog">|| SURE! ||</string>
+    <string name="positive_dialog">|| SURELY! ||</string>
     <string name="negative_dialog">|| Wait… ||</string>
 
     <!--    Screen Position-->

@@ -25,16 +25,40 @@
             android:text="@string/hello_Observe" />
 
         <ImageButton
+            android:id="@+id/buttonImageEyeEye"
+            style="@style/styleButtonDataBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:background="@color/purple_200"
+            android:src="@drawable/eye_100_eye1"
+            android:text="@string/button2_Observe"
+            tools:ignore="ContentDescription,RelativeOverlap" />
+
+        <ImageButton
             android:id="@+id/buttonImageEye"
             style="@style/styleButtonDataBase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
             android:layout_alignParentEnd="true"
-            android:background="@color/purple_200"
-            android:src="@drawable/eye_100"
+            android:layout_marginEnd="0dp"
+            android:background="@color/prpr"
+            android:src="@drawable/eye_100_background1"
             android:text="@string/button2_Observe"
             tools:ignore="ContentDescription,RelativeOverlap" />
+
+        <!--            <ImageButton-->
+<!--            android:id="@+id/buttonImageEye"-->
+<!--            style="@style/styleButtonDataBase"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="0dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:background="@color/purple_200"-->
+<!--            android:src="@drawable/eye_100"-->
+<!--            android:text="@string/button2_Observe"-->
+<!--            tools:ignore="ContentDescription,RelativeOverlap" />-->
 
        <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnObserveStart"

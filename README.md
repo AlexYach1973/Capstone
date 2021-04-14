@@ -78,7 +78,7 @@ The interactions between classes are specified in the UML diagram.
     - EspressoDataBaseActivityTest
 
 
-## **Specification**
+## **`Specification`**
 
 After installing the application, you need to enable the **permission:** *location* for this application.
 For Emulator Android Studio: *setting* -> *Apps & notifications* -> *Stalker Notes* -> *Permissions*.

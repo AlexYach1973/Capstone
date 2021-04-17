@@ -17,13 +17,13 @@ class MyWebViewClient {
 }
 
 class DataBase {
-- addCurrentPosition():void
-- updateCurrentPosition(Intent):void
-# onActivityResult(int requestCode,int resultCode, Intent):void
++ updateCurrentPosition(Intent):void
 + onCreateContextMenu(ContextMenu, View, ContextMenu.ContextMenuInfo):void
 + onContextItemSelected(MenuItem):boolean
++ deleteForId(long id):void
+# onActivityResult(int requestCode,int resultCode, Intent):void
+- addCurrentPosition():void
 - deleteAll():void
-- deleteForId(long id):void
 - displayCurrent():void
 }
 
@@ -34,8 +34,8 @@ class Observe {
 - ServiceConnection mSvcConn
 + onServiceConnected(ComponentName,IBinder):void
 + onServiceDisconnected(ComponentName):void
-- startPositionBindService():void
 + calculateDistance(double, double):void
+- startPositionBindService():void
 }
 
 class ReplyHandler {

@@ -6,9 +6,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -21,6 +23,10 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class DataBase extends AppCompatActivity {
 
@@ -37,28 +43,17 @@ public class DataBase extends AppCompatActivity {
     private static final int REQUEST_INSERT_POSITION = 1;
     private static final int REQUEST_UPDATE_POSITION = 2;
 
-    /**
-     * ListView to display the database
-     *для отображения базы данных
-     */
-    private ListView lvData;
-
-    // Context menu
-    private static final int DELETE_ID = 1;
-    private static final int UPDATE_ID = 2;
-    private long currentId ;
-
-    // формируем столбцы сопоставления
-    // form matching columns
-    private final String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
-            DBContract.FeedEntry.COLUMN_DESCRIPTION};
-
-    private final int[] to = new int[]{R.id.imageViewList, R.id.textList};
+    /** Static Button to call from a static method deleteForId() */
+    static Button mButtonRefresh;
 
     /**
-     * Buttons "Refresh", "Add" and "delete"
+     * RecyclerView;
      */
-    Button mButtonRefresh, mButtonAdd, mButtonDelete;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    // ArrayList
+    private ArrayList<RecyclerObserveItem> recyclerObserveItems;
 
     //    Field ContentResolver
     private static ContentResolver mContentResolver;
@@ -69,29 +64,31 @@ public class DataBase extends AppCompatActivity {
     public DataBase() {
     }
 
+    // Context
+    Context mContext;
+
     @SuppressLint("CutPasteId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_base);
 
+        mContext = getApplication();
+
         mContentResolver = getContentResolver();
 
-        // initialize ListView
-        lvData = findViewById(R.id.listDanger);
+        /** initialize RecyclerView */
+        recyclerView = findViewById(R.id.recyclerViewDataBase);
 
         // initialize Buttons
         mButtonRefresh = findViewById(R.id.butRefresh);
-        mButtonAdd = findViewById(R.id.butAdd);
-        mButtonDelete = findViewById(R.id.butDelete);
+        Button mButtonAdd = findViewById(R.id.butAdd);
+        Button mButtonDelete = findViewById(R.id.butDelete);
+
         // assign a listener
         mButtonRefresh.setOnClickListener(viewClickListener);
         mButtonAdd.setOnClickListener(viewClickListener);
         mButtonDelete.setOnClickListener(viewClickListener);
-
-        // добавляем контекстное меню к списку
-        // add a context menu to the list
-        registerForContextMenu(lvData);
 
     }
 
@@ -103,115 +100,31 @@ public class DataBase extends AppCompatActivity {
 
         super.onResume();
 
+        mButtonRefresh.setEnabled(false);
+
         displayCurrent();
-    }
-
-    /**
-     * context menu
-     */
-    // оздаем контекстное меню
-    // creating a context menu
-    public void onCreateContextMenu(ContextMenu menu, View view,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, view, menuInfo);
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.context_menu_data_base, menu);
-        menu.add(0, UPDATE_ID, 0,R.string.change_record);
-        menu.add(0, DELETE_ID, 0, R.string.delete_record);
-    }
-
-    // обработка нажатия на контекстное меню
-    // handling clicking on the context menu
-    public boolean onContextItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case DELETE_ID:
-                // получаем из пункта контекстного меню данные по пункту списка
-                // get data on the list item from the context menu item
-                AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo)
-                        item.getMenuInfo();
-
-                // извлекаем id записи и удаляем соответствующую запись в БД
-                // retrieve the id of the record and delete the corresponding record in the database
-                deleteForId(acmi.id);
-
-                // Refresh
-                displayCurrent();
-
-                break;
-
-            case UPDATE_ID:
-                // вызываем Activity Position для редактирования выбранного пункта из списка listView
-                // we call the activity Position to edit the selected item from the listView
-                Intent intent = new Intent(this, Position.class);
-
-                // получаем из пункта контекстного меню данные по пункту списка
-                // get data on the list item from the context menu item
-                AdapterView.AdapterContextMenuInfo acmiId = (AdapterView.AdapterContextMenuInfo)
-                        item.getMenuInfo();
-
-                // Сохраняем ID в переменной для использования в updateCurrentPosition
-                // Store the ID in a variable for use in updateCurrentPosition
-                currentId =  acmiId.id;
-                Log.d("myLogs", "acmiId.id = " + currentId);
-
-                // read information about the current position
-                // читаем информацию про текущую позицию
-               Cursor mCursorUpdate = mContentResolver.
-                       query(DBContract.FeedEntry.buildUri(currentId),
-                        null,null,null,null);
-
-               // без этой херни почему-то неработает, хотя курсор содержит одну строку
-               mCursorUpdate.moveToFirst();
-
-                // adding information about the current position
-                // добавление информации про текущую позицию
-                intent.putExtra(DataBase.POSITION_DANGER, mCursorUpdate.getInt(mCursorUpdate.
-                        getColumnIndex(DBContract.FeedEntry.COLUMN_DANGER)));
-
-                intent.putExtra(DataBase.LATITUDE, mCursorUpdate.getDouble(mCursorUpdate.
-                        getColumnIndex(DBContract.FeedEntry.COLUMN_LATITUDE)));
-
-                intent.putExtra(DataBase.LONGITUDE, mCursorUpdate.getDouble(mCursorUpdate.
-                        getColumnIndex(DBContract.FeedEntry.COLUMN_LONGITUDE)));
-
-                intent.putExtra(DataBase.DESCRIPTION, mCursorUpdate.getString(mCursorUpdate.
-                        getColumnIndex(DBContract.FeedEntry.COLUMN_DESCRIPTION)));
-
-                // Start Activity Position
-                startActivityForResult(intent, REQUEST_UPDATE_POSITION);
-
-                // close Cursor
-                mCursorUpdate.close();
-
-                break;
-            default:
-                Toast.makeText(this,
-                        "Delete, update 0 position", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        return true;
     }
 
     /**
      * Удаляем запись по ID
      * Delete the entry by ID
+     * we make the method static, otherwise we will not take it out of the context menu,
+     * which is written in the RecyclerViewAdapter
      */
-    private void deleteForId(long id) {
+    public static void deleteForId(long id,  Context context) {
 
         mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
                 DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
 
         // Сообщаем пользователю, какой ИД был удален
         // Telling the user which ID was deleted
-        Toast.makeText(this,
-                "Deleted _ID= "
-                        + id,
-                Toast.LENGTH_SHORT).show();
-    }
+        Toast.makeText(context,
+                "Deleted _ID= " + id + "\n" + "click REFRESH",
+                Toast.LENGTH_LONG).show();
 
+        mButtonRefresh.setEnabled(true);
+
+    }
 
     /**
      * Display the designated columns in the cursor as a List in
@@ -231,13 +144,31 @@ public class DataBase extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
 
         }
-            // Display the results of the query.
 
-            // создааем адаптер и настраиваем список
-            // create an adapter and set up a list
-            SimpleCursorAdapter scAdapter = new SimpleCursorAdapter
-                    (this, R.layout.item_list_data_base, mCursor, from, to,0);
-            lvData.setAdapter(scAdapter);
+        /**  initialize ArrayList */
+        recyclerObserveItems = new ArrayList<>();
+
+        // recycleItems without distance
+        ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
+
+        for (RecyclerObserveItem data : recycleItems) {
+            // fill recyclerObserveItems
+            recyclerObserveItems.add(new RecyclerObserveItem(data.getImage(),
+                    data.getIdCurrent(),
+                    data.getLat(),
+                    data.getLng(),
+                    data.getDescription(),
+                    ""));
+        }
+
+        // initialize RecyclerAdapter
+//        recyclerView.setHasFixedSize(true); // если размер не меняется
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, true);
+        layoutManager = new LinearLayoutManager(this);
+
+        // Display
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(layoutManager);
 
     }
 
@@ -250,6 +181,7 @@ public class DataBase extends AppCompatActivity {
             case R.id.butRefresh:
 
                 displayCurrent();
+                mButtonRefresh.setEnabled(false);
                 break;
 
             case R.id.butAdd:
@@ -261,7 +193,6 @@ public class DataBase extends AppCompatActivity {
                 // Call Dialog
                 showDialog(1);
 
-//                deleteAll();
                 break;
         }
 
@@ -282,11 +213,11 @@ public class DataBase extends AppCompatActivity {
 
             // Positive
             adb.setPositiveButton(R.string.positive_dialog,
-                    (DialogInterface.OnClickListener) myClickListenerDialog);
+                    myClickListenerDialog);
 
             // Negative
             adb.setNegativeButton(R.string.negative_dialog,
-                    (DialogInterface.OnClickListener) myClickListenerDialog);
+                    myClickListenerDialog);
 
             // Create Dialog
             return adb.create();
@@ -294,7 +225,7 @@ public class DataBase extends AppCompatActivity {
         return super.onCreateDialog(id);
     }
 
-    // dialogue listener
+    // dialog listener
     DialogInterface.OnClickListener myClickListenerDialog = (dialog, which) -> {
 
         switch (which) {
@@ -354,17 +285,7 @@ public class DataBase extends AppCompatActivity {
             Toast.makeText(this,
                     "Insert 1 position", Toast.LENGTH_SHORT).show();
 
-
-            // получаем данные для обновления позиции
-            // get data to update the position
-        }else if (resultCode == Activity.RESULT_OK
-                && requestCode == REQUEST_UPDATE_POSITION) {
-
-            // Обновляем текущую позицию
-            //Updating the current position
-            updateCurrentPosition(data);
-
-        } else {
+        }else {
             Log.d("myLogs", "RESULT NOT OK ???");
             Toast.makeText(this,
                     "Insert, update 0 position", Toast.LENGTH_SHORT).show();
@@ -406,7 +327,7 @@ public class DataBase extends AppCompatActivity {
      * обновляем текущую позицию (только иконку и описание)
      * update the current position (only icon and description)
      */
-    private void updateCurrentPosition(Intent intent) {
+    public static void updateCurrentPosition(Intent intent) {
 
         ContentValues cvs = new ContentValues();
 
@@ -426,6 +347,8 @@ public class DataBase extends AppCompatActivity {
 
         // обновляем выбранную строку
         // update the selected row
+        int currentId = intent.getExtras().getInt("id");
+
         mContentResolver.update(DBContract.FeedEntry.CONTENT_URI,
                 cvs,
                 DBContract.FeedEntry._ID,
@@ -433,11 +356,14 @@ public class DataBase extends AppCompatActivity {
 
         // Сообщаем об обновлении
         // We inform about the update
-        Toast.makeText(this,
-                "Update _ID= "
-                        + currentId,
-                Toast.LENGTH_SHORT).show();
 
+        Log.d("myLogs", "update currentId: " + currentId);
+
+/**      for Toast it is necessary context */
+//                Toast.makeText(this,
+//                "Update _ID= "
+//                        + currentId,
+//                Toast.LENGTH_SHORT).show();
 
     }
     /**

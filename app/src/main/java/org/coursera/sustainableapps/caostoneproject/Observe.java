@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,14 +17,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,12 +62,14 @@ public class Observe extends AppCompatActivity {
     // List for Latitude and Longitude data
     ArrayList<Map<String, Object>> dataListLatLong = new ArrayList<>();
 
-
-    // формируем столбцы сопоставления
-    // form matching columns "from" and "to"
-    private String[] from = new String[]{DBContract.FeedEntry.COLUMN_DANGER,
-            DBContract.FeedEntry.COLUMN_DESCRIPTION};
-    private int[] to = new int[]{R.id.imageListObserved, R.id.textViewDescrObserved};
+    /**
+     * RecyclerView;
+     */
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    // ArrayList
+    private ArrayList<RecyclerObserveItem> recyclerObserveItems;
 
     /**
      * Reference to the request messenger that's implemented in the PositionBindService
@@ -133,8 +132,8 @@ public class Observe extends AppCompatActivity {
 
         mContentResolver = getContentResolver();
 
-        // initialize ListView
-        listObserve = findViewById(R.id.listObserve);
+        /** initialize RecyclerView */
+        recyclerView = findViewById(R.id.recyclerViewObserve);
 
         // initialize Buttons
 //        buttonUpdate = findViewById(R.id.btnObserveStart);
@@ -151,15 +150,6 @@ public class Observe extends AppCompatActivity {
         // отобразить базу данных без расстояний
         // display database without distances
         displayDbWithoutDist();
-
-        // processing of clicking a list item
-        listObserve.setOnItemClickListener((parent, view, position, id) -> {
-            // call the google map display method
-            displaySelectedItem(position);
-
-            Log.d(TAG, "id_selected: " + id + "; " + "position: " + position);
-
-        });
 
         // Run BindService method
         Log.d(TAG, "calling bindService(): Привет Service!");
@@ -214,8 +204,8 @@ public class Observe extends AppCompatActivity {
         Log.d(TAG, "Observe DESTROYED !!!");
     }
     /**
-     * В этом этом методе выводятся точки опасностей из базы данных без расчета расстояний до них.
-     *  This method retrieves hazard points from the database without calculating distances to them.
+     * В этом методе считываем данные из базы данных. Получаем курсор
+     *  In this method, we read data from the database. Get the cursor
      */
     private void displayDbWithoutDist() {
 
@@ -233,74 +223,45 @@ public class Observe extends AppCompatActivity {
 
         } else {
 
-            // Display the results of the query.
-            // создааем адаптер и настраиваем список и отображаем
-            // create an adapter and set up a list and display
-            SimpleCursorAdapter scAdapter = new SimpleCursorAdapter
-                    (this, R.layout.item_list_observed, mCursor, from, to, 0);
-            listObserve.setAdapter(scAdapter);
+            // pass the cursor and fetch data from the databaseand Display
+            // передаем курсор и извлекаем данные из базы данных и отображаем
+            extractDataFromCursor(mCursor);
 
         }
-
-//        Retrieving data from the cursor for further use
-//        Извлекаем данные из курсора для дальнейшего использования
-        extractDataFromCursor(mCursor);
 
     }
 
     /**
-     * In this method, we extract the latitude and longitude from the cursor and
-     * add them to Map<String, Object> to calculate the distance of the danger points from the current location
-     * we also add the name and description of the danger to the Map<String, Object>,
-     * for display using SimpleAdapter
-     * В этом методе извлекаем широту и долготу из курсора и добавляем их в Map<String, Object>
-     * для оасчета расстояния точек опасности от текущего местоположения
-     * также добавляем в Map<String, Object> наименование и описание опасности,
-     * для вывода на экран с помощью SimpleAdapter
+     * In this method, we extract data from the cursor and display
+     * В этом методе извлекаем данные из курсора и выводим на экран
      */
     private void extractDataFromCursor(Cursor mCursor) {
 
-        // extract Latitude and Longitude
-        Map<String, Object> dataMapLatLong;
+        /**  initialize ArrayList */
+        recyclerObserveItems = new ArrayList<>();
 
-        // First line
-        mCursor.moveToFirst();
+        // recycleItems without distance
+        ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
 
-        // to the end of the table
-        while (!mCursor.isAfterLast()) {
-            dataMapLatLong = new HashMap<>();
+        for (RecyclerObserveItem data : recycleItems) {
+            // fill recyclerObserveItems
+            recyclerObserveItems.add(new RecyclerObserveItem(data.getImage(),
+                    data.getIdCurrent(),
+                    data.getLat(),
+                    data.getLng(),
+                    data.getDescription(),
+                     "-- "));
 
-            // Id для проверки
-            dataMapLatLong.put(DBContract.FeedEntry._ID,
-                    mCursor.getInt(mCursor.getColumnIndex(
-                            DBContract.FeedEntry._ID)));
-
-            // Danger
-            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_DANGER,
-                    mCursor.getInt(mCursor.getColumnIndex(
-                            DBContract.FeedEntry.COLUMN_DANGER)));
-
-            // широта (Latitude)
-            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_LATITUDE,
-                    mCursor.getDouble(mCursor.getColumnIndex(
-                            DBContract.FeedEntry.COLUMN_LATITUDE)));
-            // долгота (Longitude)
-            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_LONGITUDE,
-                    mCursor.getDouble(mCursor.getColumnIndex(
-                            DBContract.FeedEntry.COLUMN_LONGITUDE)));
-
-            // Description
-            dataMapLatLong.put(DBContract.FeedEntry.COLUMN_DESCRIPTION,
-                    mCursor.getString(mCursor.getColumnIndex(
-                            DBContract.FeedEntry.COLUMN_DESCRIPTION)));
-
-            //Add Map to List
-            dataListLatLong.add(dataMapLatLong);
-
-            //move to next line
-            mCursor.moveToNext();
         }
 
+        // intialize RecyclerAdapter
+//        recyclerView.setHasFixedSize(true); // если размер не меняется
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, false);
+        layoutManager = new LinearLayoutManager(this);
+
+        // Display
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     /**
@@ -352,103 +313,107 @@ public class Observe extends AppCompatActivity {
      * This method gets the current coordinates from and calculates the distances
      * to the danger points that are recorded in the database. And displays them
      */
-    public void calculateDistance(double currentLat, double currentLong){
+    public void calculateDistance(double currentLat, double currentLong) {
 
+        /**
+         *  initialize AarrayList
+         */
+        recyclerObserveItems = new ArrayList<>();
+
+        /**
+         *  Calculates distance and add it to the recyclerObserveItem
+         */
         // Current Location
         Location locCurrent = new Location("");
         locCurrent.setLatitude(currentLat);
         locCurrent.setLongitude(currentLong);
 
-        // new ArrayList
-        ArrayList<Map<String, Object>> dataDistance =
-                new ArrayList<>(dataListLatLong.size());
+        // считываем данные из базы данных
+        // read data from the database
+        Cursor mCursor = mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
+                DBContract.FeedEntry.sColumnsToDisplay,
+                null, null, null);
 
-        // New Map with distances
-        Map<String, Object> dataMapDist;
+        // recycleItems without distsnce
+        ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
 
-        // Location of danger
-        Location locDataBase = new Location("");
-        // go through the whole dataListLatLong
-        for (Map<String, Object> data : dataListLatLong){
-
-            // Initialize dataMapDist
-            dataMapDist = new HashMap<>();
-
-            double lat = (double) data.get(DBContract.FeedEntry.COLUMN_LATITUDE);
-            double lon = (double) data.get(DBContract.FeedEntry.COLUMN_LONGITUDE);
-
+        // ArrayList recyclerObserveItems for Display
+        for (RecyclerObserveItem data : recycleItems) {
+            // Caluate distance
             // Location of danger
-            locDataBase.setLatitude(lat);
-            locDataBase.setLongitude(lon);
+            Location locDataBase = new Location("");
+            // Location of danger
+            locDataBase.setLatitude(Double.valueOf(data.getLat()));
+            locDataBase.setLongitude(Double.valueOf(data.getLng()));
             double distance = locDataBase.distanceTo(locCurrent);
 
-            // Add to Map
-            dataMapDist.put(DISTANCE, (int) distance);
+            // set distance
+            data.setMeters(String.valueOf(distance));
 
-            // Add to ArrayList
-            dataDistance.add(dataMapDist);
+            // fill recyclerObserveItems
+            recyclerObserveItems.add(new RecyclerObserveItem(data.getImage(),
+                    data.getIdCurrent(),
+                    data.getLat(),
+                    data.getLng(),
+                    data.getDescription(),
+                    String.valueOf( Math.round(distance)) + " m"));
 
-//            Log.d(TAG, "" + lat + ", " + lon);
-
+            //move to next line
+            mCursor.moveToNext();
         }
 
-        // объединяем два ArrayLists
-        // combine two ArrayLists: dataListLatLong + dataDistance
-        for (int i = 0; i < dataListLatLong.size(); i++) {
+        // intialize RecyclerAdapter
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, false);
+//        layoutManager = new LinearLayoutManager(this);
 
-            // extract Map from dataListLatLong
-            Map<String, Object> returnMapLatLong = dataListLatLong.get(i);
-            // extract Map from dataDistance
-            Map<String, Object> returnMapDistance = dataDistance.get(i);
-
-//            insert distance from returnMapDistance into returnMapLatLong
-            returnMapLatLong.put(DISTANCE, returnMapDistance.get(DISTANCE));
-            // Logs
-//            Log.d(TAG, " " + dataListLatLong.get(i));
-
-            // insert returnMapLatLong into ArrayLists
-            dataListLatLong.set(i, returnMapLatLong);
-
-        }
-
-        // Create Adapter
-        SimpleAdapter sAdapter = new SimpleAdapter(this,
-                dataListLatLong,
-                R.layout.item_list_observed, new String[]{DBContract.FeedEntry.COLUMN_DANGER,
-                DBContract.FeedEntry.COLUMN_DESCRIPTION, DISTANCE},
-                new int[] {R.id.imageListObserved, R.id.textViewDescrObserved,
-                        R.id.textViewDistanceObserved});
-
-        // assign adapter
-        listObserve.setAdapter(sAdapter);
-
-
+        // Dysplay
+        recyclerView.setAdapter(recyclerAdapter);
+//        recyclerView.setLayoutManager(layoutManager);
 
     }
 
-    private void displaySelectedItem(int position) {
 
-        // extract selected Latitude and Longitude
-        Map<String, Object> selectedMapLatLong = dataListLatLong.get(position);
-        double selectedLat = (double) selectedMapLatLong.get(DBContract.FeedEntry.COLUMN_LATITUDE);
-        double selectedLon = (double) selectedMapLatLong.get(DBContract.FeedEntry.COLUMN_LONGITUDE);
-
-//        Log.d(TAG, "LatitudeSelected: " + selectedLat);
-
-        // Строка для карты
-        // String for the MapView
-        String addressSelected = "http://www.google.com/maps/@" + selectedLat +
-                "," + selectedLon + "," + 15 + "z";
-
-
-        //  Запускаем отдельное окно с Гуугл картой
-        // Launch a separate window with a google map
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(addressSelected));
-
-        startActivity(intent);
-
-    }
-
+//    private ArrayList fillArrayListFromCursor(Cursor mCursor) {
+//
+//        ArrayList<RecyclerObserveItem> recycleArrayList = new ArrayList<>();
+//
+//        // First line
+//        mCursor.moveToFirst();
+//        // to the end of the table
+//        while (!mCursor.isAfterLast()) {
+//
+//            // the same as in extractDataFromCursor()
+//            // Icon Danger
+//            int presentDamage = mCursor.getInt(mCursor.getColumnIndex(
+//                    DBContract.FeedEntry.COLUMN_DANGER));
+//
+//            // Use String.valueOf()
+//            int presentId = mCursor.getInt(mCursor.getColumnIndex(
+//                    DBContract.FeedEntry._ID));
+//
+//            // Double Lat and Long
+//            Double presentLat = mCursor.getDouble(mCursor.getColumnIndex(
+//                    DBContract.FeedEntry.COLUMN_LATITUDE));
+//            Double presentLng = mCursor.getDouble(mCursor.getColumnIndex(
+//                    DBContract.FeedEntry.COLUMN_LONGITUDE));
+//
+//            // Description
+//            String presentDescription = mCursor.getString(mCursor.getColumnIndex(
+//                    DBContract.FeedEntry.COLUMN_DESCRIPTION));
+//
+//            recycleArrayList.add(new RecyclerObserveItem(presentDamage,
+//                    presentId,
+//                    presentLat,
+//                    presentLng,
+//                    presentDescription,
+//                    ""));
+//
+//            //move to next line
+//            mCursor.moveToNext();
+//
+//        }
+//        return recycleArrayList;
+//    }
 
     /**
      * Receives the reply from the PositionBindService containing the

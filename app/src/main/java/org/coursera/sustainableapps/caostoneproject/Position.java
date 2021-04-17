@@ -34,7 +34,7 @@ public class Position extends AppCompatActivity {
      * true - calling this class to insert a new position.
      * False -  calling this class to update positions
      */
-    Boolean insertUpdate;
+    private Boolean insertUpdate;
 
     // data Intent from DataBase
     private Bundle dataIntent;
@@ -62,7 +62,7 @@ public class Position extends AppCompatActivity {
 
     // позиции геолокации
     // geolocation positions
-    double geoLan, geoLong;
+    private double geoLan, geoLong;
 
     // строка адресс местоположния
     // string location address
@@ -104,13 +104,10 @@ public class Position extends AppCompatActivity {
          * extracting data from DataBase.class to define insert/update
          */
         dataIntent = getIntent().getExtras();
-        // set boolean field insertUpdate
+        // set boolean field insert/Update
         insertUpdate = dataIntent.getString(DataBase.DESCRIPTION).equals("");
 
         Log.d("myLogs", "Boolean update: " + insertUpdate);
-
-//        Log.d("myLogs", "Latitude update: " +
-//                dataIntent.getDouble(DataBase.LATITUDE));
 
 /**
  * initialize and register BroadcastReceiver
@@ -128,7 +125,6 @@ public class Position extends AppCompatActivity {
             mCurrentLocation.currentPosition();
 
         }
-
 
         /**
          * set Spinner configuration
@@ -192,6 +188,7 @@ public class Position extends AppCompatActivity {
 
         // Title
         spDanger.setPrompt("DANGER"); // не работает. does not work.
+
         // select the element
             if (insertUpdate)
         spDanger.setSelection(0,true);
@@ -259,7 +256,13 @@ public class Position extends AppCompatActivity {
 
               // Return to DataBase
               Intent intentResult = makeIntentResult();
-              setResult(RESULT_OK, intentResult);
+              if (insertUpdate) {
+                  setResult(RESULT_OK, intentResult);
+
+              } else {
+                  DataBase.updateCurrentPosition(intentResult);
+              }
+
               finish();
               break;
       }
@@ -283,7 +286,7 @@ public class Position extends AppCompatActivity {
         new Thread(downLoadGoogleMap).start();
     }
 
-    //
+    // creating an intent to return to DataBase
     private Intent makeIntentResult() {
         Intent intent = new Intent();
         intent.putExtra(DataBase.LATITUDE, geoLan); // double
@@ -291,11 +294,16 @@ public class Position extends AppCompatActivity {
         intent.putExtra(DataBase.DESCRIPTION, checkTextDescription()); // String
         intent.putExtra(DataBase.POSITION_DANGER, positionDanger); // int
 
+
+        if (!insertUpdate) {
+            intent.putExtra("id", dataIntent.getInt("id"));
+        }
+
         return intent;
     }
 
     // проверка введенного текста в окно Description, если null, выводим Lat, Long
-    // checking the entered text in the Description window? if null, output Lat, Long
+    // checking the entered text in the Description window, if null, output Lat, Long
     private String checkTextDescription() {
         String strText;
         if (!editTextDescr.getText().toString().equals(""))

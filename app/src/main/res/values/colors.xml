@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="prpr">#00FFFFFF</color>
     <color name="yellow">#FFFFCC00</color>
+    <color name="red">#FFFF0000</color>
 </resources>

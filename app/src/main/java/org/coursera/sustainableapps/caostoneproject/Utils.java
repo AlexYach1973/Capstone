@@ -1,7 +1,10 @@
 package org.coursera.sustainableapps.caostoneproject;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.widget.ImageButton;
+
+import java.util.ArrayList;
 
 public class Utils {
 
@@ -94,6 +97,48 @@ public class Utils {
 //        imageId.animate().scaleX(0).scaleY(0).setDuration(2000);
 //        imageId.animate().scaleX(1).scaleY(1).setDuration(2000);
 
+    }
+
+    public static ArrayList<RecyclerObserveItem> fillArrayListFromCursor(Cursor mCursor) {
+
+        ArrayList<RecyclerObserveItem> recycleArrayList = new ArrayList<>();
+
+        // First line
+        mCursor.moveToFirst();
+        // to the end of the table
+        while (!mCursor.isAfterLast()) {
+
+            // the same as in extractDataFromCursor()
+            // Icon Danger
+            int presentDamage = mCursor.getInt(mCursor.getColumnIndex(
+                    DBContract.FeedEntry.COLUMN_DANGER));
+
+            // Use String.valueOf()
+            int presentId = mCursor.getInt(mCursor.getColumnIndex(
+                    DBContract.FeedEntry._ID));
+
+            // Double Lat and Long
+            double presentLat = mCursor.getDouble(mCursor.getColumnIndex(
+                    DBContract.FeedEntry.COLUMN_LATITUDE));
+            double presentLng = mCursor.getDouble(mCursor.getColumnIndex(
+                    DBContract.FeedEntry.COLUMN_LONGITUDE));
+
+            // Description
+            String presentDescription = mCursor.getString(mCursor.getColumnIndex(
+                    DBContract.FeedEntry.COLUMN_DESCRIPTION));
+
+            recycleArrayList.add(new RecyclerObserveItem(presentDamage,
+                    presentId,
+                    presentLat,
+                    presentLng,
+                    presentDescription,
+                    ""));
+
+            //move to next line
+            mCursor.moveToNext();
+
+        }
+        return recycleArrayList;
     }
 
 }

@@ -24,7 +24,11 @@
             android:id="@+id/spinnerDanger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:prompt="@string/spinnerDanger"/>
+            android:prompt="@string/spinnerDanger"
+            android:layout_margin="@dimen/button_margin_data_base"
+            android:background="@drawable/spinner"
+            />
+<!--        style="@android:style/Widget.Holo.Spinner"-->
 <!--            android:spinnerMode="dialog" />-->
         <!--        android:entries="@array/spinner_danger"-->
 
@@ -36,6 +40,7 @@
             android:ems="20"
             android:hint="@string/descr_danger"
             android:inputType="textMultiLine"
+            android:layout_margin="10dp"
             android:importantForAutofill="no" />
         <!--            android:autofillHints="" />-->
     </LinearLayout>

@@ -45,13 +45,21 @@
             android:text="@string/delete" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listDanger"
+<!--    <ListView-->
+<!--        android:id="@+id/listDanger"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/purple_700"-->
+<!--        android:divider="@color/purple_200"-->
+<!--        android:dividerHeight="2dp"-->
+<!--        android:padding="5dp" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDataBase"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_700"
-        android:divider="@color/purple_200"
-        android:dividerHeight="2dp"
-        android:padding="5dp" />
+        android:layout_height="match_parent"
+        android:padding="@dimen/button_margin_data_base"
+        android:scrollbars="vertical"
+        />
 
 </LinearLayout>

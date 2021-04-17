@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple_700"
+        >
+        
+        <ImageView
+            android:id="@+id/image_observe"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="4dp"/>
+
+        <TextView
+            android:id="@+id/text_id_observe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/purple_200"
+            android:textStyle="italic"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/image_observe"
+            />
+
+        <TextView
+            android:id="@+id/text_lan_observe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/purple_200"
+            android:textStyle="italic"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:layout_below="@id/text_id_observe"
+            android:layout_toEndOf="@id/image_observe"
+            />
+        <TextView
+            android:id="@+id/text_lng_observe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/purple_200"
+            android:textStyle="italic"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:layout_below="@id/text_lan_observe"
+            android:layout_toEndOf="@id/image_observe"
+            />
+
+        <TextView
+            android:id="@+id/text_description_observe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:textColor="@color/purple_200"
+            android:textStyle="bold|italic"
+            android:layout_toEndOf="@id/text_lng_observe"
+            android:layout_toStartOf="@id/text_meters_observe"
+            />
+
+        <TextView
+            android:id="@+id/text_meters_observe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:padding="4dp"
+            android:layout_centerVertical="true"
+            android:gravity="end"
+            android:textColor="@color/purple_200"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"
+            />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

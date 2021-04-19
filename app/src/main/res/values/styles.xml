@@ -62,4 +62,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="spinner_style">
+        android:layout_margin="@dimen/button_margin_data_base"
+<!--        <item name="android:background">@drawable/spinner</item>-->
+        <item name="android:background">@drawable/back_hand_24</item>
+    </style>
+
 </resources>

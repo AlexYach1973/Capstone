@@ -25,10 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/spinnerDanger"
-            android:layout_margin="@dimen/button_margin_data_base"
-            android:background="@drawable/spinner"
-            />
-<!--        style="@android:style/Widget.Holo.Spinner"-->
+            style="@android:style/Widget.Holo.Spinner"/>
+
+<!--            android:background="@drawable/back_hand_24" />-->
+<!--            style="@style/spinner_style"/>-->
+
+<!--            android:background="@drawable/spinner"/>-->
 <!--            android:spinnerMode="dialog" />-->
         <!--        android:entries="@array/spinner_danger"-->
 

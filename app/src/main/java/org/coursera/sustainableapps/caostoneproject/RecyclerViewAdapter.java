@@ -2,6 +2,7 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class RecyclerViewAdapter extends
 
         public ImageView imageView;
         public TextView textId;
-        public TextView textLan;
+        public TextView textLat;
         public TextView textLng;
         public TextView textDescription;
         public TextView textMeters;
@@ -48,7 +49,7 @@ public class RecyclerViewAdapter extends
 
             imageView = itemView.findViewById(R.id.image_observe);
             textId = itemView.findViewById(R.id.text_id_observe);
-            textLan = itemView.findViewById(R.id.text_lan_observe);
+            textLat = itemView.findViewById(R.id.text_lan_observe);
             textLng = itemView.findViewById(R.id.text_lng_observe);
             textDescription = itemView.findViewById(R.id.text_description_observe);
             textMeters = itemView.findViewById(R.id.text_meters_observe);
@@ -106,7 +107,7 @@ public class RecyclerViewAdapter extends
         //******************************* geters from RecyclerObserveItem
         holder.imageView.setImageResource(recyclerObserveItem.getImage());
         holder.textId.setText(strId);
-        holder.textLan.setText(strLat);
+        holder.textLat.setText(strLat);
         holder.textLng.setText(strLng);
         holder.textDescription.setText(recyclerObserveItem.getDescription());
         holder.textMeters.setText(recyclerObserveItem.getMeters());
@@ -118,6 +119,7 @@ public class RecyclerViewAdapter extends
             holder.textDescription.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
 
                 menu.setHeaderTitle("Your choice");
+
                 //**************************  CHANGE **************/
                 menu.add(0, 1,0, "change")
                         .setOnMenuItemClickListener(item -> {
@@ -153,6 +155,16 @@ public class RecyclerViewAdapter extends
 
                             // Call method from DataBase
                             DataBase.deleteForId(recyclerObserveItem.getIdCurrent(), context);
+
+                            // delete element
+                            holder.imageView.setImageResource(R.mipmap.crossbones);
+                            holder.textId.setVisibility(View.GONE);
+                            holder.textLat.setVisibility(View.GONE);
+                            holder.textLng.setVisibility(View.GONE);
+                            holder.textMeters.setVisibility(View.GONE);
+                            holder.textDescription.setText("deleted item");
+                            holder.textDescription.setTextColor(Color.RED);
+
 
                             Log.d("myLogs", "Description: "
                                     + recyclerObserveItem.getDescription());

@@ -10,16 +10,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,9 +35,9 @@ public class DataBase extends AppCompatActivity {
 
     // Request code for Position
     private static final int REQUEST_INSERT_POSITION = 1;
-    private static final int REQUEST_UPDATE_POSITION = 2;
 
     /** Static Button to call from a static method deleteForId() */
+    @SuppressLint("StaticFieldLeak")
     static Button mButtonRefresh;
 
     /**
@@ -100,6 +94,7 @@ public class DataBase extends AppCompatActivity {
 
         super.onResume();
 
+//        mButtonRefresh.setVisibility(View.GONE);
         mButtonRefresh.setEnabled(false);
 
         displayCurrent();
@@ -122,6 +117,7 @@ public class DataBase extends AppCompatActivity {
                 "Deleted _ID= " + id + "\n" + "click REFRESH",
                 Toast.LENGTH_LONG).show();
 
+//        mButtonRefresh.setVisibility(View.VISIBLE);
         mButtonRefresh.setEnabled(true);
 
     }
@@ -181,6 +177,7 @@ public class DataBase extends AppCompatActivity {
             case R.id.butRefresh:
 
                 displayCurrent();
+//                mButtonRefresh.setVisibility(View.GONE);
                 mButtonRefresh.setEnabled(false);
                 break;
 
@@ -193,10 +190,31 @@ public class DataBase extends AppCompatActivity {
                 // Call Dialog
                 showDialog(1);
 
+
                 break;
         }
 
     };
+
+//    protected Dialog onCreateDialog(int id, Bundle args) {
+//
+//        if (id == 1) {
+//            return new AlertDialog.Builder(this)
+//                    .setTitle(R.string.title_dialog)
+//                    .setIcon(R.drawable.crossbones400_384)
+//                    .setMessage(R.string.message_dialog)
+//                    .setPositiveButton(R.string.positive_dialog, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                            deleteAll();
+//                        }
+//                    }).create();
+//        } else {
+//            return super.onCreateDialog(id, args);
+//        }
+//    }
+
 
     // Dialog deprecated
     protected Dialog onCreateDialog(int id) {
@@ -209,7 +227,7 @@ public class DataBase extends AppCompatActivity {
             // Message
             adb.setMessage(R.string.message_dialog);
             // icon
-            adb.setIcon(R.drawable.crossbones400_384);
+            adb.setIcon(R.mipmap.crossbones);
 
             // Positive
             adb.setPositiveButton(R.string.positive_dialog,

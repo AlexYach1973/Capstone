@@ -40,14 +40,14 @@ public class EspressoMainActivityTest {
     public void jumpFromMainActivityToDataBaseActivity() {
 
         onView(withId(R.id.buttonDatabase)).perform(click());
-        onView(withId(R.id.listDanger)).check(matches(isDisplayed()));
+        onView(withId(R.id.recyclerViewDataBase)).check(matches(isDisplayed()));
     }
 
     @Test
     public void jumpFromMainActivityToObserveActivity() {
 
         onView(withId(R.id.buttonMap)).perform(click());
-        onView(withId(R.id.listObserve)).check(matches(isDisplayed()));
+        onView(withId(R.id.recyclerViewObserve)).check(matches(isDisplayed()));
     }
 
 }

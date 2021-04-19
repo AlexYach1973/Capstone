@@ -17,13 +17,14 @@
             android:id="@+id/image_observe"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:padding="4dp"/>
+            android:padding="4dp"
+            />
 
         <TextView
             android:id="@+id/text_id_observe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/purple_200"
             android:textStyle="italic"
             android:paddingStart="4dp"
@@ -36,7 +37,7 @@
             android:id="@+id/text_lan_observe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/purple_200"
             android:textStyle="italic"
             android:paddingStart="4dp"
@@ -48,7 +49,7 @@
             android:id="@+id/text_lng_observe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/purple_200"
             android:textStyle="italic"
             android:paddingStart="4dp"

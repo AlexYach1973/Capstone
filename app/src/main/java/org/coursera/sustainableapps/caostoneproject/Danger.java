@@ -3,6 +3,7 @@ package org.coursera.sustainableapps.caostoneproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
@@ -25,8 +26,6 @@ public class Danger extends AppCompatActivity {
 
         webView = findViewById(R.id.webView);
 
-        // initialization
-        // picture
         /**
          *buttons for selecting information about the type of hazard
          */
@@ -46,6 +45,7 @@ public class Danger extends AppCompatActivity {
         buttonRadio.setOnClickListener(viewClickListener);
 
         // включаем поддержку JavaScript
+        // includes support JavaScript
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
 
@@ -89,7 +89,6 @@ public class Danger extends AppCompatActivity {
                     //specify the download page
                     webView.loadUrl("https://en.wikipedia.org/wiki/Radio_wave");
                     break;
-
             }
         }
     };
@@ -110,12 +109,12 @@ public class Danger extends AppCompatActivity {
      *  back button processing
      *  The method handles clicking the back button
       */
-    public void onBackPressed(){
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    public void onBackPressed(){
+//        if (webView.canGoBack()) {
+//            webView.goBack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
 }

@@ -34,7 +34,7 @@ public class Position extends AppCompatActivity {
      * true - calling this class to insert a new position.
      * False -  calling this class to update positions
      */
-    private Boolean insertUpdate;
+    private Boolean insert_Update;
 
     // data Intent from DataBase
     private Bundle dataIntent;
@@ -105,16 +105,16 @@ public class Position extends AppCompatActivity {
          */
         dataIntent = getIntent().getExtras();
         // set boolean field insert/Update
-        insertUpdate = dataIntent.getString(DataBase.DESCRIPTION).equals("");
+        insert_Update = dataIntent.getString(DataBase.DESCRIPTION).equals("");
 
-        Log.d("myLogs", "Boolean update: " + insertUpdate);
+        Log.d("myLogs", "Boolean update: " + insert_Update);
 
 /**
  * initialize and register BroadcastReceiver
  * Start CurrentLocation
  */
         // when inserting a new item starts
-        if (insertUpdate) {
+        if (insert_Update) {
 
              // Initialize and register BroadcastReceiver
             mPositionReceiver = new PositionReceiver(this);
@@ -137,7 +137,7 @@ public class Position extends AppCompatActivity {
         super.onResume();
 
         // information output when updating
-        if (!insertUpdate) {
+        if (!insert_Update) {
 
             // setting button Map and Ok is Enabled
             btnCurrentMap.setEnabled(true);
@@ -190,7 +190,7 @@ public class Position extends AppCompatActivity {
         spDanger.setPrompt("DANGER"); // не работает. does not work.
 
         // select the element
-            if (insertUpdate)
+            if (insert_Update)
         spDanger.setSelection(0,true);
 
         // устанавливаем обработчик нажатия
@@ -223,7 +223,7 @@ public class Position extends AppCompatActivity {
 
        // Строки для вывода
        // Output lines
-       if (insertUpdate) {
+       if (insert_Update) {
            String pos1 = "Latitude= " + Math.round(geoLan * 1000)/1000.0;
            String pos2 = "Longitude= " + Math.round(geoLong * 1000)/1000.0;
            // Вывод
@@ -256,7 +256,7 @@ public class Position extends AppCompatActivity {
 
               // Return to DataBase
               Intent intentResult = makeIntentResult();
-              if (insertUpdate) {
+              if (insert_Update) {
                   setResult(RESULT_OK, intentResult);
 
               } else {
@@ -295,7 +295,7 @@ public class Position extends AppCompatActivity {
         intent.putExtra(DataBase.POSITION_DANGER, positionDanger); // int
 
 
-        if (!insertUpdate) {
+        if (!insert_Update) {
             intent.putExtra("id", dataIntent.getInt("id"));
         }
 

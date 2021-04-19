@@ -46,6 +46,6 @@ public class EspressoDataBaseActivityTest {
     public void pushButtonRefresh() {
 
         onView(withId(R.id.butRefresh)).perform(click());
-        onView(withId(R.id.listDanger)).check(matches(isDisplayed()));
+        onView(withId(R.id.recyclerViewDataBase)).check(matches(isDisplayed()));
     }
 }

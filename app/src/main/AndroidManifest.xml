@@ -21,8 +21,18 @@
             android:exported="false"
             android:process=":PositionService"/>
 
-        <activity android:name=".Observe" />
-        <activity android:name=".Position" />
+        <activity
+            android:name=".Danger"
+            android:label="@string/danger"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity android:name=".DataBase"
+            android:label="@string/database"/>
+
+        <activity android:name=".Observe"
+            android:label="@string/map"/>
+
+        <activity android:name=".Position"/>
 
         <provider
             android:name=".DangerProvider"
@@ -36,11 +46,8 @@
         <activity
             android:name=".DBContract"
             tools:ignore="Instantiatable" />
-        <activity android:name=".DataBase" />
-        <activity
-            android:name=".Danger"
-            android:label="@string/danger"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -8,6 +8,7 @@
 
     <!--    Screen Danger-->
     <string name="hello_danger">danger</string>
+<!--    <string name="back_danger">back to main menu</string>-->
 
     <!--    Screen DataBase-->
     <string name="hello_DataBase">not worth going there</string>
@@ -23,6 +24,7 @@
     <string name="negative_dialog">|| Wait… ||</string>
 
     <!--    Screen Position-->
+    <string name="position">POSITION</string>
     <string name="text_activity">danger is near…</string>
     <string name="buttonCurrentMap">MAP</string>
     <string name="buttonOk">OK!</string>
@@ -34,6 +36,8 @@
     <string name="hello_Observe">Always look around…</string>
     <string name="button1_Observe">UPDATE</string>
     <string name="button2_Observe">Button 2</string>
+    <string name="text_view_description">description of danger -></string>
+    <string name="text_view_distance">distance</string>
 
 
 </resources>

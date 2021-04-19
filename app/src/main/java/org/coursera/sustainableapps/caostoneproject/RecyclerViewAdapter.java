@@ -112,13 +112,12 @@ public class RecyclerViewAdapter extends
         holder.textDescription.setText(recyclerObserveItem.getDescription());
         holder.textMeters.setText(recyclerObserveItem.getMeters());
 
-
         /**  ************* implementation context Menu ******************** */
         // Call from DataBase.class
         if (bool) {
-            holder.textDescription.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+            holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
 
-                menu.setHeaderTitle("Your choice");
+                menu.setHeaderTitle(R.string.title_context_menu);
 
                 //**************************  CHANGE **************/
                 menu.add(0, 1,0, "change")

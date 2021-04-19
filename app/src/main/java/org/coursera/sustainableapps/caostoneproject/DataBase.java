@@ -196,26 +196,6 @@ public class DataBase extends AppCompatActivity {
 
     };
 
-//    protected Dialog onCreateDialog(int id, Bundle args) {
-//
-//        if (id == 1) {
-//            return new AlertDialog.Builder(this)
-//                    .setTitle(R.string.title_dialog)
-//                    .setIcon(R.drawable.crossbones400_384)
-//                    .setMessage(R.string.message_dialog)
-//                    .setPositiveButton(R.string.positive_dialog, new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//
-//                            deleteAll();
-//                        }
-//                    }).create();
-//        } else {
-//            return super.onCreateDialog(id, args);
-//        }
-//    }
-
-
     // Dialog deprecated
     protected Dialog onCreateDialog(int id) {
 

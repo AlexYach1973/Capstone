@@ -157,11 +157,14 @@ public class RecyclerViewAdapter extends
 
                             // delete element
                             holder.imageView.setImageResource(R.mipmap.crossbones);
-                            holder.textId.setVisibility(View.GONE);
-                            holder.textLat.setVisibility(View.GONE);
-                            holder.textLng.setVisibility(View.GONE);
+//                            holder.textId.setVisibility(View.GONE);
+                            holder.textId.setTextColor(Color.parseColor("#666666"));
+//                            holder.textLat.setVisibility(View.GONE);
+                            holder.textLat.setTextColor(Color.parseColor("#666666"));
+//                            holder.textLng.setVisibility(View.GONE);
+                            holder.textLng.setTextColor(Color.parseColor("#666666"));
                             holder.textMeters.setVisibility(View.GONE);
-                            holder.textDescription.setText("deleted item");
+                            holder.textDescription.setText("  deleted item");
                             holder.textDescription.setTextColor(Color.RED);
 
 

@@ -32,7 +32,8 @@
         <activity android:name=".Observe"
             android:label="@string/map"/>
 
-        <activity android:name=".Position"/>
+        <activity android:name=".Position"
+            android:label="@string/position"/>
 
         <provider
             android:name=".DangerProvider"

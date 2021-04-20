@@ -313,7 +313,7 @@ public class Observe extends AppCompatActivity {
      * This method gets the current coordinates from and calculates the distances
      * to the danger points that are recorded in the database. And displays them
      */
-    public void calculateDistance(double currentLat, double currentLong) {
+    private void calculateDistance(double currentLat, double currentLong) {
 
         /**
          *  initialize AarrayList
@@ -371,49 +371,6 @@ public class Observe extends AppCompatActivity {
 //        recyclerView.setLayoutManager(layoutManager);
 
     }
-
-
-//    private ArrayList fillArrayListFromCursor(Cursor mCursor) {
-//
-//        ArrayList<RecyclerObserveItem> recycleArrayList = new ArrayList<>();
-//
-//        // First line
-//        mCursor.moveToFirst();
-//        // to the end of the table
-//        while (!mCursor.isAfterLast()) {
-//
-//            // the same as in extractDataFromCursor()
-//            // Icon Danger
-//            int presentDamage = mCursor.getInt(mCursor.getColumnIndex(
-//                    DBContract.FeedEntry.COLUMN_DANGER));
-//
-//            // Use String.valueOf()
-//            int presentId = mCursor.getInt(mCursor.getColumnIndex(
-//                    DBContract.FeedEntry._ID));
-//
-//            // Double Lat and Long
-//            Double presentLat = mCursor.getDouble(mCursor.getColumnIndex(
-//                    DBContract.FeedEntry.COLUMN_LATITUDE));
-//            Double presentLng = mCursor.getDouble(mCursor.getColumnIndex(
-//                    DBContract.FeedEntry.COLUMN_LONGITUDE));
-//
-//            // Description
-//            String presentDescription = mCursor.getString(mCursor.getColumnIndex(
-//                    DBContract.FeedEntry.COLUMN_DESCRIPTION));
-//
-//            recycleArrayList.add(new RecyclerObserveItem(presentDamage,
-//                    presentId,
-//                    presentLat,
-//                    presentLng,
-//                    presentDescription,
-//                    ""));
-//
-//            //move to next line
-//            mCursor.moveToNext();
-//
-//        }
-//        return recycleArrayList;
-//    }
 
     /**
      * Receives the reply from the PositionBindService containing the

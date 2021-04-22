@@ -1,7 +1,7 @@
 package org.coursera.sustainableapps.caostoneproject;
 
 import android.content.ContentProvider;
-import android.content.ContentUris;
+import android.content.ContentUris; // специальный класс для работы с uri
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
+import static org.coursera.sustainableapps.caostoneproject.DBContract.*;
 
 public class DangerProvider extends ContentProvider {
 
@@ -46,6 +48,15 @@ public class DangerProvider extends ContentProvider {
             buildUriMatcher();
 
     @Override
+    public boolean onCreate() {
+        mContext = getContext();
+        // Create the DatabaseHelper.
+        mDataBaseHelper = new DataBaseHelper(mContext);
+        return true;
+    }
+
+
+    @Override
     public int delete(Uri uri,
                       String selection,
                       String[] selectionArgs) {
@@ -54,15 +65,17 @@ public class DangerProvider extends ContentProvider {
 
         // Logs
         Log.d("myLogs", "Удаление DangerProvider");
-        Log.d("myLogs", "Selection :" + selection);
+//        Log.d("myLogs", "Selection :" + selection);
 //        Log.d("myLogs", "SelectionArgs :" + selectionArgs[0]);
 
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
                 returnCount = mDataBaseHelper.getWritableDatabase().delete
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs);
+
+                Log.d("myLogs", "Delete CHARACTERS: " + CHARACTERS);
                 break;
 
             case CHARACTER:
@@ -70,10 +83,12 @@ public class DangerProvider extends ContentProvider {
                 selection = addSelectionArgs(selection, selectionArgs);
 
                 returnCount =  mDataBaseHelper.getWritableDatabase().delete
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 addKeyIdCheckToWhereStatement(selection,
                                         ContentUris.parseId(uri)),
                                 selectionArgs);
+
+                Log.d("myLogs", "Delete CHARACTER: " + CHARACTER);
                 break;
 
             default: throw new UnsupportedOperationException("???");
@@ -90,8 +105,9 @@ public class DangerProvider extends ContentProvider {
 
     /**
      * Return a selection string that concatenates all the
-     * selectionArgs for a given @a selection using the given @a
-     * operation.
+     * selectionArgs for a given @a selection using the given @a operation.
+     * Возвращает строку выбора, которая объединяет все selectionArgs для данного выбора @a
+     * с использованием данной операции
      */
     private String addSelectionArgs(String selection,
                                     String[] selectionArgs) {
@@ -113,6 +129,8 @@ public class DangerProvider extends ContentProvider {
             // Обработка случая окончательного выбора
             selectionResult.append(selection).append(" = ?");
 
+            Log.d("myLogs", "DangerProvider addSelectionArgs: " + selectionResult);
+
             return selectionResult.toString();
         }
     }
@@ -120,6 +138,8 @@ public class DangerProvider extends ContentProvider {
     /**
      * Helper method that appends a given key id to the end of the
      * WHERE statement parameter.
+     * Вспомогательный метод, который добавляет заданный идентификатор ключа
+     * в конец параметра инструкции WHERE
      */
     private static String addKeyIdCheckToWhereStatement(String whereStatement,
                                                         long id) {
@@ -131,7 +151,7 @@ public class DangerProvider extends ContentProvider {
 
         // Append the key id to the end of the WHERE statement.
         return newWhereStatement
-                + DBContract.FeedEntry._ID
+                + FeedEntry._ID
                 + " = '"
                 + id
                 + "'";
@@ -143,9 +163,9 @@ public class DangerProvider extends ContentProvider {
         // at the given URI.
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
-                return DBContract.FeedEntry.CONTENT_ITEMS_TYPE;
+                return FeedEntry.CONTENT_ITEMS_TYPE;
             case CHARACTER:
-                return DBContract.FeedEntry.CONTENT_ITEM_TYPE;
+                return FeedEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: "
                         + uri);
@@ -158,18 +178,20 @@ public class DangerProvider extends ContentProvider {
         Uri returnUri;
 
         // Logs
-        Log.d("myLogs", "insert :" + uri.toString());
+//        Log.d("myLogs", "insert :" + uri.toString());
 
         // Try to match against the path in a url.  It returns the
         // code for the matched node (added using addURI), or -1 if
-        // there is no matched node.  If there's a match insert a new
-        // row.
+        // there is no matched node.  If there's a match insert a new row.
+        //
         if (sUriMatcher.match(uri) == CHARACTERS) {
             final SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
-            long id = db.insert(DBContract.FeedEntry.TABLE_NAME,
+            long id = db.insert(FeedEntry.TABLE_NAME,
                     null, cvs);
+
+            // метод withAppendedId добавляет в конец строки полученный "/id"
             returnUri = ContentUris
-                    .withAppendedId(DBContract.FeedEntry.CONTENT_URI, id);
+                    .withAppendedId(FeedEntry.CONTENT_URI, id);
         } else {
             throw new UnsupportedOperationException("Unknown uri: "
                     + uri);
@@ -177,16 +199,11 @@ public class DangerProvider extends ContentProvider {
         // Notifies registered observers that a row was inserted.
         mContext.getContentResolver().notifyChange(uri,null);
 
+        Log.d("myLogs", "insertUri witch id: " + returnUri);
+
         return returnUri;
     }
 
-    @Override
-    public boolean onCreate() {
-        mContext = getContext();
-        // Create the DatabaseHelper.
-        mDataBaseHelper = new DataBaseHelper(mContext);
-        return true;
-    }
 
     /**
      * Method called to handle query requests from client
@@ -198,15 +215,16 @@ public class DangerProvider extends ContentProvider {
 
         Cursor cursor;
 
-        // Match the id returned by UriMatcher to query appropriate
-        // rows.
+        // Match the id returned by UriMatcher to query appropriate rows.
+        // Сопоставьте идентификатор, возвращаемый UriMatcher,
+        // для запроса соответствующих строк.
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
 
-//                Log.d("myLogs", "Зпустили Provider метод Query");
+//                Log.d("myLogs", "Зaпустили Provider метод Query");
 
                 cursor = mDataBaseHelper.getReadableDatabase().query
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 null,
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs,
@@ -214,20 +232,22 @@ public class DangerProvider extends ContentProvider {
                                 null,
                                 sortOrder);
                 // Logs
-//                Log.d("myLogs", "!!! return cursor of DangerProvider.query !!!");
+                Log.d("myLogs", "Query CHARACTERS: " + CHARACTERS);
 
                 break;
 
             case CHARACTER:
                 cursor = mDataBaseHelper.getReadableDatabase().query
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 projection,
                                 addKeyIdCheckToWhereStatement(selection,
-                                        ContentUris.parseId(uri)),
+                                        ContentUris.parseId(uri)), // parseId(uri)- преобразует последний сегмент после слеша в long
                                 selectionArgs,
                                 null,
                                 null,
                                 sortOrder);
+
+                Log.d("myLogs", "Query CHARACTER: " + CHARACTER);
                 break;
 
             default:
@@ -252,28 +272,33 @@ public class DangerProvider extends ContentProvider {
 
         int returnCount;
         // Logs
-        Log.d("myLogs", "" + cvs + ". " + uri);
+//        Log.d("myLogs", "update: "  + uri);
 
         // Try to match against the path in a url.  It returns the
         // code for the matched node (added using addURI), or -1 if
         // there is no matched node.  If there's a match update rows.
         switch (sUriMatcher.match(uri)) {
             case CHARACTERS:
+
                 returnCount = mDataBaseHelper.getWritableDatabase().update
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 cvs,
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs);
+                Log.d("myLogs", "Update CHARACTERS: " + CHARACTERS);
                 break;
 
             case CHARACTER:
+                // Expand the selection if necessary.
                 selection = addSelectionArgs(selection, selectionArgs);
+
                 returnCount = mDataBaseHelper.getWritableDatabase().update
-                        (DBContract.FeedEntry.TABLE_NAME,
+                        (FeedEntry.TABLE_NAME,
                                 cvs,
                                 addKeyIdCheckToWhereStatement(selection,
                                         ContentUris.parseId(uri)),
                                 selectionArgs);
+                Log.d("myLogs", "Update CHARACTER: " + CHARACTER);
                 break;
 
             default:
@@ -292,6 +317,8 @@ public class DangerProvider extends ContentProvider {
     /**
      * Helper method that matches each URI to the integer
      * constants defined above.
+     * Вспомогательный метод, который сопоставляет каждый URI
+     * с целочисленными константами, определенными выше
      *
      * @return UriMatcher
      */
@@ -300,16 +327,20 @@ public class DangerProvider extends ContentProvider {
         // to return when a match is found.  The code passed into the
         // constructor represents the code to return for the rootURI.
         // It's common to use NO_MATCH as the code for this case.
+        // Все пути, добавленные в UriMatcher, имеют соответствующий код,
+        // который будет возвращаться при обнаружении совпадения.
+        // Код, переданный в конструктор, представляет собой код, возвращаемый для rootURI.
+        // Обычно в качестве кода для этого случая используется NO_MATCH.
         final UriMatcher matcher =
                 new UriMatcher(UriMatcher.NO_MATCH);
 
         // For each type of URI that is added, a corresponding code is
         // created.
-        matcher.addURI(DBContract.CONTENT_AUTHORITY,
-                DBContract.PATH_CHARACTER,
+        matcher.addURI(CONTENT_AUTHORITY,
+                PATH_CHARACTER,
                 CHARACTERS);
-        matcher.addURI(DBContract.CONTENT_AUTHORITY,
-                DBContract.PATH_CHARACTER
+        matcher.addURI(CONTENT_AUTHORITY,
+                PATH_CHARACTER
                         + "/#",
                 CHARACTER);
         return matcher;

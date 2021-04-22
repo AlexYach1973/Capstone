@@ -107,7 +107,14 @@ public class Position extends AppCompatActivity {
         // set boolean field insert/Update
         insert_Update = dataIntent.getString(DataBase.DESCRIPTION).equals("");
 
-        Log.d("myLogs", "Boolean update: " + insert_Update);
+        // set Title Activity
+        if (insert_Update) {
+            setTitle("INSERT NEW ITEM");
+        } else {
+            setTitle("EDIT CURRENT ITEM");
+        }
+
+        Log.d("myLogs", "Boolean insert: " + insert_Update);
 
 /**
  * initialize and register BroadcastReceiver
@@ -260,7 +267,7 @@ public class Position extends AppCompatActivity {
                   setResult(RESULT_OK, intentResult);
 
               } else {
-                  DataBase.updateCurrentPosition(intentResult);
+                  DataBase.updateCurrentPosition(intentResult, getApplicationContext());
               }
 
               finish();
@@ -291,7 +298,7 @@ public class Position extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(DataBase.LATITUDE, geoLan); // double
         intent.putExtra(DataBase.LONGITUDE, geoLong); // double
-        intent.putExtra(DataBase.DESCRIPTION, checkTextDescription()); // String
+        intent.putExtra(DataBase.DESCRIPTION, checkTextDescription()); //.trim()); // String trim()- обрезает пробелы
         intent.putExtra(DataBase.POSITION_DANGER, positionDanger); // int
 
 

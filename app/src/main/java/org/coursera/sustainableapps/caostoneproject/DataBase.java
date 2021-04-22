@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import static org.coursera.sustainableapps.caostoneproject.DBContract.*;
 
 public class DataBase extends AppCompatActivity {
 
@@ -108,8 +111,9 @@ public class DataBase extends AppCompatActivity {
      */
     public static void deleteForId(long id,  Context context) {
 
-        mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
-                DBContract.FeedEntry._ID, new String[] {String.valueOf(id)});
+        // // use withAppendedId method from ContentUris class to add "id" to end of uri string
+        mContentResolver.delete(ContentUris.withAppendedId(FeedEntry.CONTENT_URI, id),
+                FeedEntry._ID, new String[] {String.valueOf(id)});
 
         // Сообщаем пользователю, какой ИД был удален
         // Telling the user which ID was deleted
@@ -129,8 +133,8 @@ public class DataBase extends AppCompatActivity {
     private void displayCurrent() {
 
         // Query for all characters
-        Cursor mCursor = mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
-                DBContract.FeedEntry.sColumnsToDisplay,
+        Cursor mCursor = mContentResolver.query(FeedEntry.CONTENT_URI,
+                FeedEntry.sColumnsToDisplay,
                 null, null, null);
 
 // Inform the user if there's nothing to display.
@@ -144,9 +148,11 @@ public class DataBase extends AppCompatActivity {
         /**  initialize ArrayList */
         recyclerObserveItems = new ArrayList<>();
 
-        // recycleItems without distance
+        // using a helper method from the UTIL.class
         ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
+        mCursor.close();
 
+        // recycleItems without distance
         for (RecyclerObserveItem data : recycleItems) {
             // fill recyclerObserveItems
             recyclerObserveItems.add(new RecyclerObserveItem(data.getImage(),
@@ -294,6 +300,7 @@ public class DataBase extends AppCompatActivity {
     /**
      * inserting the current position into the database
      * вставка текущей позиции в базу данных
+     * ContentResolver при неудаче возвращает "null"
      */
     private void insertCurrentGeo(Intent intent) {
 
@@ -302,22 +309,22 @@ public class DataBase extends AppCompatActivity {
         // get the data and insert it into ContentValues
         // получаем данные и вставляем их в ContentValues
 
-        cvs.put(DBContract.FeedEntry.COLUMN_LATITUDE,
+        cvs.put(FeedEntry.COLUMN_LATITUDE,
                 intent.getDoubleExtra(LATITUDE, 0));
 
-        cvs.put(DBContract.FeedEntry.COLUMN_LONGITUDE,
+        cvs.put(FeedEntry.COLUMN_LONGITUDE,
                 intent.getDoubleExtra(LONGITUDE, 0));
 
-        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.
+        cvs.put(FeedEntry.COLUMN_DESCRIPTION, intent.
                 getStringExtra(DESCRIPTION));
 
         // insert the icon using the Utils class method helper method. вставляем иконку
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
+        cvs.put(FeedEntry.COLUMN_DANGER,
                 Utils.imageDamageForItemSpinner
                         (intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Inserting
-        mContentResolver.insert(DBContract.FeedEntry.CONTENT_URI, cvs);
+        mContentResolver.insert(FeedEntry.CONTENT_URI, cvs);
 
     }
 
@@ -325,7 +332,7 @@ public class DataBase extends AppCompatActivity {
      * обновляем текущую позицию (только иконку и описание)
      * update the current position (only icon and description)
      */
-    public static void updateCurrentPosition(Intent intent) {
+    public static void updateCurrentPosition(Intent intent, Context mContext) {
 
         ContentValues cvs = new ContentValues();
 
@@ -333,12 +340,12 @@ public class DataBase extends AppCompatActivity {
         // получаем данные и вставляем их в ContentValues
 
         // insert the icon using the Utils class method helper method. вставляем иконку
-        cvs.put(DBContract.FeedEntry.COLUMN_DANGER,
+        cvs.put(FeedEntry.COLUMN_DANGER,
                 Utils.imageDamageForItemSpinner
                         (intent.getIntExtra(POSITION_DANGER, 0)));
 
         // Descriptions
-        cvs.put(DBContract.FeedEntry.COLUMN_DESCRIPTION, intent.
+        cvs.put(FeedEntry.COLUMN_DESCRIPTION, intent.
                 getStringExtra(DESCRIPTION));
 
 //        Log.d("myLogs","ID= " + currentId);
@@ -347,21 +354,22 @@ public class DataBase extends AppCompatActivity {
         // update the selected row
         int currentId = intent.getExtras().getInt("id");
 
-        mContentResolver.update(DBContract.FeedEntry.CONTENT_URI,
+        // use withAppendedId method from ContentUris class to add "id" to end of uri string
+        mContentResolver.update(ContentUris.withAppendedId(FeedEntry.CONTENT_URI, currentId),
                 cvs,
-                DBContract.FeedEntry._ID,
+                FeedEntry._ID,
                 new String[]{String.valueOf(currentId)});
 
         // Сообщаем об обновлении
         // We inform about the update
 
-        Log.d("myLogs", "update currentId: " + currentId);
+        Log.d("myLogs", "DATABASE: update currentId: " + currentId);
 
-/**      for Toast it is necessary context */
-//                Toast.makeText(this,
-//                "Update _ID= "
-//                        + currentId,
-//                Toast.LENGTH_SHORT).show();
+/**      for Toast it is necessary context. We passed it from Position.class */
+                Toast.makeText(mContext,
+                "Update _ID= "
+                        + currentId,
+                Toast.LENGTH_SHORT).show();
 
     }
     /**
@@ -369,7 +377,7 @@ public class DataBase extends AppCompatActivity {
      */
     private void deleteAll() {
 
-        int numDeleted = mContentResolver.delete(DBContract.FeedEntry.CONTENT_URI,
+        int numDeleted = mContentResolver.delete(FeedEntry.CONTENT_URI,
                 null, null);
 
         // Сообщаем пользователю, сколько символов было удалено.

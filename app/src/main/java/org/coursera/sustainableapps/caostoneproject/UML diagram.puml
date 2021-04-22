@@ -34,7 +34,7 @@ class Observe {
 - ServiceConnection mSvcConn
 + onServiceConnected(ComponentName,IBinder):void
 + onServiceDisconnected(ComponentName):void
-- calculateDistance(double, double):void
+- calculateDistanceAndDisplay(double, double):void
 - startPositionBindService():void
 }
 

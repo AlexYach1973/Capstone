@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static org.coursera.sustainableapps.caostoneproject.DBContract.FeedEntry;
+
 /**
  * Этот класс взаимодействует с связанным сервисом и получает от него широту и долготу
  * текущего положения. Расчитывает расстояния между текущеи положением и точками опасности
@@ -136,12 +138,10 @@ public class Observe extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewObserve);
 
         // initialize Buttons
-//        buttonUpdate = findViewById(R.id.btnObserveStart);
         imageButtonEye = findViewById(R.id.buttonImageEye);
         imageButtonEyeEye = findViewById(R.id.buttonImageEyeEye);
 
         // assign a listener
-//        buttonUpdate.setOnClickListener(viewClickListener);
         imageButtonEye.setOnClickListener(viewClickListener);
 
         // Initialize the reply messenger.
@@ -211,8 +211,8 @@ public class Observe extends AppCompatActivity {
 
         // считываем данные из базы данных
         // read data from the database
-        Cursor mCursor = mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
-                DBContract.FeedEntry.sColumnsToDisplay,
+        Cursor mCursor = mContentResolver.query(FeedEntry.CONTENT_URI,
+                FeedEntry.sColumnsToDisplay,
                 null, null, null);
 
         if (mCursor.getCount() == 0) {
@@ -226,6 +226,7 @@ public class Observe extends AppCompatActivity {
             // pass the cursor and fetch data from the databaseand Display
             // передаем курсор и извлекаем данные из базы данных и отображаем
             extractDataFromCursor(mCursor);
+            mCursor.close();
 
         }
 
@@ -242,6 +243,7 @@ public class Observe extends AppCompatActivity {
 
         // recycleItems without distance
         ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
+        mCursor.close();
 
         for (RecyclerObserveItem data : recycleItems) {
             // fill recyclerObserveItems
@@ -313,7 +315,7 @@ public class Observe extends AppCompatActivity {
      * This method gets the current coordinates from and calculates the distances
      * to the danger points that are recorded in the database. And displays them
      */
-    private void calculateDistance(double currentLat, double currentLong) {
+    private void calculateDistanceAndDisplay(double currentLat, double currentLong) {
 
         /**
          *  initialize AarrayList
@@ -330,12 +332,13 @@ public class Observe extends AppCompatActivity {
 
         // считываем данные из базы данных
         // read data from the database
-        Cursor mCursor = mContentResolver.query(DBContract.FeedEntry.CONTENT_URI,
-                DBContract.FeedEntry.sColumnsToDisplay,
+        Cursor mCursor = mContentResolver.query(FeedEntry.CONTENT_URI,
+                FeedEntry.sColumnsToDisplay,
                 null, null, null);
 
         // recycleItems without distsnce
         ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
+        mCursor.close();
 
         // ArrayList recyclerObserveItems for Display
         for (RecyclerObserveItem data : recycleItems) {
@@ -356,10 +359,8 @@ public class Observe extends AppCompatActivity {
                     data.getLat(),
                     data.getLng(),
                     data.getDescription(),
-                    String.valueOf( Math.round(distance)) + " m"));
+                    String.valueOf(Math.round(distance))));
 
-            //move to next line
-            mCursor.moveToNext();
         }
 
         // intialize RecyclerAdapter
@@ -412,7 +413,7 @@ public class Observe extends AppCompatActivity {
             if (currentLat != 0) {
 
                 // calculate Distance
-                observe.calculateDistance(currentLat, currentLong);
+                observe.calculateDistanceAndDisplay(currentLat, currentLong);
             } else {
                 Toast.makeText(observe.getApplicationContext(),
                         "wait 5 sec and try again",

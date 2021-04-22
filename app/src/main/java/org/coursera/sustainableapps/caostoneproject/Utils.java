@@ -2,9 +2,12 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import android.graphics.drawable.Icon;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+
+import static org.coursera.sustainableapps.caostoneproject.DBContract.*;
 
 public class Utils {
 
@@ -103,29 +106,37 @@ public class Utils {
 
         ArrayList<RecyclerObserveItem> recycleArrayList = new ArrayList<>();
 
-        // First line
-        mCursor.moveToFirst();
-        // to the end of the table
-        while (!mCursor.isAfterLast()) {
-
-            // the same as in extractDataFromCursor()
-            // Icon Danger
+        while (mCursor.moveToNext()) {
+//             Icon Danger
             int presentDamage = mCursor.getInt(mCursor.getColumnIndex(
-                    DBContract.FeedEntry.COLUMN_DANGER));
+                    FeedEntry.COLUMN_DANGER));
+            // verification icon
+            if (presentDamage < 0)
+                throw new IllegalArgumentException("unknown danger icon");
 
             // Use String.valueOf()
             int presentId = mCursor.getInt(mCursor.getColumnIndex(
-                    DBContract.FeedEntry._ID));
+                    FeedEntry._ID));
+            // verification id
+            if (presentId < 0)
+                throw new IllegalArgumentException("unknown id");
 
             // Double Lat and Long
             double presentLat = mCursor.getDouble(mCursor.getColumnIndex(
-                    DBContract.FeedEntry.COLUMN_LATITUDE));
+                    FeedEntry.COLUMN_LATITUDE));
+            // verification Latitude
+            if (presentLat == 0)
+                throw new IllegalArgumentException("unknown Latitude");
+
             double presentLng = mCursor.getDouble(mCursor.getColumnIndex(
-                    DBContract.FeedEntry.COLUMN_LONGITUDE));
+                    FeedEntry.COLUMN_LONGITUDE));
+            // verification Longitude
+            if (presentLng == 0)
+                throw new IllegalArgumentException("unknown Longitude");
 
             // Description
             String presentDescription = mCursor.getString(mCursor.getColumnIndex(
-                    DBContract.FeedEntry.COLUMN_DESCRIPTION));
+                    FeedEntry.COLUMN_DESCRIPTION));
 
             recycleArrayList.add(new RecyclerObserveItem(presentDamage,
                     presentId,
@@ -134,9 +145,19 @@ public class Utils {
                     presentDescription,
                     ""));
 
-            //move to next line
-            mCursor.moveToNext();
-
+/**
+ *                  или по-другому
+ *
+ *              // First line
+ * //        mCursor.moveToFirst();
+ * //            // to the end of the table
+ * //        while (!mCursor.isAfterLast()) {
+ * //           ....................
+ * //
+ * //            //move to next line
+ *          mCursor.moveToNext();
+ *          }
+ */
         }
         return recycleArrayList;
     }

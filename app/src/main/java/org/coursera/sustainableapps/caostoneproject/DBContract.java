@@ -16,7 +16,7 @@ public final class DBContract {
      */
     public static final String CONTENT_AUTHORITY = "org.coursera.dangerprovider";
 
-    /**
+    /** URI - Unified Resource Identifier/ Единый идентификатор ресурса
      * Use CONTENT_AUTHORITY to create the base of all URI's which
      * apps will use to contact the content provider.
      */

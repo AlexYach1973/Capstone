@@ -1,5 +1,6 @@
 package org.coursera.sustainableapps.caostoneproject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -90,10 +91,13 @@ public class RecyclerViewAdapter extends
         return new RecyclerViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
 
         RecyclerObserveItem recyclerObserveItem = arrayList.get(position);
+
+        //******************************* geters from RecyclerObserveItem
 
         // formation String int, Lat and Lng
         String strId = "id= " + recyclerObserveItem.getIdCurrent();
@@ -104,13 +108,22 @@ public class RecyclerViewAdapter extends
         String strLng = "lon= " +
                 Math.round(recyclerObserveItem.getLng() * 100)/100.0;
 
-        //******************************* geters from RecyclerObserveItem
         holder.imageView.setImageResource(recyclerObserveItem.getImage());
         holder.textId.setText(strId);
         holder.textLat.setText(strLat);
         holder.textLng.setText(strLng);
         holder.textDescription.setText(recyclerObserveItem.getDescription());
-        holder.textMeters.setText(recyclerObserveItem.getMeters());
+
+        // call Observe.class
+        if (!bool & !recyclerObserveItem.getMeters().equals("-- ")) {
+            // vicinity check
+            if (Integer.parseInt(recyclerObserveItem.getMeters()) < 100) {
+                holder.textMeters.setTextColor(Color.parseColor("#FF3366"));
+            } else {
+                holder.textMeters.setTextColor(Color.parseColor("#BB86FC"));
+            }
+        }
+        holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
 
         /**  ************* implementation context Menu ******************** */
         // Call from DataBase.class
@@ -167,9 +180,9 @@ public class RecyclerViewAdapter extends
                             holder.textDescription.setText("  deleted item");
                             holder.textDescription.setTextColor(Color.RED);
 
-
-                            Log.d("myLogs", "Description: "
-                                    + recyclerObserveItem.getDescription());
+                            // Logs
+//                            Log.d("myLogs", "Description: "
+//                                    + recyclerObserveItem.getDescription());
 
                             return true;
                         });

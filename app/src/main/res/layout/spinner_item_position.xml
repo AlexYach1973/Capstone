@@ -15,9 +15,6 @@
         app:srcCompat="@drawable/respirator_one_fon_80"/>
 <!--        app:srcCompat="@mipmap/crossbones_round" />-->
 
-
-
-
     <TextView
         android:id="@+id/spinnerTextDanger"
         android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     <string name="danger">DANGER</string>
     <string name="database">DATABASE</string>
     <string name="map">OBSERVE</string>
-    <string name="hello">Welcome to HELL</string>
+    <string name="hello">Welcome to the HELL</string>
 
     <!--    Screen Danger-->
     <string name="hello_danger">danger</string>
@@ -32,13 +32,13 @@
     <string name="buttonOk">OK!</string>
     <string name="spinnerDanger">Danger choosing</string>
     <string name="descr_danger">Description</string>
-    <string name="waite">waite…</string>
+    <string name="waite">wait…</string>
 
 <!--    Screen Observe-->
     <string name="hello_Observe">Always look around…</string>
     <string name="button1_Observe">UPDATE</string>
     <string name="button2_Observe">Button 2</string>
-    <string name="text_view_description">description of danger -></string>
+    <string name="text_view_description">description</string>
     <string name="text_view_distance">distance</string>
 
 

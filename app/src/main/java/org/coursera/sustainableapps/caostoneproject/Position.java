@@ -136,7 +136,7 @@ public class Position extends AppCompatActivity {
         /**
          * set Spinner configuration
          */
-        spinnerConfiguration();
+        spinnerConfigurationPosition();
     }
 
     protected void onResume() {
@@ -182,12 +182,12 @@ public class Position extends AppCompatActivity {
         /**
          * Spinner
          */
-        private void spinnerConfiguration(){
+        private void spinnerConfigurationPosition(){
         // адаптер для спиннера. spinner adapter
             // устанавливаем свое отображения списка
             // set our display of the list (R.layout.spinner_item)
             ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this,
-                    R.layout.spinner_item, R.id.spinnerTextDanger, spData);
+                    R.layout.spinner_item_position, R.id.spinnerTextDanger, spData);
 
         // привязываем спиннер к адаптеру
         // attach the spinner to the adapter

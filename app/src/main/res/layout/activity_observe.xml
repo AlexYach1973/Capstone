@@ -14,11 +14,23 @@
         android:background="@color/purple_200"
         android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/spinnerObserve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:prompt="@string/spinnerDanger"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            style="@android:style/Widget.Holo.Spinner"/>
+
         <TextView
             android:id="@+id/textViewObserve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/spinnerObserve"
+            android:layout_toStartOf="@id/buttonImageEye"
             style="@style/styleTextObserve"
             android:text="@string/hello_Observe" />
 
@@ -32,7 +44,6 @@
             android:padding="0dp"
             android:background="@color/purple_200"
             android:src="@drawable/eye_100_eye1"
-            android:text="@string/button2_Observe"
             tools:ignore="ContentDescription,RelativeOverlap" />
 
         <ImageButton
@@ -45,7 +56,6 @@
             android:padding="0dp"
             android:background="@color/prpr"
             android:src="@drawable/eye_100_background1"
-            android:text="@string/button2_Observe"
             tools:ignore="ContentDescription,RelativeOverlap" />
 
         </RelativeLayout>
@@ -57,37 +67,40 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="2dp"
-        android:background="@drawable/spinner"
         >
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/text_view_description"
-            android:textColor="@color/purple_700"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:gravity="end"
-            android:padding="0dp"
-            android:layout_margin="0dp"/>
+<!--        <Spinner-->
+<!--            android:id="@+id/spinnerObserve"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:prompt="@string/spinnerDanger"-->
+<!--            style="@android:style/Widget.Holo.Spinner"/>-->
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/text_view_distance"
-            android:gravity="end"
-            android:paddingEnd="8dp"
-            android:paddingStart="0dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="4dp"
-            android:textColor="@color/purple_700"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_margin="0dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/textViewDescription"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/text_view_description"-->
+<!--            android:textColor="@color/purple_700"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="20sp"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="4dp"-->
+<!--            android:background="@drawable/spinner"-->
+<!--            android:layout_margin="4dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewSort"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/text_view_distance"-->
+<!--            android:gravity="end"-->
+<!--            android:padding="4dp"-->
+<!--            android:textColor="@color/purple_700"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="20sp"-->
+<!--            android:background="@drawable/spinner"-->
+<!--            android:layout_margin="4dp"/>-->
 
     </LinearLayout>
 

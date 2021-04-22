@@ -14,9 +14,14 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +29,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static org.coursera.sustainableapps.caostoneproject.DBContract.FeedEntry;
 
@@ -55,14 +59,26 @@ public class Observe extends AppCompatActivity {
     // Button
     private ImageButton imageButtonEye, imageButtonEyeEye;
 
-    /**
-     * ListView to display the database
-     *для отображения базы данных
-     */
-    ListView listObserve;
+    // Spinner
+    Spinner spObserve;
+    // содержимое спинера. contents spinner
+    private final Integer[] spDataObserve = {
+            R.mipmap.respirator_foreground,
+            R.mipmap.ic_launcher_round_foreground,
+            R.mipmap.ic_launcher_bio_foreground,
+            R.mipmap.ic_launcher_chem_foreground,
+            R.mipmap.ic_launcher_laser_foreground,
+            R.mipmap.ic_launcher_magnetics_foreground,
+            R.mipmap.ic_launcher_radio_foreground};
 
-    // List for Latitude and Longitude data
-    ArrayList<Map<String, Object>> dataListLatLong = new ArrayList<>();
+    // sorting the database (query) display using a spinner
+    private String[] strSelectionArgs = null;
+    private String strSelection = null;
+
+    // TextViewю Пока не исрользуем
+//    TextView textViewSort;
+
+
 
     /**
      * RecyclerView;
@@ -137,19 +153,26 @@ public class Observe extends AppCompatActivity {
         /** initialize RecyclerView */
         recyclerView = findViewById(R.id.recyclerViewObserve);
 
-        // initialize Buttons
+        // initialize ImageButtons
         imageButtonEye = findViewById(R.id.buttonImageEye);
         imageButtonEyeEye = findViewById(R.id.buttonImageEyeEye);
 
+        // initialize TextView
+//        textViewSort = findViewById(R.id.textViewSort);
+
+        /**
+         * initialize Spinner
+         */
+        spObserve = findViewById(R.id.spinnerObserve);
+        // Spinner configuration
+        spinnerConfigurationObserve();
+
         // assign a listener
         imageButtonEye.setOnClickListener(viewClickListener);
+//        textViewSort.setOnClickListener(viewClickListener);
 
         // Initialize the reply messenger.
         mReplyMessenger = new Messenger(new ReplyHandler(this));
-
-        // отобразить базу данных без расстояний
-        // display database without distances
-        displayDbWithoutDist();
 
         // Run BindService method
         Log.d(TAG, "calling bindService(): Привет Service!");
@@ -161,6 +184,54 @@ public class Observe extends AppCompatActivity {
                     Context.BIND_AUTO_CREATE);
         }
 
+    }
+
+    /**
+     * Spinner configuration
+     */
+    private void spinnerConfigurationObserve(){
+        // адаптер для спиннера. spinner adapter
+        // устанавливаем свое отображения списка
+        // set our display of the list (R.layout.spinner_item)
+        MyIconAdapter spAdapter = new MyIconAdapter(this,
+                R.layout.spinner_item_observe, spDataObserve);
+
+        // привязываем спиннер к адаптеру
+        // attach the spinner to the adapter
+        spObserve.setAdapter(spAdapter);
+
+        // set "all elements"
+        spObserve.setSelection(0);
+
+        // устанавливаем обработчик нажатия. set the click handler
+        spObserve.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                // convert the spinner's position to the ID of the hazard icon
+                // using the Urils.class helper method
+
+                int positionToIdIcon = 0;
+                if (position == 0) {
+                    strSelection = null;
+                    strSelectionArgs = null;
+
+                } else {
+                     positionToIdIcon = Utils.imageDamageForItemSpinner(position - 1);
+                    strSelection = FeedEntry.COLUMN_DANGER;
+                    strSelectionArgs = new String[]{String.valueOf(positionToIdIcon)};
+                }
+                // отобразить базу данных без расстояний
+                // display database without distances
+                displayDbWithoutDist();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
@@ -213,7 +284,7 @@ public class Observe extends AppCompatActivity {
         // read data from the database
         Cursor mCursor = mContentResolver.query(FeedEntry.CONTENT_URI,
                 FeedEntry.sColumnsToDisplay,
-                null, null, null);
+                strSelection, strSelectionArgs, null);
 
         if (mCursor.getCount() == 0) {
             // Inform the user if there's nothing to display.
@@ -275,6 +346,9 @@ public class Observe extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     View.OnClickListener viewClickListener = v -> {
 
+        switch (v.getId()) {
+
+            case R.id.buttonImageEye:
                 // Show ImageButtonEye
                 Utils.showImage(imageButtonEyeEye);
 
@@ -283,6 +357,13 @@ public class Observe extends AppCompatActivity {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+                break;
+//            case R.id.textViewSort:
+//
+//
+//                Log.d(TAG, "selected sorting DataBase");
+//                break;
+        }
     };
 
     /**
@@ -334,7 +415,7 @@ public class Observe extends AppCompatActivity {
         // read data from the database
         Cursor mCursor = mContentResolver.query(FeedEntry.CONTENT_URI,
                 FeedEntry.sColumnsToDisplay,
-                null, null, null);
+                strSelection, strSelectionArgs, null);
 
         // recycleItems without distsnce
         ArrayList<RecyclerObserveItem> recycleItems = Utils.fillArrayListFromCursor(mCursor);
@@ -370,6 +451,42 @@ public class Observe extends AppCompatActivity {
         // Dysplay
         recyclerView.setAdapter(recyclerAdapter);
 //        recyclerView.setLayoutManager(layoutManager);
+
+    }
+
+    /**
+     * creat MyIconAdapter for spinnerObserve
+     */
+    public class MyIconAdapter extends ArrayAdapter {
+
+        // Constructor
+        public MyIconAdapter(Context context, int resource, Object[] objects) {
+            super(context, resource, objects);
+        }
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView,
+                                  ViewGroup parent) {
+
+            LayoutInflater inflater = getLayoutInflater();
+            View row = inflater.inflate(R.layout.spinner_item_observe, parent, false);
+
+            ImageView icon = (ImageView) row.findViewById(R.id.spinnerImageObserve);
+            icon.setImageResource(spDataObserve[position]);
+
+            return row;
+        }
 
     }
 

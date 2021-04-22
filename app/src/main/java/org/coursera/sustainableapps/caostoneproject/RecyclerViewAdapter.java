@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,11 +118,15 @@ public class RecyclerViewAdapter extends
             // vicinity check
             if (Integer.parseInt(recyclerObserveItem.getMeters()) < 100) {
                 holder.textMeters.setTextColor(Color.parseColor("#FF3366"));
+
+                holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
             } else {
                 holder.textMeters.setTextColor(Color.parseColor("#BB86FC"));
+
+                holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
             }
         }
-        holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
+        holder.textMeters.setText(recyclerObserveItem.getMeters());
 
         /**  ************* implementation context Menu ******************** */
         // Call from DataBase.class

@@ -64,7 +64,7 @@ public class DangerProvider extends ContentProvider {
         int returnCount;
 
         // Logs
-        Log.d("myLogs", "Удаление DangerProvider");
+//        Log.d("myLogs", "Удаление DangerProvider");
 //        Log.d("myLogs", "Selection :" + selection);
 //        Log.d("myLogs", "SelectionArgs :" + selectionArgs[0]);
 
@@ -75,7 +75,7 @@ public class DangerProvider extends ContentProvider {
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs);
 
-                Log.d("myLogs", "Delete CHARACTERS: " + CHARACTERS);
+//                Log.d("myLogs", "Delete CHARACTERS: " + CHARACTERS);
                 break;
 
             case CHARACTER:
@@ -88,7 +88,7 @@ public class DangerProvider extends ContentProvider {
                                         ContentUris.parseId(uri)),
                                 selectionArgs);
 
-                Log.d("myLogs", "Delete CHARACTER: " + CHARACTER);
+//                Log.d("myLogs", "Delete CHARACTER: " + CHARACTER);
                 break;
 
             default: throw new UnsupportedOperationException("???");
@@ -129,7 +129,7 @@ public class DangerProvider extends ContentProvider {
             // Обработка случая окончательного выбора
             selectionResult.append(selection).append(" = ?");
 
-            Log.d("myLogs", "DangerProvider addSelectionArgs: " + selectionResult);
+//            Log.d("myLogs", "DangerProvider addSelectionArgs: " + selectionResult);
 
             return selectionResult.toString();
         }
@@ -199,7 +199,7 @@ public class DangerProvider extends ContentProvider {
         // Notifies registered observers that a row was inserted.
         mContext.getContentResolver().notifyChange(uri,null);
 
-        Log.d("myLogs", "insertUri witch id: " + returnUri);
+//        Log.d("myLogs", "insertUri witch id: " + returnUri);
 
         return returnUri;
     }
@@ -232,7 +232,7 @@ public class DangerProvider extends ContentProvider {
                                 null,
                                 sortOrder);
                 // Logs
-                Log.d("myLogs", "Query CHARACTERS: " + CHARACTERS);
+//                Log.d("myLogs", "Query CHARACTERS: " + CHARACTERS);
 
                 break;
 
@@ -252,7 +252,7 @@ public class DangerProvider extends ContentProvider {
 
             default:
                 // Logs
-                Log.d("myLogs", "CASE - No CHARACTERS, No CHARACTER");
+//                Log.d("myLogs", "CASE - No CHARACTERS, No CHARACTER");
                 throw new UnsupportedOperationException("QUERY ???");
         }
 
@@ -285,7 +285,7 @@ public class DangerProvider extends ContentProvider {
                                 cvs,
                                 addSelectionArgs(selection, selectionArgs),
                                 selectionArgs);
-                Log.d("myLogs", "Update CHARACTERS: " + CHARACTERS);
+//                Log.d("myLogs", "Update CHARACTERS: " + CHARACTERS);
                 break;
 
             case CHARACTER:
@@ -298,7 +298,7 @@ public class DangerProvider extends ContentProvider {
                                 addKeyIdCheckToWhereStatement(selection,
                                         ContentUris.parseId(uri)),
                                 selectionArgs);
-                Log.d("myLogs", "Update CHARACTER: " + CHARACTER);
+//                Log.d("myLogs", "Update CHARACTER: " + CHARACTER);
                 break;
 
             default:

@@ -10,7 +10,7 @@
         />
 
     <item
-        android:id="@+id/menu_obserev_long"
+        android:id="@+id/menu_observe_long"
         android:title="@string/menu_long"
         android:icon="@drawable/ic_long_text_24"
         app:showAsAction="always"

@@ -244,12 +244,12 @@ public class Observe extends AppCompatActivity {
     }
 
     /**
-     *
+     * MENU
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_observe, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -257,16 +257,17 @@ public class Observe extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_observe_short:
                 long_short_text = false;
+
                 displayDbWithoutDist();
 
-                Log.d(TAG,"menu short");
+//                Log.d(TAG,"menu short");
                 return true;
 
-            case R.id.menu_obserev_long:
+            case R.id.menu_observe_long:
                 long_short_text = true;
                 displayDbWithoutDist();
 
-                Log.d(TAG,"menu long");
+//                Log.d(TAG,"menu long");
                 return true;
         }
 
@@ -331,15 +332,12 @@ public class Observe extends AppCompatActivity {
                     "No items to display",
                     Toast.LENGTH_SHORT).show();
 
-        } else {
+        }
 
             // pass the cursor and fetch data from the databaseand Display
             // передаем курсор и извлекаем данные из базы данных и отображаем
             extractDataFromCursor(mCursor);
             mCursor.close();
-
-        }
-
     }
 
     /**
@@ -570,7 +568,7 @@ public class Observe extends AppCompatActivity {
 
             if (currentLat != 0) {
 
-                // calculate Distance
+                // calculate Distance and Display
                 observe.calculateDistanceAndDisplay(currentLat, currentLong);
             } else {
                 Toast.makeText(observe.getApplicationContext(),

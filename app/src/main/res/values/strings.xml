@@ -40,6 +40,9 @@
     <string name="button2_Observe">Button 2</string>
     <string name="text_view_description">description</string>
     <string name="text_view_distance">distance</string>
+<!--    Menu Observe-->
+    <string name="menu_short">short text</string>
+    <string name="menu_long">long text</string>
 
 
 </resources>

@@ -2,12 +2,11 @@ package org.coursera.sustainableapps.caostoneproject;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.graphics.drawable.Icon;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
 
-import static org.coursera.sustainableapps.caostoneproject.DBContract.*;
+import static org.coursera.sustainableapps.caostoneproject.DBContract.FeedEntry;
 
 public class Utils {
 

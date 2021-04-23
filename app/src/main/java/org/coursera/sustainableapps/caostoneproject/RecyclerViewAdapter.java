@@ -24,18 +24,22 @@ public class RecyclerViewAdapter extends
 
     // if bool = false - from Observe.class
     // if bool = true - from DataBase.class
-    private final Boolean bool;
+    private final Boolean dataBase_Observe;
+
+    // if bool = true - long text
+    // if bool = false - short text
+    private final Boolean long_short_text;
 
     public RecyclerViewAdapter(ArrayList<RecyclerObserveItem> arrayList, Context context,
-                               Boolean bool) {
+                               Boolean dataBase_Observe, Boolean long_short_text) {
         this.arrayList = arrayList;
         this.context = context;
-        this.bool = bool;
+        this.dataBase_Observe = dataBase_Observe;
+        this.long_short_text = long_short_text;
 
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-//            , View.OnCreateContextMenuListener {
 
         public ImageView imageView;
         public TextView textId;
@@ -61,7 +65,7 @@ public class RecyclerViewAdapter extends
         public void onClick(View v) {
 
             // Call from Observe.class
-            if (!bool) {
+            if (!dataBase_Observe) {
                 int position = getAdapterPosition();
                 RecyclerObserveItem recyclerObserveItem = arrayList.get(position);
 
@@ -108,29 +112,38 @@ public class RecyclerViewAdapter extends
                 Math.round(recyclerObserveItem.getLng() * 100)/100.0;
 
         holder.imageView.setImageResource(recyclerObserveItem.getImage());
+
         holder.textId.setText(strId);
         holder.textLat.setText(strLat);
         holder.textLng.setText(strLng);
+
+        // if there is a short presentation of data, we make the id, Lat, long fields invisible
+        if (!long_short_text) {
+            holder.textId.setVisibility(View.GONE);
+            holder.textLat.setVisibility(View.GONE);
+            holder.textLng.setVisibility(View.GONE);
+        }
+
         holder.textDescription.setText(recyclerObserveItem.getDescription());
+        holder.textMeters.setText(recyclerObserveItem.getMeters());
 
         // call Observe.class
-        if (!bool & !recyclerObserveItem.getMeters().equals("-- ")) {
+        if (!dataBase_Observe & !recyclerObserveItem.getMeters().equals("-- ")) {
             // vicinity check
             if (Integer.parseInt(recyclerObserveItem.getMeters()) < 100) {
                 holder.textMeters.setTextColor(Color.parseColor("#FF3366"));
 
-                holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
             } else {
                 holder.textMeters.setTextColor(Color.parseColor("#BB86FC"));
 
-                holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
             }
+            holder.textMeters.setText(recyclerObserveItem.getMeters() + " m");
         }
-        holder.textMeters.setText(recyclerObserveItem.getMeters());
+
 
         /**  ************* implementation context Menu ******************** */
         // Call from DataBase.class
-        if (bool) {
+        if (dataBase_Observe) {
             holder.itemView.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
 
                 menu.setHeaderTitle(R.string.title_context_menu);

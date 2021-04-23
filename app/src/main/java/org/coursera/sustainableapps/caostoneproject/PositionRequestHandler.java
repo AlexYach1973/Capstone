@@ -16,8 +16,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-//import java.util.logging.Handler;
-
 /**
  * This class gets the current latitude and longitude and sends back to PositionBindService
  * via a reply messenger contained  in the request message
@@ -75,7 +73,7 @@ public void handleMessage(Message request) {
     // команда, которая срабатывает при корректировки данных (0 с или 0 м)
     // command that is triggered when data is corrected (0 s or 0 m)
     locationManager.requestLocationUpdates
-            (LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            (LocationManager.GPS_PROVIDER, 10, 10, locationListener);
 
 
     // Creates a Message

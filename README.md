@@ -123,9 +123,13 @@ Long press on a database item displays a context menu:
 **`OBSERVE`**
 
 This window is used to monitor the danger points that are entered in the database. A database is displayed in the center of the window, showing the danger icon, database entry ID, longitude, latitude, description, and distance in meters. To start surveillance, you must press the button at the top of the screen (terrible eye)
-Information is updated only by clicking on the button (terrible eye). When you click on an item in the List, a window with a google map is launched, where the location of the danger is shown. The distance text colour changes when you reach at least 100 meters. 
+Information is updated only by clicking on the button (terrible eye). The distance text colour changes when you reach at least 100 meters. 
 
+When you click on an item in the List, a window with a google map is launched, where the location of the danger is shown. 
 
+When you push the spinner you can display separate danger type.
+
+In the menu, you can choose a short or long view of danger points.
 
 
 https://github.com/AlexYach1973/Capstone

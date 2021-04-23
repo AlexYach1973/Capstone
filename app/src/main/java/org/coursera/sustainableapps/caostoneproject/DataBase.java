@@ -47,16 +47,17 @@ public class DataBase extends AppCompatActivity {
      * RecyclerView;
      */
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     // ArrayList
     private ArrayList<RecyclerObserveItem> recyclerObserveItems;
+
 
     //    Field ContentResolver
     private static ContentResolver mContentResolver;
 
     /**
-     * Constructor initializes the fields.
+     * Constructor
      */
     public DataBase() {
     }
@@ -165,7 +166,8 @@ public class DataBase extends AppCompatActivity {
 
         // initialize RecyclerAdapter
 //        recyclerView.setHasFixedSize(true); // если размер не меняется
-        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, true);
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this,
+                true, true);
         layoutManager = new LinearLayoutManager(this);
 
         // Display

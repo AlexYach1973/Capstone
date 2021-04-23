@@ -6,7 +6,7 @@
     <dimen name="text_size_position">18sp</dimen>
     <dimen name="text_padding">6dp</dimen>
     <dimen name="button_padding">15dp</dimen>
-    <dimen name="button_padding_data_base">10dp</dimen>
+    <dimen name="button_padding_data_base">8dp</dimen>
     <dimen name="button_padding_position">5dp</dimen>
     <dimen name="button_margin">10dp</dimen>
     <dimen name="button_margin_data_base">5dp</dimen>

@@ -15,6 +15,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -75,10 +77,8 @@ public class Observe extends AppCompatActivity {
     private String[] strSelectionArgs = null;
     private String strSelection = null;
 
-    // TextViewю Пока не исрользуем
+    // TextViewю Пока не используем
 //    TextView textViewSort;
-
-
 
     /**
      * RecyclerView;
@@ -88,6 +88,15 @@ public class Observe extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     // ArrayList
     private ArrayList<RecyclerObserveItem> recyclerObserveItems;
+
+    /**
+     * Boolean field.
+     * Specifies the long or short representation of the data on the screen.
+     * This field is passed to RecyclerViewAdapter()
+     *  if bool = true - long text
+     * if bool = false - short text
+     */
+    private Boolean long_short_text = true;
 
     /**
      * Reference to the request messenger that's implemented in the PositionBindService
@@ -235,6 +244,36 @@ public class Observe extends AppCompatActivity {
     }
 
     /**
+     *
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_observe, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_observe_short:
+                long_short_text = false;
+                displayDbWithoutDist();
+
+                Log.d(TAG,"menu short");
+                return true;
+
+            case R.id.menu_obserev_long:
+                long_short_text = true;
+                displayDbWithoutDist();
+
+                Log.d(TAG,"menu long");
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
      * Hook method called by Android when this activity becomes visible.
      */
     @Override
@@ -329,7 +368,8 @@ public class Observe extends AppCompatActivity {
 
         // intialize RecyclerAdapter
 //        recyclerView.setHasFixedSize(true); // если размер не меняется
-        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, false);
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this,
+                false, long_short_text);
         layoutManager = new LinearLayoutManager(this);
 
         // Display
@@ -445,7 +485,8 @@ public class Observe extends AppCompatActivity {
         }
 
         // intialize RecyclerAdapter
-        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this, false);
+        recyclerAdapter = new RecyclerViewAdapter(recyclerObserveItems,this,
+                false, long_short_text);
 //        layoutManager = new LinearLayoutManager(this);
 
         // Dysplay

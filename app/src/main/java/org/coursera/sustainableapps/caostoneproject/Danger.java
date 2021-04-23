@@ -1,15 +1,14 @@
 package org.coursera.sustainableapps.caostoneproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Danger extends AppCompatActivity {
 

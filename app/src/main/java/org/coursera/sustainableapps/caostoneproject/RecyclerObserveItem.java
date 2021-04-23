@@ -2,11 +2,11 @@ package org.coursera.sustainableapps.caostoneproject;
 
 public class RecyclerObserveItem {
 
-    private  int image;
-    private int idCurrent;
-    private double lan;
-    private double lng;
-    private String description;
+    private final int image;
+    private final int idCurrent;
+    private final double lan;
+    private final double lng;
+    private final String description;
     private String meters;
 
     public RecyclerObserveItem(int image, int id, double lan, double lng,
